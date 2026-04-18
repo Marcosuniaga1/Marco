@@ -1,4 +1,3 @@
-import { renderStillOnWeb } from "@remotion/web-renderer";
 import type { ComponentType } from "react";
 
 interface CaptureConfig {
@@ -8,39 +7,40 @@ interface CaptureConfig {
   durationInFrames: number;
 }
 
-/**
- * Captures a frame from a Remotion composition and returns it as a base64 data URL.
- */
 export async function captureFrame(
   Component: ComponentType,
   frame: number,
   config: CaptureConfig,
 ): Promise<string> {
-  const blob = await (
-    await renderStillOnWeb({
-      composition: {
-        component: Component,
-        id: "frame-capture",
-        width: config.width,
-        height: config.height,
-        fps: config.fps,
-        durationInFrames: config.durationInFrames,
-      },
-      frame,
-      scale: 0.5, // 960x540 - good enough for AI context
-      inputProps: {},
-    })
-  ).blob({ format: "jpeg" });
+  try {
+    const { renderStillOnWeb } = await import("@remotion/web-renderer");
+    const blob = await (
+      await renderStillOnWeb({
+        composition: {
+          component: Component,
+          id: "frame-capture",
+          width: config.width,
+          height: config.height,
+          fps: config.fps,
+          durationInFrames: config.durationInFrames,
+        },
+        frame,
+        scale: 0.5,
+        inputProps: {},
+      })
+    ).blob({ format: "jpeg" });
 
-  // Convert blob to base64 data URL
-  const buffer = await blob.arrayBuffer();
-  const bytes = new Uint8Array(buffer);
-  let binary = "";
-  for (let i = 0; i < bytes.length; i++) {
-    binary += String.fromCharCode(bytes[i]);
+    const buffer = await blob.arrayBuffer();
+    const bytes = new Uint8Array(buffer);
+    let binary = "";
+    for (let i = 0; i < bytes.length; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    const base64 = btoa(binary);
+    return `data:image/jpeg;base64,${base64}`;
+  } catch {
+    return "";
   }
-  const base64 = btoa(binary);
-  return `data:image/jpeg;base64,${base64}`;
 }
 
 /**
