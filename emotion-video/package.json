@@ -6,8 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "studio": "remotion studio src/remotion/index.ts",
-    "render": "remotion render src/remotion/index.ts EmotionGraphicVideo output.mp4"
+    "studio": "remotion studio src/remotion/index.tsx",
+    "render": "remotion render src/remotion/index.tsx EmotionGraphicVideo output.mp4"
   },
   "dependencies": {
     "next": "14.2.5",
