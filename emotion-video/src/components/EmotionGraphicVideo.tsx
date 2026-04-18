@@ -123,10 +123,12 @@ const GlitchText: React.FC<{
 
 const FlashTransition: React.FC<{ triggerFrames: number[] }> = ({ triggerFrames }) => {
   const frame = useCurrentFrame();
-  const flashOpacity = triggerFrames.reduce((acc, f) =>
-    Math.max(acc, interpolate(frame - f, [0, 8], [0.9, 0], {
+  const flashOpacity = triggerFrames.reduce((acc, f) => {
+    if (frame < f) return acc;
+    return Math.max(acc, interpolate(frame - f, [0, 8], [0.9, 0], {
       extrapolateLeft: "clamp", extrapolateRight: "clamp",
-    })), 0);
+    }));
+  }, 0);
   if (flashOpacity === 0) return null;
   return (
     <div style={{
