@@ -1,8 +1,10 @@
 import React from "react";
 import {
   AbsoluteFill,
+  Audio,
   interpolate,
   spring,
+  staticFile,
   useCurrentFrame,
   useVideoConfig,
   Sequence,
@@ -16,20 +18,20 @@ const C = {
   pink: "#FF006E",
   gold: "#FFD700",
   red: "#FF5252",
+  orange: "#FF6B35",
+  green: "#00FF88",
   white: "#FFFFFF",
 };
 
-// ─── Scene timing (frames @ 30 fps, total 900 = 30 s) ────────────────────────
-const T = {
-  s1: 0,    // 0 s  – Hook
-  s2: 90,   // 3 s  – Roma / Realidad Imparable
-  s3: 270,  // 9 s  – ¿Por qué sigues atrapado?
-  s4: 450,  // 15 s – Marketing de Afiliados
-  s5: 660,  // 22 s – CTA ¡Síguenos!
-  end: 900, // 30 s
-};
+// ─── Scene timing (frames @ 30 fps = 30 s) ───────────────────────────────────
+const T = { s1: 0, s2: 90, s3: 270, s4: 450, s5: 660, end: 900 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+function seededRand(n: number) {
+  const x = Math.sin(n) * 10000;
+  return x - Math.floor(x);
+}
+
 function spr(frame: number, fps: number, stiffness = 120, damping = 14) {
   return spring({ frame, fps, config: { stiffness, damping } });
 }
@@ -41,12 +43,16 @@ function fadeIn(frame: number, dur = 15) {
   });
 }
 
-function slideUp(prog: number, dist = 60) {
-  return interpolate(prog, [0, 1], [dist, 0]);
+function shake(frame: number, intensity = 6, speed = 1.5) {
+  return (
+    Math.sin(frame * speed * Math.PI) *
+    intensity *
+    Math.max(0, 1 - frame * 0.08)
+  );
 }
 
-function slideX(prog: number, dist = 80) {
-  return interpolate(prog, [0, 1], [dist, 0]);
+function glitchX(frame: number) {
+  return frame % 7 < 1 ? (seededRand(frame * 3.7) - 0.5) * 20 : 0;
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -65,57 +71,84 @@ const Grid: React.FC = () => (
 );
 
 const Dot: React.FC<{
-  x: string;
-  y: string;
-  size: number;
-  color: string;
-  offset: number;
+  x: string; y: string; size: number; color: string; offset: number;
 }> = ({ x, y, size, color, offset }) => {
   const frame = useCurrentFrame();
   const pulse = Math.sin((frame + offset) * 0.08) * 0.4 + 0.6;
+  const floatY = Math.sin((frame + offset) * 0.03) * 15;
   return (
-    <div
-      style={{
-        position: "absolute",
-        left: x,
-        top: y,
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        backgroundColor: color,
-        opacity: pulse,
-        boxShadow: `0 0 ${size * 3}px ${color}`,
-        transform: `scale(${0.8 + pulse * 0.3})`,
-      }}
-    />
+    <div style={{
+      position: "absolute", left: x, top: y, width: size, height: size,
+      borderRadius: "50%", backgroundColor: color, opacity: pulse,
+      boxShadow: `0 0 ${size * 3}px ${color}`,
+      transform: `scale(${0.8 + pulse * 0.3}) translateY(${floatY}px)`,
+    }} />
   );
 };
 
-const Hi: React.FC<{ color: string; children: React.ReactNode }> = ({
-  color,
-  children,
-}) => (
-  <span
-    style={{
-      color,
-      textShadow: `0 0 20px ${color}, 0 0 40px ${color}66`,
-    }}
-  >
+const GlitchText: React.FC<{
+  text: string; fontSize: number; color: string; frame: number;
+  style?: React.CSSProperties;
+}> = ({ text, fontSize, color, frame, style }) => {
+  const gx = glitchX(frame);
+  const isGlitching = Math.abs(gx) > 0;
+  return (
+    <div style={{ position: "relative", display: "inline-block", ...style }}>
+      <div style={{
+        fontFamily: '"Arial Black", Impact, sans-serif', fontSize,
+        fontWeight: 900, color,
+        textShadow: `0 0 30px ${color}, 0 0 60px ${color}88`,
+      }}>{text}</div>
+      {isGlitching && (
+        <div style={{
+          position: "absolute", top: 0, left: gx * 0.5,
+          fontFamily: '"Arial Black", Impact, sans-serif', fontSize,
+          fontWeight: 900, color: "#FF0000", opacity: 0.5,
+          mixBlendMode: "screen",
+          clipPath: `inset(${seededRand(frame * 1.3) * 60}% 0 ${seededRand(frame * 2.1) * 30}% 0)`,
+        }}>{text}</div>
+      )}
+      {isGlitching && (
+        <div style={{
+          position: "absolute", top: 0, left: -gx * 0.3,
+          fontFamily: '"Arial Black", Impact, sans-serif', fontSize,
+          fontWeight: 900, color: "#00FFFF", opacity: 0.5,
+          mixBlendMode: "screen",
+          clipPath: `inset(${seededRand(frame * 2.7) * 40}% 0 ${seededRand(frame * 1.5) * 50}% 0)`,
+        }}>{text}</div>
+      )}
+    </div>
+  );
+};
+
+const FlashTransition: React.FC<{ triggerFrames: number[] }> = ({ triggerFrames }) => {
+  const frame = useCurrentFrame();
+  const flashOpacity = triggerFrames.reduce((acc, f) =>
+    Math.max(acc, interpolate(frame - f, [0, 8], [0.9, 0], {
+      extrapolateLeft: "clamp", extrapolateRight: "clamp",
+    })), 0);
+  if (flashOpacity === 0) return null;
+  return (
+    <div style={{
+      position: "absolute", inset: 0, backgroundColor: C.white,
+      opacity: flashOpacity, pointerEvents: "none", zIndex: 100,
+    }} />
+  );
+};
+
+const Hi: React.FC<{ color: string; children: React.ReactNode }> = ({ color, children }) => (
+  <span style={{ color, textShadow: `0 0 20px ${color}, 0 0 40px ${color}66` }}>
     {children}
   </span>
 );
 
-const Radial: React.FC<{ color: string; pos?: string }> = ({
-  color,
-  pos = "50% 50%",
+const Radial: React.FC<{ color: string; pos?: string; size?: string }> = ({
+  color, pos = "50% 50%", size = "65%",
 }) => (
-  <div
-    style={{
-      position: "absolute",
-      inset: 0,
-      background: `radial-gradient(ellipse at ${pos}, ${color}28 0%, transparent 65%)`,
-    }}
-  />
+  <div style={{
+    position: "absolute", inset: 0,
+    background: `radial-gradient(ellipse at ${pos}, ${color}30 0%, transparent ${size})`,
+  }} />
 );
 
 // ─── Scene 1 – Hook ───────────────────────────────────────────────────────────
@@ -123,70 +156,33 @@ const S1: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const hey = spr(frame, fps, 300, 20);
-  const pulse = Math.sin(frame * 0.3) * 0.05 + 1;
-
-  const basta = spr(frame - 12, fps, 180, 16);
-  const bastaOp = fadeIn(frame - 12);
-
-  const sub = spr(frame - 30, fps, 120, 14);
-  const subOp = fadeIn(frame - 30);
+  const heyProg = spr(frame, fps, 400, 18);
+  const heyOp = fadeIn(frame, 8);
+  const heyShake = shake(frame - 5, 8, 2.5);
+  const heyScale = interpolate(heyProg, [0, 0.8, 1], [0, 1.2, 1]);
+  const basta = spr(frame - 15, fps, 300, 20);
+  const bastaOp = fadeIn(frame - 15, 8);
+  const bastaX = interpolate(basta, [0, 1], [-400, 0]);
+  const subOp = fadeIn(frame - 35, 10);
+  const subScale = spr(frame - 35, fps, 200, 18);
 
   return (
-    <AbsoluteFill
-      style={{ justifyContent: "center", alignItems: "center", flexDirection: "column", gap: 8 }}
-    >
+    <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", flexDirection: "column", gap: 4 }}>
       <Radial color={C.gold} />
-
-      {/* HEY, */}
-      <div
-        style={{
-          fontFamily: '"Arial Black", Impact, sans-serif',
-          fontSize: 160,
-          fontWeight: 900,
-          color: C.gold,
-          textShadow: `0 0 30px ${C.gold}, 0 0 60px ${C.gold}88`,
-          transform: `scale(${hey * pulse})`,
-          opacity: hey,
-          lineHeight: 1,
-          letterSpacing: -4,
-        }}
-      >
-        HEY,
+      <div style={{ transform: `scale(${heyScale}) translateX(${heyShake}px)`, opacity: heyOp, marginBottom: -10 }}>
+        <GlitchText text="HEY," fontSize={160} color={C.gold} frame={frame < 25 ? frame : 0} />
       </div>
-
-      {/* BASTA DE SCROLLEAR */}
-      <div
-        style={{
-          fontFamily: '"Arial Black", Impact, sans-serif',
-          fontSize: 68,
-          fontWeight: 900,
-          color: C.white,
-          textShadow: `0 0 20px ${C.blue}`,
-          transform: `translateY(${slideUp(basta)})`,
-          opacity: bastaOp,
-          textAlign: "center",
-          letterSpacing: 2,
-        }}
-      >
-        BASTA DE SCROLLEAR
-      </div>
-
-      {/* y empieza a generar ingresos */}
-      <div
-        style={{
-          fontFamily: "Arial, sans-serif",
-          fontSize: 38,
-          fontWeight: 600,
-          color: C.blue,
-          transform: `translateY(${slideUp(sub, 40)})`,
-          opacity: subOp,
-          textAlign: "center",
-          letterSpacing: 1,
-        }}
-      >
-        y empieza a generar ingresos
-      </div>
+      <div style={{
+        fontFamily: '"Arial Black", Impact, sans-serif', fontSize: 66, fontWeight: 900,
+        color: C.white, textShadow: `0 0 20px ${C.blue}, 0 0 40px ${C.blue}66`,
+        transform: `translateX(${bastaX}px)`, opacity: bastaOp,
+        letterSpacing: 2, textAlign: "center",
+      }}>BASTA DE SCROLLEAR</div>
+      <div style={{
+        fontFamily: "Arial, sans-serif", fontSize: 38, fontWeight: 700,
+        color: C.blue, opacity: subOp, transform: `scale(${subScale})`,
+        marginTop: 8, textShadow: `0 0 15px ${C.blue}`,
+      }}>y empieza a generar ingresos 💰</div>
     </AbsoluteFill>
   );
 };
@@ -196,64 +192,35 @@ const S2: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const l1 = spr(frame, fps, 100, 14);
-  const l1op = fadeIn(frame);
-  const l2 = spr(frame - 25, fps, 100, 14);
-  const l2op = fadeIn(frame - 25);
-  const l3 = spr(frame - 55, fps, 150, 12);
-  const l3op = fadeIn(frame - 55, 20);
+  const l1 = spr(frame, fps, 200, 16);
+  const l1op = fadeIn(frame, 10);
+  const l2 = spr(frame - 20, fps, 200, 16);
+  const l2op = fadeIn(frame - 20, 10);
+  const l3op = fadeIn(frame - 50, 12);
+  const realScale = interpolate(spr(frame - 50, fps, 200, 10), [0, 0.7, 1], [0, 1.3, 1]);
+  const l3shake = shake(frame - 55, 5, 3);
 
   return (
-    <AbsoluteFill
-      style={{ justifyContent: "center", alignItems: "center", flexDirection: "column" }}
-    >
+    <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
       <Radial color={C.purple} pos="50% 40%" />
-
-      <div style={{ textAlign: "center", padding: "0 80px" }}>
-        <div
-          style={{
-            fontFamily: "Arial, sans-serif",
-            fontSize: 48,
-            color: C.white,
-            fontWeight: 700,
-            opacity: l1op,
-            transform: `translateX(${slideX(l1, -80)})`,
-            marginBottom: 8,
-          }}
-        >
-          <Hi color={C.gold}>Roma</Hi> no se construyó en un día,
-        </div>
-
-        <div
-          style={{
-            fontFamily: "Arial, sans-serif",
-            fontSize: 48,
-            color: C.white,
-            fontWeight: 700,
-            opacity: l2op,
-            transform: `translateX(${slideX(l2, 80)})`,
-            marginBottom: 30,
-          }}
-        >
-          pero se mantuvo unida por una
-        </div>
-
-        <div
-          style={{
-            fontFamily: '"Arial Black", Impact, sans-serif',
-            fontSize: 88,
-            fontWeight: 900,
-            color: C.pink,
-            textShadow: `0 0 20px ${C.pink}, 0 0 40px ${C.pink}66`,
-            opacity: l3op,
-            transform: `scale(${l3})`,
-            letterSpacing: 2,
-            lineHeight: 1,
-          }}
-        >
-          REALIDAD
-          <br />
-          IMPARABLE
+      <Radial color={C.pink} pos="80% 70%" size="40%" />
+      <div style={{ textAlign: "center", padding: "0 70px" }}>
+        <div style={{
+          fontFamily: "Arial, sans-serif", fontSize: 46, color: C.white, fontWeight: 700,
+          opacity: l1op, transform: `translateX(${interpolate(l1, [0, 1], [-100, 0])}px)`,
+          marginBottom: 6,
+        }}><Hi color={C.gold}>Roma</Hi> no se construyó en un día,</div>
+        <div style={{
+          fontFamily: "Arial, sans-serif", fontSize: 46, color: C.white, fontWeight: 700,
+          opacity: l2op, transform: `translateX(${interpolate(l2, [0, 1], [100, 0])}px)`,
+          marginBottom: 24,
+        }}>pero se mantuvo unida por una</div>
+        <div style={{ transform: `scale(${realScale}) translateX(${l3shake}px)`, opacity: l3op }}>
+          <div style={{
+            fontFamily: '"Arial Black", Impact, sans-serif', fontSize: 88, fontWeight: 900,
+            color: C.pink, letterSpacing: 3, lineHeight: 1,
+            textShadow: `0 0 20px ${C.pink}, 0 0 50px ${C.pink}88, 0 0 100px ${C.pink}44`,
+          }}>REALIDAD<br />IMPARABLE</div>
         </div>
       </div>
     </AbsoluteFill>
@@ -265,53 +232,33 @@ const S3: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const q1 = spr(frame, fps, 120, 15);
-  const q1op = fadeIn(frame);
-  const q2 = spr(frame - 35, fps, 120, 14);
-  const q2op = fadeIn(frame - 35);
-  const warn = Math.sin(frame * 0.2) * 0.25 + 0.75;
+  const q1 = spr(frame, fps, 150, 15);
+  const q1op = fadeIn(frame, 10);
+  const q2 = spr(frame - 35, fps, 150, 14);
+  const q2op = fadeIn(frame - 35, 12);
+  const pulse = 1 + Math.sin(frame * 0.35) * 0.07;
+  const colorShift = interpolate(Math.sin(frame * 0.2), [-1, 1], [0, 30]);
+  const qShake = frame > 40 ? Math.sin(frame * 2.8) * 3 : 0;
 
   return (
-    <AbsoluteFill
-      style={{ justifyContent: "center", alignItems: "center", flexDirection: "column" }}
-    >
-      <Radial color="#FF3B00" />
-
-      <div style={{ textAlign: "center", padding: "0 70px" }}>
-        <div
-          style={{
-            fontFamily: "Arial, sans-serif",
-            fontSize: 50,
-            color: C.white,
-            fontWeight: 700,
-            opacity: q1op,
-            transform: `translateY(${slideUp(q1)})`,
-            marginBottom: 28,
-          }}
-        >
-          Si sientes que{" "}
-          <Hi color={C.blue}>nada puede detenerte</Hi>,
-        </div>
-
-        <div
-          style={{
-            fontFamily: '"Arial Black", Impact, sans-serif',
-            fontSize: 62,
-            fontWeight: 900,
-            color: C.red,
-            textShadow: `0 0 20px ${C.red}, 0 0 40px ${C.red}66`,
-            opacity: q2op * warn,
-            transform: `scale(${interpolate(q2, [0, 1], [0.8, 1])})`,
-            lineHeight: 1.2,
-          }}
-        >
-          ¿Por qué sigues
-          <br />
-          atrapado en una
-          <br />
-          vida financiera
-          <br />
-          que no te gusta?
+    <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+      <Radial color="#FF2200" />
+      <Radial color={C.orange} pos="30% 70%" size="50%" />
+      <div style={{ textAlign: "center", padding: "0 65px" }}>
+        <div style={{
+          fontFamily: "Arial, sans-serif", fontSize: 48, color: C.white, fontWeight: 700,
+          opacity: q1op, transform: `translateY(${interpolate(q1, [0, 1], [80, 0])}px)`,
+          marginBottom: 24, lineHeight: 1.3,
+        }}>Si sientes que <Hi color={C.blue}>nada puede detenerte</Hi>,</div>
+        <div style={{
+          fontFamily: '"Arial Black", Impact, sans-serif', fontSize: 60, fontWeight: 900,
+          color: `hsl(${colorShift}, 100%, 60%)`,
+          textShadow: `0 0 20px #FF5252, 0 0 40px #FF525288`,
+          opacity: q2op,
+          transform: `scale(${interpolate(q2, [0, 1], [0.7, 1]) * pulse}) translateX(${qShake}px)`,
+          lineHeight: 1.2,
+        }}>
+          ¿Por qué sigues<br />atrapado en una<br />vida financiera<br />que no te gusta?
         </div>
       </div>
     </AbsoluteFill>
@@ -323,84 +270,57 @@ const S4: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const l1 = spr(frame, fps, 100, 14);
-  const l1op = fadeIn(frame);
-  const l2 = spr(frame - 30, fps, 120, 15);
-  const l2op = fadeIn(frame - 30);
-  const l3 = spr(frame - 65, fps, 140, 14);
-  const l3op = fadeIn(frame - 65);
-  const l4 = spr(frame - 100, fps, 150, 14);
-  const l4op = fadeIn(frame - 100);
+  const l1 = spr(frame, fps, 200, 14);
+  const l1op = fadeIn(frame, 10);
+  const mkt = spr(frame - 20, fps, 250, 16);
+  const mktOp = fadeIn(frame - 20, 10);
+  const afl = spr(frame - 35, fps, 250, 16);
+  const aflOp = fadeIn(frame - 35, 10);
+  const l3 = spr(frame - 70, fps, 180, 14);
+  const l3op = fadeIn(frame - 70, 12);
+  const l4 = spr(frame - 100, fps, 180, 14);
+  const l4op = fadeIn(frame - 100, 12);
+  const scanY = (frame * 12) % 1920;
 
   return (
-    <AbsoluteFill
-      style={{ justifyContent: "center", alignItems: "center", flexDirection: "column" }}
-    >
-      <Radial color={C.blue} pos="50% 40%" />
-
-      <div style={{ textAlign: "center", padding: "0 60px" }}>
-        <div
-          style={{
-            fontFamily: "Arial, sans-serif",
-            fontSize: 32,
-            color: C.blue,
-            letterSpacing: 5,
-            fontWeight: 700,
-            opacity: l1op,
-            transform: `translateY(${slideUp(l1, -40)})`,
-            marginBottom: 16,
-          }}
-        >
-          LA HERRAMIENTA QUE ME ESTÁ
-        </div>
-
-        <div
-          style={{
-            fontFamily: '"Arial Black", Impact, sans-serif',
-            fontSize: 90,
-            fontWeight: 900,
-            color: C.white,
-            textShadow: `0 0 30px ${C.blue}, 0 0 60px ${C.blue}44`,
-            opacity: l2op,
-            transform: `scale(${l2})`,
-            lineHeight: 1,
-            letterSpacing: -2,
-            marginBottom: 10,
-          }}
-        >
-          MARKETING
-          <br />
-          <span style={{ color: C.blue }}>AFILIADOS</span>
-        </div>
-
-        <div
-          style={{
-            fontFamily: "Arial, sans-serif",
-            fontSize: 40,
-            color: C.white,
-            fontWeight: 600,
-            opacity: l3op,
-            transform: `translateY(${slideUp(l3, 40)})`,
-            marginTop: 12,
-          }}
-        >
-          construir mi <Hi color={C.gold}>IMPERIO DIGITAL</Hi>
-        </div>
-
-        <div
-          style={{
-            fontFamily: "Arial, sans-serif",
-            fontSize: 46,
-            color: C.purple,
-            fontWeight: 700,
-            opacity: l4op,
-            transform: `translateY(${slideUp(l4, 40)})`,
-            marginTop: 10,
-            textShadow: `0 0 20px ${C.purple}`,
-          }}
-        >
-          desde 🏠 CASA
-        </div>
+    <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+      <Radial color={C.blue} pos="50% 35%" />
+      <Radial color={C.purple} pos="80% 60%" size="45%" />
+      {[0, 200, 400, 600, 800].map((offset, i) => (
+        <div key={i} style={{
+          position: "absolute", top: (scanY + offset) % 1920, left: 0,
+          width: "100%", height: 1, backgroundColor: C.blue, opacity: 0.15,
+        }} />
+      ))}
+      <div style={{ textAlign: "center", padding: "0 55px" }}>
+        <div style={{
+          fontFamily: "Arial, sans-serif", fontSize: 28, color: C.blue,
+          letterSpacing: 8, fontWeight: 700, opacity: l1op,
+          transform: `translateY(${interpolate(l1, [0, 1], [-50, 0])}px)`,
+          marginBottom: 12, textTransform: "uppercase" as const,
+        }}>La herramienta que me está</div>
+        <div style={{
+          fontFamily: '"Arial Black", Impact, sans-serif', fontSize: 96, fontWeight: 900,
+          color: C.white, textShadow: `0 0 30px ${C.blue}`, opacity: mktOp,
+          transform: `translateY(${interpolate(mkt, [0, 1], [-80, 0])}px)`,
+          lineHeight: 0.95, letterSpacing: -2,
+        }}>MARKETING</div>
+        <div style={{
+          fontFamily: '"Arial Black", Impact, sans-serif', fontSize: 96, fontWeight: 900,
+          color: C.blue, textShadow: `0 0 30px ${C.blue}, 0 0 60px ${C.blue}66`,
+          opacity: aflOp, transform: `translateY(${interpolate(afl, [0, 1], [80, 0])}px)`,
+          lineHeight: 0.95, letterSpacing: -2, marginBottom: 16,
+        }}>AFILIADOS</div>
+        <div style={{
+          fontFamily: "Arial, sans-serif", fontSize: 40, color: C.white, fontWeight: 700,
+          opacity: l3op, transform: `translateX(${interpolate(l3, [0, 1], [-80, 0])}px)`,
+          marginTop: 8,
+        }}>mi <Hi color={C.gold}>IMPERIO DIGITAL</Hi> 🏆</div>
+        <div style={{
+          fontFamily: "Arial, sans-serif", fontSize: 44, color: C.purple, fontWeight: 800,
+          opacity: l4op, transform: `translateX(${interpolate(l4, [0, 1], [80, 0])}px)`,
+          marginTop: 6, textShadow: `0 0 20px ${C.purple}`,
+        }}>desde 🏠 CASA</div>
       </div>
     </AbsoluteFill>
   );
@@ -411,86 +331,68 @@ const S5: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const t1 = spr(frame, fps, 200, 15);
-  const t1op = fadeIn(frame);
-  const t2 = spr(frame - 25, fps, 120, 14);
-  const t2op = fadeIn(frame - 25);
-  const t3 = spr(frame - 55, fps, 200, 12);
-  const t3op = fadeIn(frame - 55);
+  const t1 = spr(frame, fps, 400, 14);
+  const t1op = fadeIn(frame, 8);
+  const t2 = spr(frame - 28, fps, 150, 14);
+  const t2op = fadeIn(frame - 28, 12);
+  const t3 = spr(frame - 58, fps, 300, 10);
+  const t3op = fadeIn(frame - 58, 10);
+  const pulse = 1 + Math.sin(frame * 0.4) * 0.06;
+  const glow = 0.7 + Math.sin(frame * 0.5) * 0.3;
 
-  const pulse = Math.sin(frame * 0.25) * 0.05 + 1;
-  const glow = Math.sin(frame * 0.4) * 0.3 + 0.7;
+  const stars = Array.from({ length: 12 }, (_, i) => ({
+    angle: (i / 12) * Math.PI * 2,
+    dist: 280 + Math.sin(frame * 0.1 + i) * 50,
+    size: 6 + Math.sin(frame * 0.15 + i * 1.3) * 3,
+    opacity: 0.4 + Math.sin(frame * 0.2 + i * 0.7) * 0.4,
+  }));
 
   return (
-    <AbsoluteFill
-      style={{ justifyContent: "center", alignItems: "center", flexDirection: "column" }}
-    >
-      <Radial color={C.gold} />
-      <Radial color={C.pink} pos="50% 85%" />
-
-      <div style={{ textAlign: "center", padding: "0 60px" }}>
-        {/* ¡SÍGUENOS! */}
-        <div
-          style={{
-            fontFamily: '"Arial Black", Impact, sans-serif',
-            fontSize: 118,
-            fontWeight: 900,
-            color: C.gold,
-            textShadow: `0 0 30px ${C.gold}, 0 0 60px ${C.gold}88`,
-            transform: `scale(${t1 * pulse})`,
-            opacity: t1op,
-            lineHeight: 0.9,
-            marginBottom: 24,
-          }}
-        >
-          ¡SÍGUENOS!
-        </div>
-
-        {/* Escríbeme */}
-        <div
-          style={{
-            fontFamily: "Arial, sans-serif",
-            fontSize: 44,
-            color: C.white,
-            fontWeight: 700,
-            opacity: t2op,
-            transform: `translateY(${slideUp(t2, 40)})`,
-            marginBottom: 36,
-          }}
-        >
-          Escríbeme y te ayudaremos
-        </div>
-
-        {/* Button */}
-        <div
-          style={{
-            fontFamily: '"Arial Black", sans-serif',
-            fontSize: 52,
-            fontWeight: 900,
-            color: C.bg,
-            backgroundColor: C.gold,
-            padding: "22px 52px",
-            borderRadius: 18,
-            transform: `scale(${t3 * pulse})`,
-            opacity: t3op * glow,
-            boxShadow: `0 0 40px ${C.gold}, 0 0 80px ${C.gold}66`,
-            display: "inline-block",
-          }}
-        >
-          ¡GENERAR HOY! 🚀
-        </div>
+    <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+      <Radial color={C.gold} size="70%" />
+      <Radial color={C.pink} pos="50% 90%" size="40%" />
+      {stars.map((s, i) => (
+        <div key={i} style={{
+          position: "absolute",
+          left: `calc(50% + ${Math.cos(s.angle + frame * 0.02) * s.dist * 0.3}px)`,
+          top: `calc(50% + ${Math.sin(s.angle + frame * 0.02) * s.dist * 0.5}px)`,
+          width: s.size, height: s.size, borderRadius: "50%",
+          backgroundColor: i % 2 === 0 ? C.gold : C.pink, opacity: s.opacity,
+          boxShadow: `0 0 ${s.size * 3}px ${i % 2 === 0 ? C.gold : C.pink}`,
+        }} />
+      ))}
+      <div style={{ textAlign: "center", padding: "0 55px", position: "relative" }}>
+        <div style={{
+          fontFamily: '"Arial Black", Impact, sans-serif', fontSize: 116, fontWeight: 900,
+          color: C.gold, textShadow: `0 0 30px ${C.gold}, 0 0 70px ${C.gold}88`,
+          transform: `scale(${interpolate(t1, [0, 0.7, 1], [0, 1.25, 1]) * pulse})`,
+          opacity: t1op, lineHeight: 0.9, marginBottom: 20,
+        }}>¡SÍGUENOS!</div>
+        <div style={{
+          fontFamily: "Arial, sans-serif", fontSize: 42, color: C.white, fontWeight: 700,
+          opacity: t2op, transform: `translateY(${interpolate(t2, [0, 1], [50, 0])}px)`,
+          marginBottom: 32,
+        }}>Escríbeme y te ayudaremos</div>
+        <div style={{
+          fontFamily: '"Arial Black", sans-serif', fontSize: 50, fontWeight: 900,
+          color: C.bg, backgroundColor: C.gold, padding: "24px 56px", borderRadius: 20,
+          transform: `scale(${interpolate(t3, [0, 0.6, 1], [0, 1.15, 1]) * pulse})`,
+          opacity: t3op * glow,
+          boxShadow: `0 0 40px ${C.gold}, 0 0 80px ${C.gold}88, 0 0 120px ${C.gold}44`,
+          display: "inline-block",
+        }}>¡GENERAR HOY! 🚀</div>
       </div>
     </AbsoluteFill>
   );
 };
 
-// ─── Root composition ─────────────────────────────────────────────────────────
+// ─── Root ─────────────────────────────────────────────────────────────────────
 export const EmotionGraphicVideo: React.FC = () => {
   const frame = useCurrentFrame();
-  const scanY = (frame * 4) % 1920;
+  const scanY = (frame * 5) % 1920;
 
   const dots = [
-    { x: "8%",  y: "12%", size: 10, color: C.blue,   offset: 0 },
+    { x: "8%",  y: "12%", size: 10, color: C.blue,   offset: 0  },
     { x: "88%", y: "8%",  size: 7,  color: C.pink,   offset: 30 },
     { x: "15%", y: "65%", size: 12, color: C.purple,  offset: 15 },
     { x: "80%", y: "70%", size: 8,  color: C.gold,   offset: 45 },
@@ -498,66 +400,43 @@ export const EmotionGraphicVideo: React.FC = () => {
     { x: "92%", y: "45%", size: 9,  color: C.pink,   offset: 60 },
     { x: "5%",  y: "85%", size: 7,  color: C.purple,  offset: 10 },
     { x: "55%", y: "95%", size: 11, color: C.gold,   offset: 50 },
+    { x: "25%", y: "30%", size: 5,  color: C.green,  offset: 35 },
+    { x: "70%", y: "25%", size: 8,  color: C.green,  offset: 25 },
+    { x: "40%", y: "80%", size: 6,  color: C.blue,   offset: 55 },
+    { x: "75%", y: "90%", size: 9,  color: C.pink,   offset: 40 },
   ];
 
   return (
     <AbsoluteFill style={{ backgroundColor: C.bg, overflow: "hidden" }}>
-      {/* Deep background gradient */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: `radial-gradient(ellipse at 50% 0%, #1a0035 0%, #0a001a 40%, ${C.bg} 70%)`,
-        }}
-      />
+      <Audio src={staticFile("audio.mp3")} />
 
-      {/* Tech grid */}
+      <div style={{
+        position: "absolute", inset: 0,
+        background: `radial-gradient(ellipse at 50% 0%, #1a0035 0%, #0a001a 40%, ${C.bg} 70%)`,
+      }} />
+
       <Grid />
 
-      {/* Moving scanline */}
-      <div
-        style={{
-          position: "absolute",
-          top: scanY,
-          left: 0,
-          width: "100%",
-          height: 3,
-          background: `linear-gradient(transparent, ${C.blue}44, transparent)`,
-          pointerEvents: "none",
-        }}
-      />
+      <div style={{
+        position: "absolute", top: scanY, left: 0, width: "100%", height: 3,
+        background: `linear-gradient(transparent, ${C.blue}55, transparent)`,
+        pointerEvents: "none",
+      }} />
 
-      {/* Corner HUD brackets */}
-      <div style={{ position: "absolute", top: 50, left: 50, width: 70, height: 70, borderTop: `3px solid ${C.blue}`, borderLeft: `3px solid ${C.blue}` }} />
-      <div style={{ position: "absolute", top: 50, right: 50, width: 70, height: 70, borderTop: `3px solid ${C.pink}`, borderRight: `3px solid ${C.pink}` }} />
-      <div style={{ position: "absolute", bottom: 50, left: 50, width: 70, height: 70, borderBottom: `3px solid ${C.purple}`, borderLeft: `3px solid ${C.purple}` }} />
-      <div style={{ position: "absolute", bottom: 50, right: 50, width: 70, height: 70, borderBottom: `3px solid ${C.gold}`, borderRight: `3px solid ${C.gold}` }} />
+      <div style={{ position: "absolute", top: 50, left: 50, width: 70, height: 70, borderTop: `3px solid ${C.blue}`, borderLeft: `3px solid ${C.blue}`, boxShadow: `0 0 15px ${C.blue}` }} />
+      <div style={{ position: "absolute", top: 50, right: 50, width: 70, height: 70, borderTop: `3px solid ${C.pink}`, borderRight: `3px solid ${C.pink}`, boxShadow: `0 0 15px ${C.pink}` }} />
+      <div style={{ position: "absolute", bottom: 50, left: 50, width: 70, height: 70, borderBottom: `3px solid ${C.purple}`, borderLeft: `3px solid ${C.purple}`, boxShadow: `0 0 15px ${C.purple}` }} />
+      <div style={{ position: "absolute", bottom: 50, right: 50, width: 70, height: 70, borderBottom: `3px solid ${C.gold}`, borderRight: `3px solid ${C.gold}`, boxShadow: `0 0 15px ${C.gold}` }} />
 
-      {/* Floating glow particles */}
-      {dots.map((d, i) => (
-        <Dot key={i} {...d} />
-      ))}
+      {dots.map((d, i) => <Dot key={i} {...d} />)}
 
-      {/* ── Scenes ── */}
-      <Sequence from={T.s1} durationInFrames={T.s2 - T.s1}>
-        <S1 />
-      </Sequence>
+      <FlashTransition triggerFrames={[T.s2, T.s3, T.s4, T.s5]} />
 
-      <Sequence from={T.s2} durationInFrames={T.s3 - T.s2}>
-        <S2 />
-      </Sequence>
-
-      <Sequence from={T.s3} durationInFrames={T.s4 - T.s3}>
-        <S3 />
-      </Sequence>
-
-      <Sequence from={T.s4} durationInFrames={T.s5 - T.s4}>
-        <S4 />
-      </Sequence>
-
-      <Sequence from={T.s5} durationInFrames={T.end - T.s5}>
-        <S5 />
-      </Sequence>
+      <Sequence from={T.s1} durationInFrames={T.s2 - T.s1}><S1 /></Sequence>
+      <Sequence from={T.s2} durationInFrames={T.s3 - T.s2}><S2 /></Sequence>
+      <Sequence from={T.s3} durationInFrames={T.s4 - T.s3}><S3 /></Sequence>
+      <Sequence from={T.s4} durationInFrames={T.s5 - T.s4}><S4 /></Sequence>
+      <Sequence from={T.s5} durationInFrames={T.end - T.s5}><S5 /></Sequence>
     </AbsoluteFill>
   );
 };
