@@ -1,0 +1,19 @@
+{
+  "searchStringsArray": [
+    "salones de belleza en CDMX",
+    "barberías en CDMX",
+    "dentistas en CDMX",
+    "gimnasios en CDMX",
+    "talleres mecánicos en CDMX",
+    "veterinarias en CDMX",
+    "consultorios médicos en CDMX",
+    "estéticas en CDMX"
+  ],
+  "maxCrawledPlacesPerSearch": 7,
+  "language": "es",
+  "countryCode": "mx",
+  "scrapeContacts": true,
+  "scrapeReviewsPersonalData": false,
+  "skipClosedPlaces": true,
+  "website": "withoutWebsite"
+}
