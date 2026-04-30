@@ -3,7 +3,7 @@ const WHATSAPP_MESSAGE = "Hola Kenia, quiero agendar una cita";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
   WHATSAPP_MESSAGE
 )}`;
-const INSTAGRAM_URL = "https://www.instagram.com/keniacarpio/";
+const INSTAGRAM_URL = "https://www.instagram.com/saldelhueco/";
 
 export default function Contacto() {
   return (
@@ -66,7 +66,7 @@ export default function Contacto() {
             </div>
             <h3 className="heading-serif text-2xl text-crema mb-2">Instagram</h3>
             <p className="text-sm text-crema/70 mb-4">
-              @keniacarpio — Sigue mis lecturas, episodios y reflexiones diarias.
+              @saldelhueco — Lecturas, rituales, contenido real y sin filtros.
             </p>
             <span className="inline-flex items-center gap-2 text-sm font-medium text-oro group-hover:gap-3 transition-all">
               Ver perfil <span>→</span>

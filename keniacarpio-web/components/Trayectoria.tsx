@@ -5,14 +5,14 @@ const highlights = [
     desc: "Más de una década en producciones audiovisuales en Venezuela y Latinoamérica.",
   },
   {
-    role: "Conductora",
-    title: "Sal del Hueco",
-    desc: "Programa propio sobre desarrollo personal, vínculos y transformación.",
+    role: "Locutora · Creadora",
+    title: "Voz y contenido",
+    desc: "Locución, narrativa y creación de contenido. Una voz que escucha y sostiene.",
   },
   {
-    role: "Tarotista",
-    title: "Lecturas individuales y grupales",
-    desc: "Acompañamiento espiritual con tarot a personas en momentos clave.",
+    role: "Psicopedagoga",
+    title: "Acompañar procesos",
+    desc: "Formación en aprendizaje y desarrollo, integrada hoy con tarot y rituales.",
   },
 ];
 
@@ -30,12 +30,13 @@ export default function Trayectoria() {
             Trayectoria
           </p>
           <h2 className="heading-serif text-4xl md:text-5xl">
-            Una vida frente a las <span className="gold-text">cámaras</span>
+            Una <span className="gold-text">voz</span> entrenada en escuchar
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-crema/70">
-            Antes de leer cartas leí guiones. La actuación me enseñó a escuchar,
-            a sostener silencios y a habitar emociones que parecen imposibles.
-            Esa misma sensibilidad acompaña hoy cada lectura.
+            Antes de leer cartas leí guiones. La actuación, la locución y la
+            psicopedagogía me enseñaron a escuchar, a sostener silencios y a
+            habitar emociones que parecen imposibles. Esa misma sensibilidad
+            acompaña hoy cada lectura.
           </p>
         </div>
 

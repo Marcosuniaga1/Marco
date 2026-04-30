@@ -3,7 +3,7 @@ const WHATSAPP_MESSAGE = "Hola Kenia, quiero agendar una cita";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
   WHATSAPP_MESSAGE
 )}`;
-const INSTAGRAM_URL = "https://www.instagram.com/keniacarpio/";
+const INSTAGRAM_URL = "https://www.instagram.com/saldelhueco/";
 
 export default function FloatingButtons() {
   return (
@@ -31,7 +31,7 @@ export default function FloatingButtons() {
         className="group flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-[#feda75] via-[#d62976] to-[#4f5bd5] shadow-lg shadow-[#d62976]/40 transition-all hover:scale-110 hover:shadow-[#d62976]/60"
       >
         <span className="absolute right-full mr-3 hidden whitespace-nowrap rounded-full bg-noche/90 px-3 py-1 text-xs text-crema backdrop-blur-sm group-hover:block border border-oro/20">
-          @keniacarpio
+          @saldelhueco
         </span>
         <svg viewBox="0 0 24 24" className="h-6 w-6 fill-white" aria-hidden>
           <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.336 3.608 1.311.975.975 1.249 2.242 1.311 3.608.058 1.266.069 1.646.069 4.85s-.012 3.584-.07 4.85c-.062 1.366-.336 2.633-1.311 3.608-.975.975-2.242 1.249-3.608 1.311-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.336-3.608-1.311-.975-.975-1.249-2.242-1.311-3.608C2.175 15.747 2.163 15.367 2.163 12s.012-3.584.07-4.85c.062-1.366.336-2.633 1.311-3.608.975-.975 2.242-1.249 3.608-1.311C8.416 2.175 8.796 2.163 12 2.163zm0 1.838c-3.158 0-3.51.012-4.745.068-.974.045-1.504.207-1.857.344-.467.182-.8.399-1.15.749-.35.35-.567.683-.749 1.15-.137.353-.299.883-.344 1.857-.056 1.235-.068 1.587-.068 4.745s.012 3.51.068 4.745c.045.974.207 1.504.344 1.857.182.467.399.8.749 1.15.35.35.683.567 1.15.749.353.137.883.299 1.857.344 1.235.056 1.587.068 4.745.068s3.51-.012 4.745-.068c.974-.045 1.504-.207 1.857-.344.467-.182.8-.399 1.15-.749.35-.35.567-.683.749-1.15.137-.353.299-.883.344-1.857.056-1.235.068-1.587.068-4.745s-.012-3.51-.068-4.745c-.045-.974-.207-1.504-.344-1.857a3.097 3.097 0 00-.749-1.15 3.097 3.097 0 00-1.15-.749c-.353-.137-.883-.299-1.857-.344C15.51 4.013 15.158 4 12 4zm0 3.135a4.865 4.865 0 110 9.73 4.865 4.865 0 010-9.73zm0 8.027a3.162 3.162 0 100-6.324 3.162 3.162 0 000 6.324zm6.406-8.225a1.137 1.137 0 11-2.273 0 1.137 1.137 0 012.273 0z" />

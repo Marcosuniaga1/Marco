@@ -15,23 +15,34 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Kenia Carpio · Tarotista & Actriz",
+  title: "Sal del Hueco · Kenia Carpio · Bien brutal. Bien bruja.",
   description:
-    "Lectura de tarot, guía espiritual y trayectoria actoral. Sesiones presenciales y online. Conducción del programa Sal del Hueco.",
+    "Tarot, oráculos y rituales para autoconocimiento real. Lecturas honestas, kits energéticos coherentes y rituales con intención. No te saco del hueco — te acompaño a que tú salgas.",
   keywords: [
-    "Kenia Carpio",
-    "tarotista",
-    "actriz",
     "Sal del Hueco",
-    "lectura de tarot",
-    "Venezuela",
+    "Kenia Carpio",
+    "tarot",
+    "tarotista",
+    "rituales",
+    "kits energéticos",
+    "espiritualidad consciente",
+    "lectura de tarot Venezuela",
+    "tarot online",
+    "bruja consciente",
   ],
   openGraph: {
-    title: "Kenia Carpio · Tarotista & Actriz",
+    title: "Sal del Hueco · Bien brutal. Bien bruja.",
     description:
-      "Sesiones de tarot, programa Sal del Hueco y trayectoria actoral.",
+      "Tarot, rituales y kits energéticos. Espiritualidad real, sin poses.",
     type: "website",
     locale: "es_VE",
+    siteName: "Sal del Hueco",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sal del Hueco · Bien brutal. Bien bruja.",
+    description:
+      "Tarot, rituales y kits energéticos con Kenia Carpio.",
   },
 };
 
