@@ -14,7 +14,7 @@ export default function Footer() {
         </p>
         <div className="flex gap-4 text-sm text-crema/60">
           <a
-            href="https://www.instagram.com/keniacarpio/"
+            href="https://www.instagram.com/saldelhueco/"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-oro transition-colors"

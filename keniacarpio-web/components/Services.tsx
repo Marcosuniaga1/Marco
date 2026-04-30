@@ -1,27 +1,27 @@
 const services = [
   {
     icon: "✦",
-    title: "Lectura general",
-    desc: "Una visión amplia de tu momento actual: amor, trabajo, salud, propósito. Ideal si sientes que estás en una encrucijada.",
-    duration: "45 min",
-  },
-  {
-    icon: "❤",
-    title: "Tarot del amor",
-    desc: "Claridad sobre tus vínculos: la pareja, lo que se va, lo que llega y los patrones que vale la pena soltar.",
-    duration: "45 min",
+    title: "Lectura de Tarot",
+    desc: "Una lectura honesta. No para que te diga lo que quieres oír — para que te muestre lo que ya sabes y aún no te atreves a aceptar.",
+    tags: ["General", "Amor", "Decisiones", "Espiritual"],
   },
   {
     icon: "☾",
-    title: "Guía espiritual",
-    desc: "Una sesión más profunda para quienes buscan reconectar con su propósito, sanar duelos o tomar decisiones grandes.",
-    duration: "60 min",
+    title: "Mensajes oraculares",
+    desc: "Pregunta concreta, respuesta directa desde los oráculos. Cuando solo necesitas una señal clara para moverte.",
+    tags: ["Express", "Una pregunta"],
   },
   {
-    icon: "✧",
-    title: "Lectura express",
-    desc: "Tres cartas, una pregunta concreta, una respuesta directa. Para cuando solo necesitas un norte rápido.",
-    duration: "20 min",
+    icon: "❋",
+    title: "Kits energéticos",
+    desc: "Limpieza, amor o abundancia. Hechos con intención y coherentes con tu objetivo. No son talismanes en serie — son herramientas.",
+    tags: ["Limpieza", "Amor", "Abundancia"],
+  },
+  {
+    icon: "✺",
+    title: "Rituales personalizados",
+    desc: "Símbolos, fuego y códigos diseñados para tu proceso. Para soltar, abrir camino, cerrar ciclos o invocar lo que viene.",
+    tags: ["A medida", "Por intención"],
   },
 ];
 
@@ -39,15 +39,16 @@ export default function Services() {
             Servicios
           </p>
           <h2 className="heading-serif text-4xl md:text-5xl">
-            Sesiones de <span className="gold-text">tarot</span>
+            Herramientas para{" "}
+            <span className="gold-text">salir del hueco</span>
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-crema/70">
-            Disponibles presencial y online. Cada sesión incluye grabación de
-            audio para que puedas volver a escucharla.
+            Cada servicio nace de la misma esencia: verdad, conciencia y respeto
+            por tu proceso. Sin promesas mágicas. Sin gurús.
           </p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 sm:grid-cols-2">
           {services.map((s) => (
             <article
               key={s.title}
@@ -60,16 +61,23 @@ export default function Services() {
               <p className="mb-4 text-sm leading-relaxed text-crema/70">
                 {s.desc}
               </p>
-              <p className="text-xs uppercase tracking-widest text-oro/80">
-                {s.duration}
-              </p>
+              <div className="flex flex-wrap gap-2">
+                {s.tags.map((t) => (
+                  <span
+                    key={t}
+                    className="rounded-full border border-oro/30 px-3 py-1 text-xs uppercase tracking-wider text-oro/80"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
             </article>
           ))}
         </div>
 
         <div className="mt-12 text-center">
           <a href="#contacto" className="btn-primary">
-            Quiero agendar una cita
+            Quiero agendar una lectura
           </a>
         </div>
       </div>

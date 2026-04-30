@@ -25,14 +25,14 @@ export default function Hero() {
 
       <div className="container-narrow relative z-10 px-6 text-center md:px-12">
         <p className="mb-4 text-sm uppercase tracking-[0.4em] text-oro animate-fade-in-up">
-          Tarotista · Actriz · Conductora
+          Sal del Hueco · Kenia Carpio
         </p>
         <h1 className="heading-serif mb-6 text-5xl font-bold leading-tight md:text-7xl lg:text-8xl animate-fade-in-up" style={{ animationDelay: "0.15s", opacity: 0 }}>
-          Kenia <span className="gold-text">Carpio</span>
+          Bien brutal. <span className="gold-text">Bien bruja.</span>
         </h1>
         <p className="mx-auto mb-10 max-w-2xl text-lg text-crema/80 md:text-xl animate-fade-in-up" style={{ animationDelay: "0.3s", opacity: 0 }}>
-          Guía espiritual a través del tarot. Lecturas que te ayudan a salir del
-          hueco y reconectar con tu propósito.
+          Tarot, oráculos y rituales para autoconocimiento real. Lecturas
+          honestas, sin poses, con humor y verdad emocional.
         </p>
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row animate-fade-in-up" style={{ animationDelay: "0.45s", opacity: 0 }}>
           <a href="#contacto" className="btn-primary">
