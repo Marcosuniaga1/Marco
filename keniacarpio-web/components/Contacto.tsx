@@ -11,7 +11,8 @@ export default function Contacto() {
       id="contacto"
       className="section-padding relative bg-mystic-gradient"
     >
-      <div className="absolute inset-0 starfield opacity-30" />
+      <div className="absolute inset-0 soft-noise opacity-60" />
+      <div className="absolute inset-0 starfield opacity-15" />
 
       <div className="container-narrow relative z-10">
         <div className="mb-12 text-center">

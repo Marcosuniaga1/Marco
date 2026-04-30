@@ -5,26 +5,10 @@ const WHATSAPP_URL = `https://wa.me/584241054059?text=${encodeURIComponent(
 export default function PromoBanner() {
   return (
     <section className="relative overflow-hidden bg-noche px-6 py-20 md:px-12 md:py-24">
-      {/* Decorative background */}
+      {/* Soft layered background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-violeta-deep via-noche to-violeta-deep" />
-        <div className="absolute inset-0 starfield opacity-50" />
-      </div>
-
-      {/* Floating mystic icons */}
-      <div className="pointer-events-none absolute inset-0">
-        <span className="absolute left-[6%] top-[20%] text-7xl text-oro/15 animate-float-slow">
-          🎉
-        </span>
-        <span className="absolute right-[8%] top-[15%] text-6xl text-oro/15 animate-float-slow" style={{ animationDelay: "1s" }}>
-          ✦
-        </span>
-        <span className="absolute left-[10%] bottom-[15%] text-6xl text-oro/15 animate-float-slow" style={{ animationDelay: "2s" }}>
-          ☾
-        </span>
-        <span className="absolute right-[6%] bottom-[20%] text-7xl text-oro/15 animate-float-slow" style={{ animationDelay: "1.5s" }}>
-          ✧
-        </span>
+        <div className="absolute inset-0 bg-gradient-to-br from-violeta-deep via-noche to-teal-deep" />
+        <div className="absolute inset-0 soft-noise opacity-70" />
       </div>
 
       <div className="container-narrow relative z-10">
@@ -46,7 +30,7 @@ export default function PromoBanner() {
             <span className="text-oro font-medium">cumpleaños</span>,{" "}
             <span className="text-oro font-medium">despedidas de soltera</span>{" "}
             y{" "}
-            <span className="text-oro font-medium">reuniones de amigas</span>.
+            <span className="text-oro font-medium">eventos especiales</span>.
             Magia, joda y verdad para que tu encuentro nadie lo olvide.
           </p>
 
@@ -64,9 +48,9 @@ export default function PromoBanner() {
                 d: "Lecturas para la novia y sus amigas — entre risas y profundidad.",
               },
               {
-                icon: "✨",
-                t: "Reuniones",
-                d: "Una noche de amigas con tarot y conversación real.",
+                icon: "🌙",
+                t: "Eventos Especiales",
+                d: "Halloween, celebración lunar, otras efemérides. Magia para fechas que merecen marca.",
               },
             ].map((e) => (
               <div

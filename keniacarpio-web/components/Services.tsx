@@ -31,7 +31,8 @@ export default function Services() {
       id="servicios"
       className="section-padding relative bg-violeta-deep"
     >
-      <div className="absolute inset-0 starfield opacity-20" />
+      <div className="absolute inset-0 starfield opacity-10" />
+      <div className="absolute inset-0 bg-gradient-to-b from-noche/30 via-transparent to-noche/30" />
 
       <div className="container-narrow relative z-10">
         <div className="mb-14 text-center">

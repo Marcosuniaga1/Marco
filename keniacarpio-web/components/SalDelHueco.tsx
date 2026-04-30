@@ -28,8 +28,9 @@ export default function SalDelHueco() {
       id="sal-del-hueco"
       className="relative bg-mystic-gradient overflow-hidden"
     >
-      <div className="absolute inset-0 starfield opacity-40" />
-      <div className="absolute inset-0 bg-gradient-to-b from-noche via-transparent to-noche" />
+      <div className="absolute inset-0 soft-noise opacity-80" />
+      <div className="absolute inset-0 starfield opacity-15" />
+      <div className="absolute inset-0 bg-gradient-to-b from-noche/50 via-transparent to-noche/60" />
 
       <div className="section-padding relative z-10 container-narrow">
         {/* Header */}

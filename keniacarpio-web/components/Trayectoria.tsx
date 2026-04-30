@@ -1,13 +1,13 @@
 const highlights = [
   {
     role: "Actriz",
-    title: "Cine y televisión",
-    desc: "Más de una década en producciones audiovisuales en Venezuela y Latinoamérica.",
+    title: "Cine, Teatro y TV",
+    desc: "Más de una década en producciones audiovisuales y montajes teatrales en Venezuela y Latinoamérica.",
   },
   {
     role: "Locutora · Creadora",
     title: "Voz y contenido",
-    desc: "Locución, narrativa y creación de contenido. Una voz que escucha y sostiene.",
+    desc: "Locución, narrativa y creación de contenido. Impulsa marcas a través de su presencia y su voz.",
   },
   {
     role: "Psicopedagoga",
@@ -16,13 +16,26 @@ const highlights = [
   },
 ];
 
+const featured = {
+  role: "Productora de contenido para marcas",
+  title: "Estrategia + producción audiovisual completa",
+  bullets: [
+    "Diseño de estrategia y plan de impulso para redes sociales.",
+    "Dirección creativa: locación, vestuario, paleta visual, guion.",
+    "Producción técnica: cámara, luces y equipo de rodaje.",
+    "Posproducción: edición y entrega de piezas listas para publicar.",
+  ],
+  note: "No gestiono las cuentas — creo el contenido que las hace crecer.",
+};
+
 export default function Trayectoria() {
   return (
     <section
       id="trayectoria"
-      className="section-padding relative bg-violeta-deep"
+      className="section-padding relative bg-violeta-deep overflow-hidden"
     >
-      <div className="absolute inset-0 starfield opacity-20" />
+      <div className="absolute inset-0 starfield opacity-15" />
+      <div className="absolute inset-0 bg-gradient-to-b from-noche/40 via-transparent to-noche/40" />
 
       <div className="container-narrow relative z-10">
         <div className="mb-14 text-center">
@@ -36,10 +49,42 @@ export default function Trayectoria() {
             Antes de leer cartas leí guiones. La actuación, la locución y la
             psicopedagogía me enseñaron a escuchar, a sostener silencios y a
             habitar emociones que parecen imposibles. Esa misma sensibilidad
-            acompaña hoy cada lectura.
+            acompaña hoy cada lectura — y cada producción.
           </p>
         </div>
 
+        {/* Featured card — Productora de contenido */}
+        <article className="relative mb-10 overflow-hidden rounded-3xl border border-oro/40 bg-noche/60 backdrop-blur p-8 md:p-10">
+          <div className="absolute inset-0 bg-gradient-to-br from-violeta/30 via-transparent to-teal/20" />
+          <div className="relative grid gap-6 md:grid-cols-[1.4fr_1fr] md:items-center">
+            <div>
+              <p className="mb-2 text-xs uppercase tracking-[0.3em] text-oro">
+                {featured.role}
+              </p>
+              <h3 className="heading-serif text-2xl md:text-3xl mb-4 text-crema">
+                {featured.title}
+              </h3>
+              <ul className="space-y-2">
+                {featured.bullets.map((b) => (
+                  <li
+                    key={b}
+                    className="flex items-start gap-3 text-sm text-crema/80 leading-relaxed"
+                  >
+                    <span className="mt-1 text-oro">✦</span>
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <blockquote className="rounded-2xl border border-oro/25 bg-violeta-deep/60 p-6 md:p-7">
+              <p className="font-serif text-lg md:text-xl text-crema italic leading-snug">
+                &ldquo;{featured.note}&rdquo;
+              </p>
+            </blockquote>
+          </div>
+        </article>
+
+        {/* Three role highlights */}
         <div className="grid gap-6 md:grid-cols-3">
           {highlights.map((h) => (
             <article
