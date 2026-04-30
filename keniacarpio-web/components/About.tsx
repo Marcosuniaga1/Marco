@@ -18,8 +18,8 @@ export default function About() {
               className="h-full w-full object-cover"
             />
           </div>
-          <div className="absolute -bottom-6 -right-6 hidden h-32 w-32 rounded-full border border-oro/30 bg-noche/80 backdrop-blur md:flex items-center justify-center">
-            <span className="text-5xl text-oro">☾</span>
+          <div className="absolute -bottom-6 -right-6 hidden h-32 w-32 rounded-full border border-oro/40 bg-gradient-to-br from-oro/20 to-violeta/40 backdrop-blur md:flex items-center justify-center">
+            <span className="font-serif text-2xl gold-text">SDH</span>
           </div>
         </div>
 
