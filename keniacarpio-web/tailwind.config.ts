@@ -14,9 +14,9 @@ const config: Config = {
           light: "#5A3387",
         },
         oro: {
-          DEFAULT: "#D4AF37",
-          light: "#E8C766",
-          dark: "#A8862A",
+          DEFAULT: "#F5DC6A",
+          light: "#FAEAA0",
+          dark: "#D4B843",
         },
         noche: "#0E0A14",
         crema: "#F4ECD8",
@@ -29,7 +29,7 @@ const config: Config = {
         "mystic-gradient":
           "radial-gradient(ellipse at top, #3B1E5E 0%, #1a0d2e 50%, #0E0A14 100%)",
         "gold-shine":
-          "linear-gradient(135deg, #D4AF37 0%, #E8C766 50%, #A8862A 100%)",
+          "linear-gradient(135deg, #F5DC6A 0%, #FAEAA0 50%, #D4B843 100%)",
       },
       animation: {
         "fade-in-up": "fadeInUp 0.8s ease-out forwards",
