@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function About() {
   return (
     <section
@@ -7,10 +9,14 @@ export default function About() {
       <div className="container-narrow grid gap-12 md:grid-cols-2 md:items-start">
         <div className="relative md:sticky md:top-28">
           <div className="aspect-[4/5] w-full overflow-hidden rounded-3xl border border-oro/20 bg-violeta-deep shadow-2xl shadow-violeta/30">
-            {/* TODO: reemplazar por foto real de Kenia con cartas de tarot */}
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-violeta via-violeta-deep to-noche">
-              <span className="text-9xl text-oro/40">✦</span>
-            </div>
+            <Image
+              src="/img/kenia.jpg"
+              alt="Kenia Carpio sosteniendo cartas de tarot"
+              width={800}
+              height={1000}
+              priority
+              className="h-full w-full object-cover"
+            />
           </div>
           <div className="absolute -bottom-6 -right-6 hidden h-32 w-32 rounded-full border border-oro/30 bg-noche/80 backdrop-blur md:flex items-center justify-center">
             <span className="text-5xl text-oro">☾</span>

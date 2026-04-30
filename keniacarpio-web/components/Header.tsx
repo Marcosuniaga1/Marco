@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 const links = [
   { href: "#sobre-mi", label: "Sobre mí" },
@@ -30,9 +31,16 @@ export default function Header() {
     >
       <nav className="container-narrow flex items-center justify-between px-6 py-4 md:px-12">
         <a href="#hero" className="flex items-center gap-2">
-          <span className="text-2xl">✦</span>
-          <span className="font-serif text-xl text-crema">
-            Kenia <span className="gold-text font-semibold">Carpio</span>
+          <Image
+            src="/img/logo.png"
+            alt="Sal del Hueco"
+            width={48}
+            height={48}
+            priority
+            className="h-10 w-10 object-contain"
+          />
+          <span className="font-serif text-lg text-crema sm:text-xl">
+            Sal del <span className="gold-text font-semibold">Hueco</span>
           </span>
         </a>
 
