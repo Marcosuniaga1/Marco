@@ -4,12 +4,19 @@ import { useState, useEffect, useRef } from "react";
 
 const WHATSAPP_NUMBER = "584241054059";
 
+type ContextOption = {
+  label: string;
+  fragment: string;
+};
+
 type Service = {
   id: string;
   label: string;
   icon: string;
   desc: string;
   message: string;
+  contextQuestion?: string;
+  contextOptions?: ContextOption[];
 };
 
 const SERVICES: Service[] = [
@@ -18,35 +25,75 @@ const SERVICES: Service[] = [
     label: "Lectura de Tarot",
     icon: "✦",
     desc: "Lectura honesta sobre tu momento.",
-    message: "Quiero agendar una lectura de Tarot. Cuéntame disponibilidad y precios.",
+    message: "Quiero agendar una lectura de Tarot.",
+    contextQuestion: "¿Qué quieres descubrir especialmente?",
+    contextOptions: [
+      { label: "Mi momento actual y lo que viene", fragment: "Quiero entender mi momento actual y lo que viene." },
+      { label: "Una decisión específica", fragment: "Tengo una decisión específica que necesito clarificar." },
+      { label: "Un patrón que se repite", fragment: "Hay un patrón en mi vida que se repite y quiero entender." },
+      { label: "Cerrar / sanar un ciclo", fragment: "Estoy en un proceso de cerrar o sanar un ciclo." },
+      { label: "Otro tema", fragment: "Tengo otro tema específico para conversar." },
+    ],
   },
   {
     id: "mensaje-oracular",
     label: "Mensaje oracular",
     icon: "☾",
     desc: "Pregunta concreta, respuesta directa.",
-    message: "Quiero un mensaje oracular express. ¿Cómo funciona y cuánto cuesta?",
+    message: "Quiero un mensaje oracular express.",
+    contextQuestion: "¿Sobre qué área es tu pregunta?",
+    contextOptions: [
+      { label: "Amor / vínculos", fragment: "Mi pregunta es sobre amor o vínculos." },
+      { label: "Trabajo / dinero", fragment: "Mi pregunta es sobre trabajo o dinero." },
+      { label: "Familia / hogar", fragment: "Mi pregunta es sobre familia o hogar." },
+      { label: "Espiritual / propósito", fragment: "Mi pregunta es sobre lo espiritual o mi propósito." },
+      { label: "Otra área", fragment: "Mi pregunta es sobre otra área." },
+    ],
   },
   {
     id: "kit-energetico",
     label: "Kit energético",
     icon: "❋",
     desc: "Limpieza, amor o abundancia.",
-    message: "Me interesa un kit energético. ¿Cuáles tienes disponibles y cómo lo enviamos?",
+    message: "Me interesa un kit energético.",
+    contextQuestion: "¿Cuál es tu intención principal?",
+    contextOptions: [
+      { label: "Limpieza energética", fragment: "Quiero un kit de limpieza energética." },
+      { label: "Atraer amor", fragment: "Quiero un kit para atraer amor." },
+      { label: "Abundancia / prosperidad", fragment: "Quiero un kit para abundancia y prosperidad." },
+      { label: "Protección", fragment: "Quiero un kit de protección." },
+      { label: "Otra intención", fragment: "Tengo otra intención específica para el kit." },
+    ],
   },
   {
     id: "ritual",
     label: "Ritual personalizado",
     icon: "✺",
     desc: "Diseñado a tu medida.",
-    message: "Me gustaría un ritual personalizado. ¿Cómo armamos uno para mi caso?",
+    message: "Me gustaría un ritual personalizado.",
+    contextQuestion: "¿Qué proceso estás atravesando?",
+    contextOptions: [
+      { label: "Cerrar un ciclo", fragment: "Necesito cerrar un ciclo." },
+      { label: "Soltar a alguien o algo", fragment: "Necesito soltar a alguien o algo." },
+      { label: "Abrir un camino nuevo", fragment: "Quiero abrir un camino nuevo." },
+      { label: "Sanar una herida", fragment: "Quiero sanar una herida específica." },
+      { label: "Otro proceso", fragment: "Estoy atravesando otro proceso." },
+    ],
   },
   {
     id: "evento",
     label: "Show / Evento",
     icon: "🎉",
-    desc: "Cumpleaños, despedidas, reuniones.",
-    message: "Quiero contratar tarot para un evento. Te cuento detalles para coordinar.",
+    desc: "Cumpleaños, despedidas, eventos especiales.",
+    message: "Quiero contratar tarot para un evento.",
+    contextQuestion: "¿Qué tipo de evento es?",
+    contextOptions: [
+      { label: "Cumpleaños", fragment: "Es un cumpleaños." },
+      { label: "Despedida de soltera", fragment: "Es una despedida de soltera." },
+      { label: "Halloween", fragment: "Es un evento de Halloween." },
+      { label: "Celebración lunar / efeméride", fragment: "Es una celebración lunar o efeméride especial." },
+      { label: "Otro tipo de evento", fragment: "Es otro tipo de evento." },
+    ],
   },
   {
     id: "otro",
@@ -79,12 +126,13 @@ const PAYMENTS = [
   },
 ];
 
-type Step = "intro" | "service" | "name" | "payment" | "handoff";
+type Step = "intro" | "service" | "context" | "name" | "payment" | "handoff";
 
 export default function Chat() {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<Step>("intro");
   const [service, setService] = useState<Service | null>(null);
+  const [context, setContext] = useState<ContextOption | null>(null);
   const [name, setName] = useState("");
   const [unread, setUnread] = useState(true);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -107,6 +155,7 @@ export default function Chat() {
   const reset = () => {
     setStep("intro");
     setService(null);
+    setContext(null);
     setName("");
   };
 
@@ -115,10 +164,22 @@ export default function Chat() {
     setTimeout(reset, 300);
   };
 
+  const pickService = (s: Service) => {
+    setService(s);
+    setContext(null);
+    setStep(s.contextOptions ? "context" : "name");
+  };
+
+  const pickContext = (c: ContextOption) => {
+    setContext(c);
+    setStep("name");
+  };
+
   const buildWhatsappLink = () => {
     const greeting = name ? `Hola Kenia, soy ${name}.` : "Hola Kenia.";
-    const body = service?.message ?? "Quiero más información.";
-    const text = `${greeting} ${body}`;
+    const base = service?.message ?? "Quiero más información.";
+    const ctx = context ? ` ${context.fragment}` : "";
+    const text = `${greeting} ${base}${ctx}`;
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
   };
 
@@ -154,7 +215,7 @@ export default function Chat() {
         >
           <div
             ref={dialogRef}
-            className="relative w-full max-w-md flex flex-col h-[85vh] sm:h-[600px] bg-noche border border-oro/30 sm:rounded-3xl shadow-2xl shadow-violeta/40 animate-fade-in-up"
+            className="relative w-full max-w-md flex flex-col h-[85vh] sm:h-[640px] bg-noche border border-oro/30 sm:rounded-3xl shadow-2xl shadow-violeta/40 animate-fade-in-up"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
@@ -212,10 +273,7 @@ export default function Chat() {
                     {SERVICES.map((s) => (
                       <button
                         key={s.id}
-                        onClick={() => {
-                          setService(s);
-                          setStep("name");
-                        }}
+                        onClick={() => pickService(s)}
                         className="rounded-2xl border border-oro/25 bg-violeta-deep/40 p-3 text-left transition-all hover:border-oro/60 hover:bg-violeta-deep/70"
                       >
                         <span className="text-2xl block mb-1">{s.icon}</span>
@@ -231,11 +289,39 @@ export default function Chat() {
                 </>
               )}
 
+              {/* CONTEXT (per-service follow-up) */}
+              {step === "context" && service?.contextOptions && (
+                <>
+                  <Bubble>
+                    Genial — <span className="text-oro">{service.label}</span>.
+                  </Bubble>
+                  <Bubble delay={300}>{service.contextQuestion}</Bubble>
+                  <div className="space-y-2 pt-2">
+                    {service.contextOptions.map((opt) => (
+                      <button
+                        key={opt.label}
+                        onClick={() => pickContext(opt)}
+                        className="w-full rounded-2xl border border-oro/25 bg-violeta-deep/40 p-3 text-left transition-all hover:border-oro/60 hover:bg-violeta-deep/70"
+                      >
+                        <p className="text-sm text-crema">{opt.label}</p>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="pt-2">
+                    <button
+                      onClick={() => setStep("service")}
+                      className="btn-outline w-full text-sm"
+                    >
+                      ← Cambiar servicio
+                    </button>
+                  </div>
+                </>
+              )}
+
               {/* NAME */}
               {step === "name" && service && (
                 <>
                   <Bubble>
-                    Genial — <span className="text-oro">{service.label}</span>.{" "}
                     Para personalizar el mensaje, ¿cómo te llamas?
                   </Bubble>
                   <div className="pt-2">
@@ -251,7 +337,9 @@ export default function Chat() {
                     />
                     <div className="mt-3 flex gap-2">
                       <button
-                        onClick={() => setStep("service")}
+                        onClick={() =>
+                          setStep(service.contextOptions ? "context" : "service")
+                        }
                         className="btn-outline flex-1 text-sm"
                       >
                         ← Atrás
@@ -326,7 +414,13 @@ export default function Chat() {
                     <span className="text-oro">{service.label.toLowerCase()}</span>{" "}
                     por WhatsApp — ahí te respondo personalmente.
                   </Bubble>
-                  <Bubble delay={300}>
+                  {context && (
+                    <Bubble delay={200}>
+                      Le adelanté a Kenia que te interesa especialmente:{" "}
+                      <span className="text-oro">{context.label.toLowerCase()}</span>.
+                    </Bubble>
+                  )}
+                  <Bubble delay={500}>
                     Voy a abrir WhatsApp con un mensaje precargado. Solo dale{" "}
                     <span className="text-oro">enviar</span>.
                   </Bubble>
@@ -354,7 +448,7 @@ export default function Chat() {
             {/* Footer */}
             <footer className="border-t border-oro/15 bg-noche/80 px-5 py-3">
               <p className="text-[10px] text-center text-crema/50 uppercase tracking-widest">
-                Sal del Hueco · Bien brutal. Bien bruja.
+                Sal del Hueco · Bien brutal, bien bruja
               </p>
             </footer>
           </div>

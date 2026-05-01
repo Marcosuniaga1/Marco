@@ -42,7 +42,7 @@ export default function SalDelHueco() {
             Sal del <span className="gold-text">Hueco</span>
           </h2>
           <p className="font-serif text-xl md:text-2xl text-crema italic">
-            Bien brutal. <span className="gold-text">Bien bruja.</span>
+            Bien brutal, <span className="gold-text">bien bruja</span>
           </p>
         </div>
 
