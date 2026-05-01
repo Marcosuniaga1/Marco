@@ -20,7 +20,7 @@ export default function Hero() {
         {/* Logo as the main title */}
         <div className="mb-8 flex justify-center animate-fade-in-up" style={{ animationDelay: "0.15s", opacity: 0 }}>
           <Image
-            src="/img/logo.png"
+            src="/img/logo.PNG"
             alt="Sal del Hueco"
             width={520}
             height={520}
