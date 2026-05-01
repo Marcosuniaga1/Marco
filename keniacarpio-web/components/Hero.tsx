@@ -4,7 +4,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-mystic-gradient"
+      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-mystic-gradient pt-24 pb-16 md:pt-32 md:pb-20 lg:pt-36"
     >
       {/* Soft layered glow — no stars, no moons */}
       <div className="absolute inset-0 soft-noise opacity-90" />

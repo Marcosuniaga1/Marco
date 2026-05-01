@@ -189,7 +189,7 @@ export default function Chat() {
       <button
         onClick={openChat}
         aria-label="Abrir chat"
-        className="group fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-gold-shine shadow-lg shadow-oro/40 transition-all hover:scale-110 hover:shadow-oro/60 sm:bottom-[12.5rem]"
+        className="group fixed bottom-44 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-gold-shine shadow-lg shadow-oro/40 transition-all hover:scale-110 hover:shadow-oro/60"
         style={{ display: open ? "none" : "flex" }}
       >
         <svg
