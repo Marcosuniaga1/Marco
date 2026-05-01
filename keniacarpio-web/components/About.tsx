@@ -10,7 +10,7 @@ export default function About() {
         <div className="relative md:sticky md:top-28">
           <div className="aspect-[4/5] w-full overflow-hidden rounded-3xl border border-oro/20 bg-violeta-deep shadow-2xl shadow-violeta/30">
             <Image
-              src="/img/kenia.jpg"
+              src="/img/kenia.jpeg"
               alt="Kenia Carpio sosteniendo cartas de tarot"
               width={800}
               height={1000}
