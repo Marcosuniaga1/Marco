@@ -32,12 +32,12 @@ export default function Header() {
       <nav className="container-narrow flex items-center justify-between px-6 py-4 md:px-12">
         <a href="#hero" className="flex items-center gap-2">
           <Image
-            src="/img/logo.PNG"
+            src="/img/logo2_transparent.png"
             alt="Sal del Hueco"
-            width={48}
-            height={48}
+            width={120}
+            height={90}
             priority
-            className="h-10 w-10 object-contain"
+            className="h-10 w-auto object-contain"
           />
           <span className="font-serif text-lg text-crema sm:text-xl">
             Sal del <span className="gold-text font-semibold">Hueco</span>

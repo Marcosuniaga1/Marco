@@ -1,15 +1,36 @@
+const featured = {
+  title: "Lectura general",
+  subtitle: "Amor, dinero, energía, salud y espiritualidad",
+  desc:
+    "Sesión completa de preguntas y respuestas. Combino oráculo de Los Ángeles, péndulo y carta astral en PDF — o ritual en PDF — para darte una lectura profunda y útil.",
+  duration: "1h30",
+  formats: [
+    "1 pregunta",
+    "3 preguntas",
+    "5 preguntas",
+    "Lectura en pareja (1h30)",
+    "Carta astral",
+  ],
+};
+
 const services = [
   {
     icon: "✦",
     title: "Lectura de Tarot",
-    desc: "Una lectura honesta. No para que te diga lo que quieres oír — para que te muestre lo que ya sabes y aún no te atreves a aceptar.",
+    desc: "Lectura honesta sobre tu momento. No para que te diga lo que quieres oír — para que te muestre lo que ya sabes y aún no te atreves a aceptar.",
     tags: ["General", "Amor", "Decisiones", "Espiritual"],
   },
   {
     icon: "☾",
-    title: "Mensajes oraculares",
-    desc: "Pregunta concreta, respuesta directa desde los oráculos. Cuando solo necesitas una señal clara para moverte.",
+    title: "Mensajes del oráculo",
+    desc: "Respuesta directa desde los oráculos. Cuando solo necesitas una señal clara para moverte.",
     tags: ["Express", "Una pregunta"],
+  },
+  {
+    icon: "🪡",
+    title: "Péndulo",
+    desc: "Respuestas concretas de sí o no. Para decisiones puntuales que necesitan claridad inmediata.",
+    tags: ["Sí / No", "Express"],
   },
   {
     icon: "❋",
@@ -31,7 +52,7 @@ export default function Services() {
       id="servicios"
       className="section-padding relative bg-violeta-deep"
     >
-      <div className="absolute inset-0 starfield opacity-10" />
+      <div className="absolute inset-0 starfield opacity-25" />
       <div className="absolute inset-0 bg-gradient-to-b from-noche/30 via-transparent to-noche/30" />
 
       <div className="container-narrow relative z-10">
@@ -49,7 +70,52 @@ export default function Services() {
           </p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2">
+        {/* Featured — Lectura general */}
+        <article className="relative mb-10 overflow-hidden rounded-3xl border border-oro/40 bg-noche/60 backdrop-blur p-8 md:p-10">
+          <div className="absolute inset-0 bg-gradient-to-br from-violeta/30 via-transparent to-teal/20" />
+          <div className="relative grid gap-8 md:grid-cols-[1.3fr_1fr] md:items-center">
+            <div>
+              <p className="mb-2 text-xs uppercase tracking-[0.4em] text-oro">
+                Servicio principal
+              </p>
+              <h3 className="heading-serif text-3xl md:text-4xl mb-2 text-crema">
+                {featured.title}
+              </h3>
+              <p className="text-oro/90 italic mb-4">{featured.subtitle}</p>
+              <p className="text-crema/80 leading-relaxed mb-4">
+                {featured.desc}
+              </p>
+              <p className="text-xs uppercase tracking-widest text-oro">
+                Duración base · {featured.duration}
+              </p>
+            </div>
+            <div className="rounded-2xl border border-oro/25 bg-violeta-deep/60 p-6">
+              <p className="mb-4 text-xs uppercase tracking-[0.3em] text-oro/80">
+                Formatos disponibles
+              </p>
+              <ul className="space-y-3">
+                {featured.formats.map((f) => (
+                  <li
+                    key={f}
+                    className="flex items-start gap-3 text-sm text-crema"
+                  >
+                    <span className="mt-0.5 text-oro">✦</span>
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+              <a
+                href="#contacto"
+                className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-oro hover:gap-3 transition-all"
+              >
+                Reservar tu lectura <span>→</span>
+              </a>
+            </div>
+          </div>
+        </article>
+
+        {/* Other services */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((s) => (
             <article
               key={s.title}

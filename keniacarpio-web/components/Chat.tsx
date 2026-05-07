@@ -21,9 +21,24 @@ type Service = {
 
 const SERVICES: Service[] = [
   {
+    id: "lectura-general",
+    label: "Lectura general",
+    icon: "✦",
+    desc: "Sesión completa con varios oráculos (1h30).",
+    message: "Quiero agendar una lectura general (1h30).",
+    contextQuestion: "¿Qué formato prefieres?",
+    contextOptions: [
+      { label: "1 pregunta", fragment: "Me interesa el formato de 1 pregunta." },
+      { label: "3 preguntas", fragment: "Me interesa el formato de 3 preguntas." },
+      { label: "5 preguntas", fragment: "Me interesa el formato de 5 preguntas." },
+      { label: "Lectura en pareja (1h30)", fragment: "Me interesa una lectura en pareja (1h30)." },
+      { label: "Carta astral", fragment: "Me interesa una carta astral." },
+    ],
+  },
+  {
     id: "lectura-tarot",
     label: "Lectura de Tarot",
-    icon: "✦",
+    icon: "✧",
     desc: "Lectura honesta sobre tu momento.",
     message: "Quiero agendar una lectura de Tarot.",
     contextQuestion: "¿Qué quieres descubrir especialmente?",
@@ -37,10 +52,10 @@ const SERVICES: Service[] = [
   },
   {
     id: "mensaje-oracular",
-    label: "Mensaje oracular",
+    label: "Mensajes del oráculo",
     icon: "☾",
-    desc: "Pregunta concreta, respuesta directa.",
-    message: "Quiero un mensaje oracular express.",
+    desc: "Respuesta directa desde los oráculos.",
+    message: "Quiero un mensaje del oráculo.",
     contextQuestion: "¿Sobre qué área es tu pregunta?",
     contextOptions: [
       { label: "Amor / vínculos", fragment: "Mi pregunta es sobre amor o vínculos." },
@@ -48,6 +63,19 @@ const SERVICES: Service[] = [
       { label: "Familia / hogar", fragment: "Mi pregunta es sobre familia o hogar." },
       { label: "Espiritual / propósito", fragment: "Mi pregunta es sobre lo espiritual o mi propósito." },
       { label: "Otra área", fragment: "Mi pregunta es sobre otra área." },
+    ],
+  },
+  {
+    id: "pendulo",
+    label: "Péndulo",
+    icon: "🪡",
+    desc: "Respuestas concretas de sí o no.",
+    message: "Quiero una sesión con péndulo.",
+    contextQuestion: "¿Cuántas preguntas quieres hacer?",
+    contextOptions: [
+      { label: "1 pregunta puntual", fragment: "Tengo 1 pregunta puntual de sí o no." },
+      { label: "Varias preguntas", fragment: "Tengo varias preguntas de sí o no." },
+      { label: "Aún no estoy segura", fragment: "Aún no estoy segura del número, te lo cuento." },
     ],
   },
   {

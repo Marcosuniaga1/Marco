@@ -15,34 +15,39 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Sal del Hueco · Kenia Carpio · Bien brutal. Bien bruja.",
+  title: "Kenia Carpio · Sal del Hueco · Tarotista en Caracas, Venezuela",
   description:
-    "Tarot, oráculos y rituales para autoconocimiento real. Lecturas honestas, kits energéticos coherentes y rituales con intención. No te saco del hueco — te acompaño a que tú salgas.",
+    "Tarotista en Caracas, Venezuela. Kenia Carpio - SAL DEL HUECO. Lectura de tarot sin filtro, real y sin poses. Online y presencial.",
   keywords: [
-    "Sal del Hueco",
+    "tarotista Caracas",
+    "tarotista Venezuela",
     "Kenia Carpio",
-    "tarot",
-    "tarotista",
+    "Sal del Hueco",
+    "lectura de tarot",
+    "tarot online",
+    "tarot presencial",
+    "lectura de tarot Caracas",
     "rituales",
     "kits energéticos",
+    "carta astral",
+    "péndulo",
+    "oráculo de los ángeles",
     "espiritualidad consciente",
-    "lectura de tarot Venezuela",
-    "tarot online",
     "bruja consciente",
   ],
   openGraph: {
-    title: "Sal del Hueco · Bien brutal. Bien bruja.",
+    title: "Kenia Carpio · Sal del Hueco · Tarotista en Caracas, Venezuela",
     description:
-      "Tarot, rituales y kits energéticos. Espiritualidad real, sin poses.",
+      "Lectura de tarot sin filtro, real y sin poses. Online y presencial. Tarot, oráculos y rituales con Kenia Carpio.",
     type: "website",
     locale: "es_VE",
     siteName: "Sal del Hueco",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sal del Hueco · Bien brutal. Bien bruja.",
+    title: "Kenia Carpio · Sal del Hueco · Tarotista en Caracas",
     description:
-      "Tarot, rituales y kits energéticos con Kenia Carpio.",
+      "Lectura de tarot sin filtro, real y sin poses. Online y presencial.",
   },
 };
 
