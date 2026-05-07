@@ -143,13 +143,13 @@ const PAYMENTS = [
   {
     id: "pago-movil",
     label: "Pago Móvil",
-    logo: "/img/payments/pago-movil.png",
+    logo: "/img/payments/pago movil.png",
     note: "Venezuela · Bs",
   },
   {
     id: "western",
     label: "Western Union",
-    logo: "/img/payments/western-union.png",
+    logo: "/img/payments/western.png",
     note: "Internacional",
   },
 ];
