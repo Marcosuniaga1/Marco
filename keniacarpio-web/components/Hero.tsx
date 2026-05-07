@@ -26,12 +26,12 @@ export default function Hero() {
           style={{ opacity: 0, animationDelay: "0.2s" }}
         >
           <Image
-            src="/img/logo2_transparent.png"
+            src="/img/logo.PNG"
             alt="Sal del Hueco — Kenia Carpio, tarotista en Caracas"
             width={720}
             height={540}
             priority
-            className="h-auto w-72 md:w-[26rem] lg:w-[32rem] mix-blend-screen"
+            className="h-auto w-72 md:w-[26rem] lg:w-[32rem]"
           />
         </div>
 
