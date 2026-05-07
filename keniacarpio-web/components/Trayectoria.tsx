@@ -10,6 +10,11 @@ const highlights = [
     desc: "Locución, narrativa y creación de contenido. Impulsa marcas a través de su presencia y su voz.",
   },
   {
+    role: "Imagen de marca",
+    title: "Identidad visual y verbal",
+    desc: "Responsable de la creación de identidad visual y verbal de tu marca, impulsándola con un mensaje claro, creativo y de buen gusto.",
+  },
+  {
     role: "Psicopedagoga",
     title: "Acompañar procesos",
     desc: "Formación en aprendizaje y desarrollo, integrada hoy con tarot y rituales.",
@@ -34,7 +39,7 @@ export default function Trayectoria() {
       id="trayectoria"
       className="section-padding relative bg-violeta-deep overflow-hidden"
     >
-      <div className="absolute inset-0 starfield opacity-15" />
+      <div className="absolute inset-0 starfield opacity-25" />
       <div className="absolute inset-0 bg-gradient-to-b from-noche/40 via-transparent to-noche/40" />
 
       <div className="container-narrow relative z-10">
@@ -84,8 +89,8 @@ export default function Trayectoria() {
           </div>
         </article>
 
-        {/* Three role highlights */}
-        <div className="grid gap-6 md:grid-cols-3">
+        {/* Role highlights */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {highlights.map((h) => (
             <article
               key={h.title}
