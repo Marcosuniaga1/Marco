@@ -31,7 +31,7 @@ export default function Hero() {
             width={720}
             height={540}
             priority
-            className="h-auto w-72 md:w-[26rem] lg:w-[32rem]"
+            className="h-auto w-72 md:w-[26rem] lg:w-[32rem] mix-blend-screen"
           />
         </div>
 
