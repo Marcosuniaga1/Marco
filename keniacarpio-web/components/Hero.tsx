@@ -12,10 +12,18 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-noche/80" />
 
       <div className="container-narrow relative z-10 px-6 text-center md:px-12">
-        {/* Logo as visual anchor — bigger */}
+        {/* Main title — Kenia Carpio first, big */}
+        <h1
+          className="heading-serif mb-6 text-5xl font-bold leading-tight md:text-7xl lg:text-8xl animate-fade-in-up"
+          style={{ animationDelay: "0.05s", opacity: 0 }}
+        >
+          Kenia <span className="gold-text">Carpio</span>
+        </h1>
+
+        {/* Logo as second visual */}
         <div
           className="mb-6 flex justify-center animate-fade-in-up"
-          style={{ opacity: 0, animationDelay: "0.05s" }}
+          style={{ opacity: 0, animationDelay: "0.2s" }}
         >
           <Image
             src="/img/logo2_transparent.png"
@@ -23,17 +31,9 @@ export default function Hero() {
             width={720}
             height={540}
             priority
-            className="h-auto w-80 md:w-[28rem] lg:w-[34rem] drop-shadow-[0_0_50px_rgba(245,220,106,0.3)]"
+            className="h-auto w-72 md:w-[26rem] lg:w-[32rem] drop-shadow-[0_0_50px_rgba(245,220,106,0.3)]"
           />
         </div>
-
-        {/* Main title — Kenia Carpio, big */}
-        <h1
-          className="heading-serif mb-3 text-5xl font-bold leading-tight md:text-7xl lg:text-8xl animate-fade-in-up"
-          style={{ animationDelay: "0.2s", opacity: 0 }}
-        >
-          Kenia <span className="gold-text">Carpio</span>
-        </h1>
 
         {/* Sub-header smaller */}
         <p
@@ -51,7 +51,7 @@ export default function Hero() {
           Tarotista · Caracas, Venezuela
         </p>
 
-        {/* Description — keeps SEO copy visible */}
+        {/* Description */}
         <p
           className="mx-auto mb-10 max-w-2xl text-base text-crema/85 md:text-lg animate-fade-in-up"
           style={{ animationDelay: "0.55s", opacity: 0 }}
