@@ -32,7 +32,7 @@ export default function Header() {
       <nav className="container-narrow flex items-center justify-between px-6 py-4 md:px-12">
         <a href="#hero" className="flex items-center gap-2">
           <Image
-            src="/img/logo.PNG"
+            src="/img/logo2_transparent.png"
             alt="Sal del Hueco"
             width={120}
             height={90}
