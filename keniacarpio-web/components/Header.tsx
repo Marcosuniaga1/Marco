@@ -37,7 +37,7 @@ export default function Header() {
             width={120}
             height={90}
             priority
-            className="h-10 w-auto object-contain"
+            className="h-10 w-auto object-contain mix-blend-screen"
           />
           <span className="font-serif text-lg text-crema sm:text-xl">
             Sal del <span className="gold-text font-semibold">Hueco</span>
