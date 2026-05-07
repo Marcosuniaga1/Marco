@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 
 const WHATSAPP_NUMBER = "584241054059";
 
@@ -132,24 +133,23 @@ const SERVICES: Service[] = [
   },
 ];
 
-// TODO: reemplazar con datos reales de pago de Kenia
 const PAYMENTS = [
   {
     id: "zelle",
     label: "Zelle",
-    detail: "Email: pendiente_de_completar@email.com",
+    logo: "/img/payments/zelle.png",
     note: "Internacional · USD",
   },
   {
     id: "pago-movil",
     label: "Pago Móvil",
-    detail: "Banco · Cédula · Teléfono (pendiente)",
+    logo: "/img/payments/pago-movil.png",
     note: "Venezuela · Bs",
   },
   {
     id: "western",
     label: "Western Union",
-    detail: "Beneficiario y país (pendiente)",
+    logo: "/img/payments/western-union.png",
     note: "Internacional",
   },
 ];
@@ -203,11 +203,12 @@ export default function Chat() {
     setStep("name");
   };
 
-  const buildWhatsappLink = () => {
+  const buildWhatsappLink = (paymentLabel?: string) => {
     const greeting = name ? `Hola Kenia, soy ${name}.` : "Hola Kenia.";
     const base = service?.message ?? "Quiero más información.";
     const ctx = context ? ` ${context.fragment}` : "";
-    const text = `${greeting} ${base}${ctx}`;
+    const pay = paymentLabel ? ` Voy a pagar por ${paymentLabel}.` : "";
+    const text = `${greeting} ${base}${ctx}${pay}`;
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
   };
 
@@ -387,35 +388,46 @@ export default function Chat() {
               {step === "payment" && (
                 <>
                   <Bubble>
-                    Antes de coordinar por WhatsApp, te dejo los métodos de pago
-                    disponibles para que tengas la info a mano:
+                    ¿Cómo prefieres pagar? Elige el método y te abro WhatsApp
+                    con todo coordinado.
                   </Bubble>
                   <div className="space-y-2 pt-2">
                     {PAYMENTS.map((p) => (
-                      <div
+                      <a
                         key={p.id}
-                        className="rounded-2xl border border-oro/25 bg-violeta-deep/40 p-4"
+                        href={buildWhatsappLink(p.label)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setTimeout(close, 600)}
+                        className="group flex items-center gap-4 rounded-2xl border border-oro/25 bg-violeta-deep/40 p-4 transition-all hover:-translate-y-0.5 hover:border-oro/60 hover:bg-violeta-deep/70"
                       >
-                        <div className="flex items-center justify-between mb-1">
-                          <p className="font-serif text-crema text-base">
+                        <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-crema/95 p-2">
+                          <Image
+                            src={p.logo}
+                            alt={p.label}
+                            width={56}
+                            height={56}
+                            className="h-full w-full object-contain"
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-serif text-crema text-base leading-tight">
                             {p.label}
                           </p>
-                          <span className="text-[10px] uppercase tracking-widest text-oro/70">
+                          <p className="text-[10px] uppercase tracking-widest text-oro/70 mt-0.5">
                             {p.note}
-                          </span>
+                          </p>
                         </div>
-                        <p className="text-xs text-crema/70 leading-relaxed">
-                          {p.detail}
-                        </p>
-                      </div>
+                        <span className="text-oro/70 group-hover:text-oro transition-colors text-lg">
+                          →
+                        </span>
+                      </a>
                     ))}
                   </div>
                   <Bubble delay={400}>
-                    <span className="text-oro">
-                      No pagues nada todavía
-                    </span>
-                    . Coordinamos primero por WhatsApp y ahí confirmamos el
-                    monto exacto según tu servicio.
+                    <span className="text-oro">No pagues nada todavía</span>.
+                    Al hacer clic en un método te llevo a WhatsApp para
+                    confirmar el monto exacto según tu servicio.
                   </Bubble>
                   <div className="pt-2 flex gap-2">
                     <button
@@ -428,7 +440,7 @@ export default function Chat() {
                       onClick={() => setStep("handoff")}
                       className="btn-primary flex-1 text-sm"
                     >
-                      Continuar →
+                      Saltar y solo escribir →
                     </button>
                   </div>
                 </>

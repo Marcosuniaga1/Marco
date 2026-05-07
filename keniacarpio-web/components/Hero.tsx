@@ -31,7 +31,7 @@ export default function Hero() {
             width={720}
             height={540}
             priority
-            className="h-auto w-72 md:w-[26rem] lg:w-[32rem] drop-shadow-[0_0_50px_rgba(245,220,106,0.3)]"
+            className="h-auto w-72 md:w-[26rem] lg:w-[32rem]"
           />
         </div>
 
