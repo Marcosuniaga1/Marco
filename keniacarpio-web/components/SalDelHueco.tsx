@@ -30,6 +30,12 @@ export default function SalDelHueco() {
     >
       <div className="absolute inset-0 soft-noise opacity-80" />
       <div className="absolute inset-0 starfield opacity-30" />
+      {/* Subtle floating moons */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <span className="absolute left-[6%] top-[14%] text-3xl text-oro/12 animate-float-slow select-none" aria-hidden>☾</span>
+        <span className="absolute right-[7%] top-[40%] text-2xl text-oro/10 animate-float-slow select-none" style={{ animationDelay: "1.5s" }} aria-hidden>☽</span>
+        <span className="absolute left-[10%] bottom-[18%] text-3xl text-oro/12 animate-float-slow select-none" style={{ animationDelay: "0.8s" }} aria-hidden>☾</span>
+      </div>
       <div className="absolute inset-0 bg-gradient-to-b from-noche/50 via-transparent to-noche/60" />
 
       <div className="section-padding relative z-10 container-narrow">

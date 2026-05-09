@@ -1,4 +1,5 @@
 import Image from "next/image";
+import FloatingMoons from "./FloatingMoons";
 
 export default function Hero() {
   return (
@@ -8,7 +9,8 @@ export default function Hero() {
     >
       {/* Soft layered glow + subtle starfield */}
       <div className="absolute inset-0 soft-noise opacity-90" />
-      <div className="absolute inset-0 starfield opacity-50" />
+      <div className="absolute inset-0 starfield opacity-55" />
+      <FloatingMoons variant="more" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-noche/80" />
 
       <div className="container-narrow relative z-10 px-6 text-center md:px-12">

@@ -13,6 +13,10 @@ export default function Contacto() {
     >
       <div className="absolute inset-0 soft-noise opacity-60" />
       <div className="absolute inset-0 starfield opacity-30" />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <span className="absolute right-[8%] top-[15%] text-3xl text-oro/12 animate-float-slow select-none" aria-hidden>☾</span>
+        <span className="absolute left-[5%] bottom-[20%] text-2xl text-oro/10 animate-float-slow select-none" style={{ animationDelay: "1.2s" }} aria-hidden>☽</span>
+      </div>
 
       <div className="container-narrow relative z-10">
         <div className="mb-12 text-center">
