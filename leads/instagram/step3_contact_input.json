@@ -1,0 +1,8 @@
+{
+  "startUrls": [
+    {"url": "REEMPLAZAR_DESPUES_DE_PASO_2"}
+  ],
+  "maxRequestsPerStartUrl": 3,
+  "maxDepth": 1,
+  "considerChildFrames": true
+}
