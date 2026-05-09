@@ -9,20 +9,20 @@ const config: Config = {
     extend: {
       colors: {
         violeta: {
-          DEFAULT: "#4C3B71",
-          deep: "#021F4B",
-          light: "#5A4889",
+          DEFAULT: "#3B1E5E",
+          deep: "#2A1547",
+          light: "#5A3387",
         },
         teal: {
-          DEFAULT: "#115268",
-          deep: "#0A3A4D",
+          DEFAULT: "#2A1547",
+          deep: "#1A0D2E",
         },
         oro: {
           DEFAULT: "#F5DC6A",
           light: "#FAEAA0",
           dark: "#D4B843",
         },
-        noche: "#0A1530",
+        noche: "#0E0A14",
         crema: "#F4ECD8",
       },
       fontFamily: {
@@ -31,11 +31,11 @@ const config: Config = {
       },
       backgroundImage: {
         "mystic-gradient":
-          "linear-gradient(180deg, #021F4B 0%, #4C3B71 55%, #115268 100%)",
+          "radial-gradient(ellipse at top, #3B1E5E 0%, #1A0D2E 55%, #0E0A14 100%)",
         "mystic-radial":
-          "radial-gradient(ellipse at center, #4C3B71 0%, #021F4B 70%, #0A1530 100%)",
+          "radial-gradient(ellipse at center, #3B1E5E 0%, #2A1547 60%, #0E0A14 100%)",
         "deep-gradient":
-          "linear-gradient(180deg, #0A1530 0%, #021F4B 100%)",
+          "linear-gradient(180deg, #0E0A14 0%, #2A1547 100%)",
         "gold-shine":
           "linear-gradient(135deg, #F5DC6A 0%, #FAEAA0 50%, #D4B843 100%)",
       },

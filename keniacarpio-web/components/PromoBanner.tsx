@@ -7,8 +7,14 @@ export default function PromoBanner() {
     <section className="relative overflow-hidden bg-noche px-6 py-20 md:px-12 md:py-24">
       {/* Soft layered background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-violeta-deep via-noche to-teal-deep" />
+        <div className="absolute inset-0 bg-mystic-radial" />
         <div className="absolute inset-0 soft-noise opacity-70" />
+        <div className="absolute inset-0 starfield opacity-25" />
+      </div>
+      {/* Subtle floating moons */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <span className="absolute left-[5%] top-[18%] text-3xl text-oro/12 animate-float-slow select-none" aria-hidden>☾</span>
+        <span className="absolute right-[8%] bottom-[20%] text-3xl text-oro/12 animate-float-slow select-none" style={{ animationDelay: "1.8s" }} aria-hidden>☽</span>
       </div>
 
       <div className="container-narrow relative z-10">
