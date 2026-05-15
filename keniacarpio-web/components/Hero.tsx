@@ -31,9 +31,9 @@ export default function Hero() {
         </p>
 
         {/* Logo as the dominant visual — shifted right to balance composition (hat heavy on left).
-            "Bien brutal, bien bruja" sits centered immediately below the logo, sharing the same shift. */}
+            "Bien brutal, bien bruja" anchored under the word "hueco" inside the logo. */}
         <div
-          className="mx-auto inline-block translate-x-6 md:translate-x-16 lg:translate-x-24 animate-fade-in-up"
+          className="relative mx-auto inline-block translate-x-6 md:translate-x-16 lg:translate-x-24 animate-fade-in-up"
           style={{ animationDelay: "0.25s", opacity: 0 }}
         >
           <Image
@@ -44,9 +44,12 @@ export default function Hero() {
             priority
             className="h-auto w-[20rem] sm:w-[26rem] md:w-[34rem] lg:w-[40rem]"
           />
-          <p className="-mt-3 md:-mt-6 lg:-mt-8 text-center text-xs sm:text-sm md:text-base font-serif italic text-crema/90 whitespace-nowrap">
-            Bien brutal, <span className="text-oro">bien bruja</span>
-          </p>
+          {/* Box constrained to where the word "hueco" sits — left edge near 'h', right edge near 'o' */}
+          <div className="absolute left-[28%] right-[10%] bottom-[4%] md:bottom-[5%] flex justify-center">
+            <p className="text-[10px] sm:text-xs md:text-sm font-serif italic text-crema/90 whitespace-nowrap">
+              Bien brutal, <span className="text-oro">bien bruja</span>
+            </p>
+          </div>
         </div>
 
         {/* Description */}
