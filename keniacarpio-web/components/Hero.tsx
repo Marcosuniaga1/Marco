@@ -30,34 +30,33 @@ export default function Hero() {
           Tarotista · Caracas · Venezuela
         </p>
 
-        {/* Logo — centered on the page (no horizontal shifts). Removes all the
-            translate-x acrobatics that were making the layout impossible to align. */}
-        <div
-          className="mx-auto inline-block animate-fade-in-up"
-          style={{ animationDelay: "0.25s", opacity: 0 }}
-        >
-          <Image
-            src="/img/logo.PNG"
-            alt="Sal del Hueco — Kenia Carpio, tarotista en Caracas"
-            width={1000}
-            height={750}
-            priority
-            className="h-auto w-[20rem] sm:w-[26rem] md:w-[34rem] lg:w-[40rem]"
-          />
+        {/* Logo — shifted right via outer wrapper so it aligns with the page-centered
+            tagline below. The fade-in animation lives on the inner div so it doesn't
+            blow away the translate (animation-fill-mode forwards sets transform:
+            translateY(0) at 100%, which previously overrode any direct translateX). */}
+        <div className="translate-x-6 sm:translate-x-10 md:translate-x-20 lg:translate-x-32">
+          <div
+            className="mx-auto inline-block animate-fade-in-up"
+            style={{ animationDelay: "0.25s", opacity: 0 }}
+          >
+            <Image
+              src="/img/logo.PNG"
+              alt="Sal del Hueco — Kenia Carpio, tarotista en Caracas"
+              width={1000}
+              height={750}
+              priority
+              className="h-auto w-[20rem] sm:w-[26rem] md:w-[34rem] lg:w-[40rem]"
+            />
+          </div>
         </div>
 
-        {/* "Bien brutal, bien bruja" — wrapped in a div for horizontal translate so it
-            does not collide with the fade-in animation's transform on the inner <p>.
-            The animation sets transform: translateY(0) at 100% with fill-mode forwards,
-            which was wiping out any translateX applied directly on the <p>. */}
-        <div className="-translate-x-2 sm:-translate-x-4 md:-translate-x-8 lg:-translate-x-12">
-          <p
-            className="-mt-3 md:-mt-6 lg:-mt-8 text-center text-xs sm:text-sm md:text-base font-serif italic text-crema/90 whitespace-nowrap animate-fade-in-up"
-            style={{ animationDelay: "0.35s", opacity: 0 }}
-          >
-            Bien brutal, <span className="text-oro">bien bruja</span>
-          </p>
-        </div>
+        {/* "Bien brutal, bien bruja" — page-centered, immediately under the logo */}
+        <p
+          className="-mt-3 md:-mt-6 lg:-mt-8 text-center text-xs sm:text-sm md:text-base font-serif italic text-crema/90 whitespace-nowrap animate-fade-in-up"
+          style={{ animationDelay: "0.35s", opacity: 0 }}
+        >
+          Bien brutal, <span className="text-oro">bien bruja</span>
+        </p>
 
         {/* Description */}
         <p
