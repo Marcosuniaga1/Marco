@@ -27,15 +27,11 @@ export default function Hero() {
             priority
             className="h-auto w-[20rem] sm:w-[26rem] md:w-[34rem] lg:w-[40rem]"
           />
+          {/* "Bien brutal, bien bruja" centered immediately below the logo, flush to its bottom */}
+          <p className="-mt-3 md:-mt-6 lg:-mt-8 text-center text-sm md:text-base lg:text-lg font-serif italic text-crema/90">
+            Bien brutal, <span className="text-oro">bien bruja</span>
+          </p>
         </div>
-
-        {/* "Bien brutal, bien bruja" below the logo, aligned right under the word "hueco" */}
-        <p
-          className="mt-2 mr-2 md:-mt-2 md:mr-8 lg:mr-12 text-right text-sm md:text-base lg:text-lg font-serif italic text-crema/90 animate-fade-in-up"
-          style={{ animationDelay: "0.15s", opacity: 0 }}
-        >
-          Bien brutal, <span className="text-oro">bien bruja</span>
-        </p>
 
         {/* Kenia Carpio — smaller, supporting the logo */}
         <h1
