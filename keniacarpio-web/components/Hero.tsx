@@ -16,7 +16,7 @@ export default function Hero() {
       <div className="container-narrow relative z-10 px-6 text-center md:px-12">
         {/* Logo as the dominant visual — shifted right to balance composition (hat heavy on left) */}
         <div
-          className="relative mx-auto inline-block translate-x-4 md:translate-x-8 lg:translate-x-14 animate-fade-in-up"
+          className="relative mx-auto inline-block translate-x-6 md:translate-x-16 lg:translate-x-24 animate-fade-in-up"
           style={{ animationDelay: "0.05s", opacity: 0 }}
         >
           <Image
@@ -27,11 +27,15 @@ export default function Hero() {
             priority
             className="h-auto w-[20rem] sm:w-[26rem] md:w-[34rem] lg:w-[40rem]"
           />
-          {/* "Bien brutal, bien bruja" aligned to the width of "hueco" word at logo's right */}
-          <p className="absolute right-2 -bottom-1 md:right-6 md:-bottom-2 text-xs sm:text-sm md:text-base font-serif italic text-crema/90">
-            Bien brutal, <span className="text-oro">bien bruja</span>
-          </p>
         </div>
+
+        {/* "Bien brutal, bien bruja" below the logo, aligned right under the word "hueco" */}
+        <p
+          className="mt-2 mr-2 md:-mt-2 md:mr-8 lg:mr-12 text-right text-sm md:text-base lg:text-lg font-serif italic text-crema/90 animate-fade-in-up"
+          style={{ animationDelay: "0.15s", opacity: 0 }}
+        >
+          Bien brutal, <span className="text-oro">bien bruja</span>
+        </p>
 
         {/* Kenia Carpio — smaller, supporting the logo */}
         <h1

@@ -39,27 +39,48 @@ export default function SalDelHueco() {
       <div className="absolute inset-0 bg-gradient-to-b from-noche/50 via-transparent to-noche/60" />
 
       <div className="section-padding relative z-10 container-narrow">
-        {/* Header */}
-        <div className="mb-14 text-center">
+        {/* MANIFIESTO — now the opening of this section */}
+        <div className="mb-16 text-center">
           <p className="mb-3 text-sm uppercase tracking-[0.4em] text-oro">
-            Proyecto · Filosofía · Identidad
+            Manifiesto
           </p>
           <h2 className="heading-serif text-5xl md:text-7xl mb-4">
             Sal del <span className="gold-text">Hueco</span>
           </h2>
-          <p className="font-serif text-xl md:text-2xl text-crema italic">
-            Bien brutal, <span className="gold-text">bien bruja</span>
-          </p>
         </div>
 
-        {/* Esencia */}
-        <div className="mx-auto max-w-3xl text-center mb-16">
-          <p className="text-lg text-crema/80 leading-relaxed">
-            Misticismo real, sin poses, con humor, profundidad y verdad
-            emocional. Un proyecto espiritual y creativo que usa el{" "}
-            <span className="text-oro">Tarot, oráculos y rituales</span> como
-            herramientas de autoconocimiento, conciencia y toma de decisiones.
-          </p>
+        <div className="mb-16 rounded-3xl border border-oro/30 bg-noche/70 backdrop-blur p-8 md:p-12">
+          <div className="font-serif text-crema/90 text-lg md:text-xl leading-relaxed space-y-4 max-w-3xl mx-auto">
+            <p>
+              No nacimos para estar rotos en silencio. Pero tampoco para fingir
+              que todo está bien.
+            </p>
+            <p>
+              <span className="gold-text">SAL DEL HUECO</span> nació en la
+              oscuridad. En un lugar donde nada funcionaba y las respuestas no
+              llegaban aunque se pidieran de rodillas.
+            </p>
+            <p>
+              No creemos en la espiritualidad que maquilla el dolor.{" "}
+              <span className="text-oro">
+                Creemos en la que lo mira de frente.
+              </span>
+            </p>
+            <p>
+              El Tarot no adivina tu futuro. Te muestra lo que ya sabes, pero no
+              te atreves a aceptar. Las cartas no deciden por ti. Te devuelven
+              la responsabilidad de elegir con conciencia.
+            </p>
+            <p>
+              Aquí no prometemos luz eterna.{" "}
+              <span className="text-oro">Prometemos verdad.</span> Y a veces la
+              verdad duele… pero siempre libera.
+            </p>
+            <p className="text-2xl md:text-3xl text-crema italic text-center pt-4">
+              Porque salir del hueco no es magia.{" "}
+              <span className="gold-text">Es coraje.</span>
+            </p>
+          </div>
         </div>
 
         {/* Concepto El Hueco */}
@@ -125,42 +146,6 @@ export default function SalDelHueco() {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* Manifiesto */}
-        <div className="mb-16 rounded-3xl border border-oro/30 bg-noche/70 backdrop-blur p-8 md:p-12">
-          <p className="text-xs uppercase tracking-[0.4em] text-oro text-center mb-6">
-            Manifiesto
-          </p>
-          <div className="font-serif text-crema/90 text-lg md:text-xl leading-relaxed space-y-4 max-w-3xl mx-auto">
-            <p>
-              No nacimos para estar rotos en silencio. Pero tampoco para fingir
-              que todo está bien.
-            </p>
-            <p>
-              <span className="gold-text">SAL DEL HUECO</span> nació en la
-              oscuridad. En un lugar donde nada funcionaba y las respuestas no
-              llegaban aunque se pidieran de rodillas.
-            </p>
-            <p>
-              No creemos en la espiritualidad que maquilla el dolor.{" "}
-              <span className="text-oro">Creemos en la que lo mira de frente.</span>
-            </p>
-            <p>
-              El Tarot no adivina tu futuro. Te muestra lo que ya sabes, pero no
-              te atreves a aceptar. Las cartas no deciden por ti. Te devuelven
-              la responsabilidad de elegir con conciencia.
-            </p>
-            <p>
-              Aquí no prometemos luz eterna.{" "}
-              <span className="text-oro">Prometemos verdad.</span> Y a veces la
-              verdad duele… pero siempre libera.
-            </p>
-            <p className="text-2xl md:text-3xl text-crema italic text-center pt-4">
-              Porque salir del hueco no es magia.{" "}
-              <span className="gold-text">Es coraje.</span>
-            </p>
           </div>
         </div>
 
