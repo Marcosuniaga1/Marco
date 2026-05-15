@@ -1,8 +1,14 @@
 const featured = {
   title: "Tirada General",
   subtitle: "Amor, dinero, energía, salud y espiritualidad",
-  desc:
-    "Tirada general. Sesión completa de preguntas y respuestas. Combino oráculo, péndulo y carta astral o ritual en PDF, para una lectura profunda y útil.",
+  intro: "Incluye:",
+  parts: [
+    "Tirada general",
+    "Sesión de preguntas y respuestas",
+    "Oráculo",
+    "Péndulo",
+    "Carta astral o Ritual en PDF",
+  ],
   duration: "1h30",
   formats: [
     "1 pregunta",
@@ -82,8 +88,18 @@ export default function Services() {
                 {featured.title}
               </h3>
               <p className="text-oro/90 italic mb-4">{featured.subtitle}</p>
-              <p className="text-crema/80 leading-relaxed mb-4">
-                {featured.desc}
+              <p className="text-crema/80 leading-relaxed mb-3">
+                {featured.intro}
+              </p>
+              <p className="text-crema/85 leading-relaxed mb-5 break-words">
+                {featured.parts.map((p, i) => (
+                  <span key={p}>
+                    {p}
+                    {i < featured.parts.length - 1 && (
+                      <span className="mx-2 text-oro font-bold">+</span>
+                    )}
+                  </span>
+                ))}
               </p>
               <p className="text-xs uppercase tracking-widest text-oro">
                 Duración base · {featured.duration}

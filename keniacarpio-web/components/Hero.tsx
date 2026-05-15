@@ -14,9 +14,9 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-noche/80" />
 
       <div className="container-narrow relative z-10 px-6 text-center md:px-12">
-        {/* Logo as the dominant visual — rotated slightly clockwise to balance composition */}
+        {/* Logo as the dominant visual — shifted right to balance composition (hat heavy on left) */}
         <div
-          className="relative mx-auto inline-block animate-fade-in-up"
+          className="relative mx-auto inline-block translate-x-4 md:translate-x-8 lg:translate-x-14 animate-fade-in-up"
           style={{ animationDelay: "0.05s", opacity: 0 }}
         >
           <Image
@@ -25,10 +25,10 @@ export default function Hero() {
             width={1000}
             height={750}
             priority
-            className="h-auto w-[20rem] sm:w-[26rem] md:w-[34rem] lg:w-[40rem] rotate-3"
+            className="h-auto w-[20rem] sm:w-[26rem] md:w-[34rem] lg:w-[40rem]"
           />
           {/* "Bien brutal, bien bruja" aligned to the width of "hueco" word at logo's right */}
-          <p className="absolute right-2 -bottom-1 md:right-6 md:-bottom-2 text-xs sm:text-sm md:text-base font-serif italic text-crema/90 rotate-3">
+          <p className="absolute right-2 -bottom-1 md:right-6 md:-bottom-2 text-xs sm:text-sm md:text-base font-serif italic text-crema/90">
             Bien brutal, <span className="text-oro">bien bruja</span>
           </p>
         </div>
@@ -75,8 +75,8 @@ export default function Hero() {
       </div>
 
       <a
-        href="#servicios"
-        aria-label="Bajar a servicios"
+        href="#sal-del-hueco"
+        aria-label="Bajar al manifiesto"
         className="absolute bottom-10 left-1/2 -translate-x-1/2 text-oro/60 hover:text-oro transition-colors"
       >
         <span className="block animate-float-slow text-3xl">↓</span>
