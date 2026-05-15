@@ -60,14 +60,14 @@ const testimonios = [
   },
   {
     quote:
-      "Que Kenia te lea el tarot es una nota — súper agradable, carisma brutal, dice las cosas como son. Gracias por acompañarme en cada llamada, en cada ataque de ansiedad. Voy bien, un poco lenta por mí, pero gracias por estar ahí.",
+      "Que Kenia te lea el tarot es una nota: súper agradable, carisma brutal, dice las cosas como son. Gracias por acompañarme en cada llamada, en cada ataque de ansiedad. Voy bien, un poco lenta por mí, pero gracias por estar ahí.",
     name: "Nire Huerta",
   },
 ];
 
 const featuredTestimonial = {
   short:
-    "Lo que comenzó como una consulta trivial se convirtió en un proceso de sanación. Kenia me obsequió un kit de ritual y, en medio de un trabajo para la abundancia, terminé sanando mi relación con mamá y papá — pude decir por fin: 'Papá te amo y donde sea que estés te honro'. Solté un peso enorme que cargué por años. Esto no es adivinar, es mirar hacia adentro y llegar a la raíz.",
+    "Lo que comenzó como una consulta trivial se convirtió en un proceso de sanación. Kenia me obsequió un kit de ritual y, en medio de un trabajo para la abundancia, terminé sanando mi relación con mamá y papá. Pude decir por fin: 'Papá te amo y donde sea que estés te honro'. Solté un peso enorme que cargué por años. Esto no es adivinar, es mirar hacia adentro y llegar a la raíz.",
   full: [
     "¿Salir del hueco? Puede decirse fácil pero requiere compromiso, si lo que deseamos es una transformación real y no solo una salida rápida.",
     "Este compromiso necesita energía, fe y creer para que las bendiciones sean realmente palpables. No puede haber espacio para la duda ni el miedo.",

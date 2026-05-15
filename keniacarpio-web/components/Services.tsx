@@ -1,13 +1,13 @@
 const featured = {
-  title: "Lectura general",
+  title: "Tirada General",
   subtitle: "Amor, dinero, energía, salud y espiritualidad",
   desc:
-    "Sesión completa de preguntas y respuestas. Combino oráculo de Los Ángeles, péndulo y carta astral en PDF — o ritual en PDF — para darte una lectura profunda y útil.",
+    "Tirada general. Sesión completa de preguntas y respuestas. Combino oráculo, péndulo y carta astral o ritual en PDF, para una lectura profunda y útil.",
   duration: "1h30",
   formats: [
     "1 pregunta",
-    "3 preguntas",
-    "5 preguntas",
+    "3 Preguntas",
+    "5 Preguntas",
     "Lectura en pareja (1h30)",
     "Carta astral",
   ],
@@ -17,8 +17,8 @@ const services = [
   {
     icon: "✦",
     title: "Lectura de Tarot",
-    desc: "Lectura honesta sobre tu momento. No para que te diga lo que quieres oír — para que te muestre lo que ya sabes y aún no te atreves a aceptar.",
-    tags: ["General", "Amor", "Decisiones", "Espiritual"],
+    desc: "Lectura honesta sobre tu momento. No para que te diga lo que quieres oír. Te mostraré lo que ya sabes y aún no te atreves a aceptar.",
+    tags: ["General", "Amor", "Decisiones", "Espiritualidad…"],
   },
   {
     icon: "☾",
@@ -35,7 +35,7 @@ const services = [
   {
     icon: "❋",
     title: "Kits energéticos",
-    desc: "Limpieza, amor o abundancia. Hechos con intención y coherentes con tu objetivo. No son talismanes en serie — son herramientas.",
+    desc: "Limpieza, amor o abundancia. Hechos con intención y coherentes con tu objetivo. No son talismanes en serie, son herramientas.",
     tags: ["Limpieza", "Amor", "Abundancia"],
   },
   {
@@ -70,7 +70,7 @@ export default function Services() {
           </p>
         </div>
 
-        {/* Featured — Lectura general */}
+        {/* Featured — Tirada General */}
         <article className="relative mb-10 overflow-hidden rounded-3xl border border-oro/40 bg-noche/60 backdrop-blur p-8 md:p-10">
           <div className="absolute inset-0 bg-gradient-to-br from-violeta/30 via-transparent to-teal/20" />
           <div className="relative grid gap-8 md:grid-cols-[1.3fr_1fr] md:items-center">
@@ -90,8 +90,9 @@ export default function Services() {
               </p>
             </div>
             <div className="rounded-2xl border border-oro/25 bg-violeta-deep/60 p-6">
-              <p className="mb-4 text-xs uppercase tracking-[0.3em] text-oro/80">
-                Formatos disponibles
+              <p className="mb-4 text-sm text-crema/90 leading-snug">
+                ¿Quieres a Kenia para respuestas puntuales? Tienes estos
+                formatos disponibles:
               </p>
               <ul className="space-y-3">
                 {featured.formats.map((f) => (

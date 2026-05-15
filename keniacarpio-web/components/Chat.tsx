@@ -22,16 +22,16 @@ type Service = {
 
 const SERVICES: Service[] = [
   {
-    id: "lectura-general",
-    label: "Lectura general",
+    id: "tirada-general",
+    label: "Tirada General",
     icon: "✦",
     desc: "Sesión completa con varios oráculos (1h30).",
-    message: "Quiero agendar una lectura general (1h30).",
+    message: "Quiero agendar una Tirada General (1h30).",
     contextQuestion: "¿Qué formato prefieres?",
     contextOptions: [
       { label: "1 pregunta", fragment: "Me interesa el formato de 1 pregunta." },
-      { label: "3 preguntas", fragment: "Me interesa el formato de 3 preguntas." },
-      { label: "5 preguntas", fragment: "Me interesa el formato de 5 preguntas." },
+      { label: "3 Preguntas", fragment: "Me interesa el formato de 3 preguntas." },
+      { label: "5 Preguntas", fragment: "Me interesa el formato de 5 preguntas." },
       { label: "Lectura en pareja (1h30)", fragment: "Me interesa una lectura en pareja (1h30)." },
       { label: "Carta astral", fragment: "Me interesa una carta astral." },
     ],
@@ -322,7 +322,7 @@ export default function Chat() {
               {step === "context" && service?.contextOptions && (
                 <>
                   <Bubble>
-                    Genial — <span className="text-oro">{service.label}</span>.
+                    Genial. <span className="text-oro">{service.label}</span>.
                   </Bubble>
                   <Bubble delay={300}>{service.contextQuestion}</Bubble>
                   <div className="space-y-2 pt-2">
@@ -452,7 +452,7 @@ export default function Chat() {
                   <Bubble>
                     Listo{name ? `, ${name}` : ""}. Vamos a coordinar tu{" "}
                     <span className="text-oro">{service.label.toLowerCase()}</span>{" "}
-                    por WhatsApp — ahí te respondo personalmente.
+                    por WhatsApp, ahí te respondo personalmente.
                   </Bubble>
                   {context && (
                     <Bubble delay={200}>
