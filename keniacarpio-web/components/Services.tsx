@@ -91,13 +91,16 @@ export default function Services() {
               <p className="text-crema/80 leading-relaxed mb-3">
                 {featured.intro}
               </p>
-              <p className="text-crema/85 leading-relaxed mb-5 break-words">
+              <p className="text-crema/85 leading-relaxed mb-5">
                 {featured.parts.map((p, i) => (
                   <span key={p}>
-                    {p}
-                    {i < featured.parts.length - 1 && (
-                      <span className="mx-2 text-oro font-bold">+</span>
+                    {i > 0 && (
+                      <>
+                        {" "}
+                        <span className="text-oro font-bold">+</span>{" "}
+                      </>
                     )}
+                    {p}
                   </span>
                 ))}
               </p>
