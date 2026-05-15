@@ -46,13 +46,18 @@ export default function Hero() {
           />
         </div>
 
-        {/* "Bien brutal, bien bruja" — centered on the page, immediately under the logo */}
-        <p
-          className="-mt-3 md:-mt-6 lg:-mt-8 text-center text-xs sm:text-sm md:text-base font-serif italic text-crema/90 whitespace-nowrap animate-fade-in-up"
-          style={{ animationDelay: "0.35s", opacity: 0 }}
-        >
-          Bien brutal, <span className="text-oro">bien bruja</span>
-        </p>
+        {/* "Bien brutal, bien bruja" — wrapped in a div for horizontal translate so it
+            does not collide with the fade-in animation's transform on the inner <p>.
+            The animation sets transform: translateY(0) at 100% with fill-mode forwards,
+            which was wiping out any translateX applied directly on the <p>. */}
+        <div className="-translate-x-2 sm:-translate-x-4 md:-translate-x-8 lg:-translate-x-12">
+          <p
+            className="-mt-3 md:-mt-6 lg:-mt-8 text-center text-xs sm:text-sm md:text-base font-serif italic text-crema/90 whitespace-nowrap animate-fade-in-up"
+            style={{ animationDelay: "0.35s", opacity: 0 }}
+          >
+            Bien brutal, <span className="text-oro">bien bruja</span>
+          </p>
+        </div>
 
         {/* Description */}
         <p
