@@ -30,9 +30,10 @@ export default function Hero() {
           Tarotista · Caracas · Venezuela
         </p>
 
-        {/* Logo as the dominant visual — shifted right to balance composition (hat heavy on left) */}
+        {/* Logo — centered on the page (no horizontal shifts). Removes all the
+            translate-x acrobatics that were making the layout impossible to align. */}
         <div
-          className="mx-auto inline-block translate-x-6 md:translate-x-16 lg:translate-x-24 animate-fade-in-up"
+          className="mx-auto inline-block animate-fade-in-up"
           style={{ animationDelay: "0.25s", opacity: 0 }}
         >
           <Image
@@ -45,12 +46,9 @@ export default function Hero() {
           />
         </div>
 
-        {/* "Bien brutal, bien bruja" — centered on the page, slightly nudged left
-            to compensate for the perceived visual center (logo composition is hat-heavy
-            on the left, which biases the eye). Pulled up via negative margin so it sits
-            at the bottom of the logo art. */}
+        {/* "Bien brutal, bien bruja" — centered on the page, immediately under the logo */}
         <p
-          className="-mt-3 md:-mt-6 lg:-mt-8 -translate-x-6 md:-translate-x-14 lg:-translate-x-24 text-center text-xs sm:text-sm md:text-base font-serif italic text-crema/90 whitespace-nowrap animate-fade-in-up"
+          className="-mt-3 md:-mt-6 lg:-mt-8 text-center text-xs sm:text-sm md:text-base font-serif italic text-crema/90 whitespace-nowrap animate-fade-in-up"
           style={{ animationDelay: "0.35s", opacity: 0 }}
         >
           Bien brutal, <span className="text-oro">bien bruja</span>
