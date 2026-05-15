@@ -34,7 +34,7 @@ export default function Hero() {
             tagline below. The fade-in animation lives on the inner div so it doesn't
             blow away the translate (animation-fill-mode forwards sets transform:
             translateY(0) at 100%, which previously overrode any direct translateX). */}
-        <div className="translate-x-10 sm:translate-x-14 md:translate-x-20 lg:translate-x-32">
+        <div className="translate-x-10 sm:translate-x-14 md:translate-x-16 lg:translate-x-20">
           <div
             className="mx-auto inline-block animate-fade-in-up"
             style={{ animationDelay: "0.25s", opacity: 0 }}
