@@ -30,9 +30,10 @@ export default function Hero() {
           Tarotista · Caracas · Venezuela
         </p>
 
-        {/* Logo as the dominant visual — shifted right to balance composition (hat heavy on left) */}
+        {/* Logo as the dominant visual — shifted right to balance composition (hat heavy on left).
+            "Bien brutal, bien bruja" sits centered immediately below the logo, sharing the same shift. */}
         <div
-          className="relative mx-auto inline-block translate-x-6 md:translate-x-16 lg:translate-x-24 animate-fade-in-up"
+          className="mx-auto inline-block translate-x-6 md:translate-x-16 lg:translate-x-24 animate-fade-in-up"
           style={{ animationDelay: "0.25s", opacity: 0 }}
         >
           <Image
@@ -43,8 +44,7 @@ export default function Hero() {
             priority
             className="h-auto w-[20rem] sm:w-[26rem] md:w-[34rem] lg:w-[40rem]"
           />
-          {/* "Bien brutal, bien bruja" — small, aligned with the word "hueco" at the bottom-right of the logo, looks like part of the design */}
-          <p className="absolute bottom-[4%] right-[8%] text-[9px] sm:text-[11px] md:text-xs lg:text-sm font-serif italic text-crema/90 whitespace-nowrap">
+          <p className="-mt-3 md:-mt-6 lg:-mt-8 text-center text-xs sm:text-sm md:text-base font-serif italic text-crema/90 whitespace-nowrap">
             Bien brutal, <span className="text-oro">bien bruja</span>
           </p>
         </div>
