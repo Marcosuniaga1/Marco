@@ -51,7 +51,7 @@ export default function Contacto() {
             </div>
             <h3 className="heading-serif text-2xl text-crema mb-2">WhatsApp</h3>
             <p className="text-sm text-crema/70 mb-4">
-              +58 424 105 4059 — Mensaje precargado: “quiero agendar una cita”.
+              +58 424 105 4059. Mensaje precargado: “quiero agendar una cita”.
             </p>
             <span className="inline-flex items-center gap-2 text-sm font-medium text-oro group-hover:gap-3 transition-all">
               Escribir ahora <span>→</span>
@@ -71,7 +71,7 @@ export default function Contacto() {
             </div>
             <h3 className="heading-serif text-2xl text-crema mb-2">Instagram</h3>
             <p className="text-sm text-crema/70 mb-4">
-              @saldelhueco — Lecturas, rituales, contenido real y sin filtros.
+              @saldelhueco. Lecturas, rituales, contenido real y sin filtros.
             </p>
             <span className="inline-flex items-center gap-2 text-sm font-medium text-oro group-hover:gap-3 transition-all">
               Ver perfil <span>→</span>

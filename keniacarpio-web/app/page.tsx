@@ -1,11 +1,11 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import About from "@/components/About";
-import SalDelHueco from "@/components/SalDelHueco";
 import Services from "@/components/Services";
 import PromoBanner from "@/components/PromoBanner";
-import Trayectoria from "@/components/Trayectoria";
+import SalDelHueco from "@/components/SalDelHueco";
+import About from "@/components/About";
 import Testimonios from "@/components/Testimonios";
+import Trayectoria from "@/components/Trayectoria";
 import Contacto from "@/components/Contacto";
 import Footer from "@/components/Footer";
 import FloatingButtons from "@/components/FloatingButtons";
@@ -16,12 +16,12 @@ export default function Home() {
     <main className="relative overflow-x-hidden">
       <Header />
       <Hero />
-      <About />
-      <SalDelHueco />
       <Services />
       <PromoBanner />
-      <Trayectoria />
+      <SalDelHueco />
+      <About />
       <Testimonios />
+      <Trayectoria />
       <Contacto />
       <Footer />
       <FloatingButtons />

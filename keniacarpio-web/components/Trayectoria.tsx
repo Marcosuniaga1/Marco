@@ -30,7 +30,7 @@ const featured = {
     "Producción técnica: cámara, luces y equipo de rodaje.",
     "Posproducción: edición y entrega de piezas listas para publicar.",
   ],
-  note: "No gestiono las cuentas — creo el contenido que las hace crecer.",
+  note: "No gestiono las cuentas. Creo el contenido que las hace crecer.",
 };
 
 export default function Trayectoria() {
@@ -54,7 +54,7 @@ export default function Trayectoria() {
             Antes de leer cartas leí guiones. La actuación, la locución y la
             psicopedagogía me enseñaron a escuchar, a sostener silencios y a
             habitar emociones que parecen imposibles. Esa misma sensibilidad
-            acompaña hoy cada lectura — y cada producción.
+            acompaña hoy cada lectura, y cada producción.
           </p>
         </div>
 

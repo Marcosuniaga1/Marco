@@ -56,13 +56,13 @@ export default function About() {
               Pero despertar no es solo magia bonita. También es choque.
             </p>
             <p>
-              Cuando decidió tomarse lo espiritual en serio —estudiar Tarot y
-              metafísica— su vida cambió por completo. No solo ganó claridad:
+              Cuando decidió tomarse lo espiritual en serio, estudiar Tarot y
+              metafísica, su vida cambió por completo. No solo ganó claridad:
               ganó preguntas. Y con ellas llegaron pruebas, rupturas internas y
               externas, y un proceso profundo de transformación.
             </p>
             <p>
-              Acaba de atravesar su primera —y ojalá única— depresión. Un año
+              Acaba de atravesar su primera, y ojalá única, depresión. Un año
               jodido. Real. Oscuro. Que le enseñó que incluso con herramientas,
               el despertar no siempre es luz.{" "}
               <span className="text-oro">

@@ -51,7 +51,7 @@ export default function PromoBanner() {
               {
                 icon: "💍",
                 t: "Despedidas",
-                d: "Lecturas para la novia y sus amigas — entre risas y profundidad.",
+                d: "Lecturas para la novia y sus amigas, entre risas y profundidad.",
               },
               {
                 icon: "🌙",

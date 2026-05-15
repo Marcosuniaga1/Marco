@@ -84,7 +84,7 @@ export default function SalDelHueco() {
               &rdquo;
             </p>
             <footer className="mt-4 text-sm uppercase tracking-widest text-oro/80">
-              — Frase guía interna
+              Frase guía interna
             </footer>
           </blockquote>
         </div>
@@ -173,7 +173,7 @@ export default function SalDelHueco() {
             <div className="relative aspect-video bg-violeta-deep">
               <iframe
                 src="https://www.youtube.com/embed/-bXvsIE-6mc"
-                title="Sal del Hueco — episodio destacado"
+                title="Sal del Hueco · episodio destacado"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
                 className="absolute inset-0 h-full w-full"
