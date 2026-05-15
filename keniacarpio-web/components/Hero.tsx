@@ -50,7 +50,7 @@ export default function Hero() {
             on the left, which biases the eye). Pulled up via negative margin so it sits
             at the bottom of the logo art. */}
         <p
-          className="-mt-3 md:-mt-6 lg:-mt-8 -translate-x-3 md:-translate-x-6 lg:-translate-x-10 text-center text-xs sm:text-sm md:text-base font-serif italic text-crema/90 whitespace-nowrap animate-fade-in-up"
+          className="-mt-3 md:-mt-6 lg:-mt-8 -translate-x-6 md:-translate-x-14 lg:-translate-x-24 text-center text-xs sm:text-sm md:text-base font-serif italic text-crema/90 whitespace-nowrap animate-fade-in-up"
           style={{ animationDelay: "0.35s", opacity: 0 }}
         >
           Bien brutal, <span className="text-oro">bien bruja</span>
