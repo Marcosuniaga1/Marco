@@ -92,12 +92,8 @@ export default function Testimonios() {
     <section className="section-padding bg-noche">
       <div className="container-narrow">
         <div className="mb-14 text-center">
-          <p className="mb-3 text-sm uppercase tracking-[0.3em] text-oro">
-            Testimonios
-          </p>
-          <h2 className="heading-serif text-4xl md:text-5xl">
-            Lo que dicen quienes <span className="gold-text">ya pasaron</span>{" "}
-            por una sesión
+          <h2 className="heading-serif text-5xl md:text-6xl">
+            <span className="gold-text">Testimonios</span>
           </h2>
         </div>
 

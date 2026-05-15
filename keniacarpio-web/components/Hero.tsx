@@ -14,10 +14,26 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-noche/80" />
 
       <div className="container-narrow relative z-10 px-6 text-center md:px-12">
+        {/* Kenia Carpio — name, above the logo */}
+        <h1
+          className="heading-serif text-2xl md:text-3xl lg:text-4xl font-semibold leading-tight animate-fade-in-up"
+          style={{ animationDelay: "0.05s", opacity: 0 }}
+        >
+          Kenia <span className="gold-text">Carpio</span>
+        </h1>
+
+        {/* SEO line — visible + crawleable, smaller */}
+        <p
+          className="mt-2 mb-6 md:mb-10 text-[10px] md:text-xs uppercase tracking-[0.4em] text-oro/85 animate-fade-in-up"
+          style={{ animationDelay: "0.15s", opacity: 0 }}
+        >
+          Tarotista · Caracas · Venezuela
+        </p>
+
         {/* Logo as the dominant visual — shifted right to balance composition (hat heavy on left) */}
         <div
           className="relative mx-auto inline-block translate-x-6 md:translate-x-16 lg:translate-x-24 animate-fade-in-up"
-          style={{ animationDelay: "0.05s", opacity: 0 }}
+          style={{ animationDelay: "0.25s", opacity: 0 }}
         >
           <Image
             src="/img/logo.PNG"
@@ -27,32 +43,16 @@ export default function Hero() {
             priority
             className="h-auto w-[20rem] sm:w-[26rem] md:w-[34rem] lg:w-[40rem]"
           />
-          {/* "Bien brutal, bien bruja" centered immediately below the logo, flush to its bottom */}
-          <p className="-mt-3 md:-mt-6 lg:-mt-8 text-center text-sm md:text-base lg:text-lg font-serif italic text-crema/90">
+          {/* "Bien brutal, bien bruja" — small, aligned with the word "hueco" at the bottom-right of the logo, looks like part of the design */}
+          <p className="absolute bottom-[4%] right-[8%] text-[9px] sm:text-[11px] md:text-xs lg:text-sm font-serif italic text-crema/90 whitespace-nowrap">
             Bien brutal, <span className="text-oro">bien bruja</span>
           </p>
         </div>
 
-        {/* Kenia Carpio — smaller, supporting the logo */}
-        <h1
-          className="heading-serif mt-10 text-3xl font-semibold leading-tight md:text-4xl lg:text-5xl animate-fade-in-up"
-          style={{ animationDelay: "0.3s", opacity: 0 }}
-        >
-          Kenia <span className="gold-text">Carpio</span>
-        </h1>
-
-        {/* SEO line — visible + crawleable */}
-        <p
-          className="mt-3 text-xs md:text-sm uppercase tracking-[0.45em] text-oro/85 animate-fade-in-up"
-          style={{ animationDelay: "0.45s", opacity: 0 }}
-        >
-          Tarotista · Caracas · Venezuela
-        </p>
-
         {/* Description */}
         <p
-          className="mx-auto mt-8 mb-10 max-w-2xl text-base text-crema/85 md:text-lg animate-fade-in-up"
-          style={{ animationDelay: "0.6s", opacity: 0 }}
+          className="mx-auto mt-10 mb-10 max-w-2xl text-base text-crema/85 md:text-lg animate-fade-in-up"
+          style={{ animationDelay: "0.5s", opacity: 0 }}
         >
           Lectura de tarot{" "}
           <span className="text-oro">sin filtro, real y sin poses</span>.
@@ -63,7 +63,7 @@ export default function Hero() {
         {/* CTAs */}
         <div
           className="flex flex-col items-center justify-center gap-4 sm:flex-row animate-fade-in-up"
-          style={{ animationDelay: "0.75s", opacity: 0 }}
+          style={{ animationDelay: "0.65s", opacity: 0 }}
         >
           <a href="#contacto" className="btn-primary">
             Agendar una lectura
