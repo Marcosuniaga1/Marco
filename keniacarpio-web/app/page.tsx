@@ -1,8 +1,8 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import SalDelHueco from "@/components/SalDelHueco";
 import Services from "@/components/Services";
 import PromoBanner from "@/components/PromoBanner";
-import SalDelHueco from "@/components/SalDelHueco";
 import About from "@/components/About";
 import Testimonios from "@/components/Testimonios";
 import Trayectoria from "@/components/Trayectoria";
@@ -16,9 +16,9 @@ export default function Home() {
     <main className="relative overflow-x-hidden">
       <Header />
       <Hero />
+      <SalDelHueco />
       <Services />
       <PromoBanner />
-      <SalDelHueco />
       <About />
       <Testimonios />
       <Trayectoria />
