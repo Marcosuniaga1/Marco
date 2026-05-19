@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'input=$(cat); file_path=$(echo \"$input\" | jq -r \".tool_input.file_path // empty\"); [ -z \"$file_path\" ] && exit 0; ext=\"${file_path##*.}\"; ext=\"${ext,,}\"; case \"$ext\" in pdf|docx|xlsx|pptx|jpg|jpeg|png|gif|bmp|mp3|wav|m4a|flac|mp4|webm|mov) output_file=\"${file_path%.*}.md\"; if python3 -m markitdown \"$file_path\" -o \"$output_file\" 2>/dev/null; then printf \"%s\" \"{\\\"hookSpecificOutput\\\": {\\\"hookEventName\\\": \\\"PreToolUse\\\", \\\"updatedInput\\\": {\\\"file_path\\\": \\\"$output_file\\\"}}}\"; fi ;; esac'",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}
