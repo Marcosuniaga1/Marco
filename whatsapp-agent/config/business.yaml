@@ -1,0 +1,17 @@
+# Configuración del negocio — Editar para cada cliente
+negocio:
+  nombre: "Nombre del Negocio"
+  descripcion: "Descripción detallada del negocio, qué ofrece, a quién va dirigido."
+  horario: "Lunes a Viernes 9am–6pm, Sábados 10am–2pm"
+
+agente:
+  nombre: "Asistente"
+  tono: "amigable"  # profesional | amigable | vendedor | empático
+  casos_de_uso:
+    - "responder preguntas frecuentes"
+    - "brindar información de servicios"
+
+metadata:
+  cliente: "nombre-cliente"
+  tipo_negocio: "clinica"  # clinica | restaurante | ecommerce | otro
+  version: "1.0"
