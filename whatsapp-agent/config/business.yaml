@@ -1,17 +1,28 @@
-# Configuración del negocio — Editar para cada cliente
+# Clínica MediVida — Configuración del agente
 negocio:
-  nombre: "Nombre del Negocio"
-  descripcion: "Descripción detallada del negocio, qué ofrece, a quién va dirigido."
-  horario: "Lunes a Viernes 9am–6pm, Sábados 10am–2pm"
+  nombre: "Clínica MediVida"
+  descripcion: >
+    Clínica médica integral ubicada en Ciudad de México. Ofrecemos atención
+    en medicina general, pediatría, nutrición, psicología y odontología.
+    Contamos con laboratorio clínico propio, ultrasonidos y rayos X.
+    Más de 15 años atendiendo familias con calidez y profesionalismo.
+  horario: "Lunes a Viernes 8am–8pm, Sábados 9am–3pm, Domingos cerrado"
+  direccion: "Av. Insurgentes Sur 1234, Col. Del Valle, CDMX"
+  telefono: "+52 55 1234 5678"
+  whatsapp: "+52 55 1234 5678"
 
 agente:
-  nombre: "Asistente"
-  tono: "amigable"  # profesional | amigable | vendedor | empático
+  nombre: "Valeria"
+  tono: "empático y cálido"
   casos_de_uso:
-    - "responder preguntas frecuentes"
-    - "brindar información de servicios"
+    - "agendar y cancelar citas"
+    - "informar sobre servicios y especialidades"
+    - "informar precios de consultas"
+    - "informar resultados de laboratorio disponibles"
+    - "resolver preguntas frecuentes"
+    - "derivar a urgencias cuando sea necesario"
 
 metadata:
-  cliente: "nombre-cliente"
-  tipo_negocio: "clinica"  # clinica | restaurante | ecommerce | otro
+  cliente: "clinica-medivida-demo"
+  tipo_negocio: "clinica"
   version: "1.0"
