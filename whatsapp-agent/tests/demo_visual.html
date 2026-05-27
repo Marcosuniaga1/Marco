@@ -824,20 +824,90 @@ const INMOBILIARIA_DATA = {
       intencion: null,
       respuesta:
         'Propiedades disponibles en Caracas 📍\n\n' +
-        '• *Altamira* — Apto 3 hab | Venta: $85,000 | Alquiler: $650/mes\n' +
-        '• *Las Mercedes* — Apto 2 hab | Venta: $62,000 | Alquiler: $480/mes\n' +
-        '• *El Hatillo* — Casa 4 hab | Venta: $140,000 | Alquiler: $900/mes\n' +
-        '• *Chacao* — Local comercial | Venta: $95,000 | Alquiler: $750/mes\n\n' +
-        '¿Te interesa alguna? Puedo agendarte una visita.'
+        '🏠 *Altamira* — Apto 3 hab\n' +
+        '   Piso 8 · Terraza · Vista a la montaña · Seg. 24h\n' +
+        '   Venta: $85,000 | Alquiler: $650/mes\n\n' +
+        '🏠 *Las Mercedes* — Apto 2 hab\n' +
+        '   Zona comercial · Totalmente remodelado\n' +
+        '   Venta: $62,000 | Alquiler: $480/mes\n\n' +
+        '🏡 *El Hatillo* — Casa 4 hab\n' +
+        '   Piscina · Jardín · Cuarto de servicio · Urb. cerrada\n' +
+        '   Venta: $140,000 | Alquiler: $900/mes\n\n' +
+        '🏢 *Chacao* — Local comercial\n' +
+        '   Planta baja · Alta visibilidad · Esquinero\n' +
+        '   Venta: $95,000 | Alquiler: $750/mes\n\n' +
+        '¿Cuál te interesa? Puedo enviarte fotos o agendarte una visita.'
     },
     {
-      claves: ['valencia','carabobo','maracaibo','zulia','interior'],
+      claves: ['foto','fotos','imágenes','imagenes','imagen','video','ver fotos'],
+      intencion: null,
+      respuesta:
+        '📸 Con mucho gusto te enviamos el material fotográfico.\n\n' +
+        'Tenemos fotos, video y plano de planta de:\n\n' +
+        '📍 *Caracas:*\n' +
+        '• Apto 3 hab — Altamira ($85,000 / $650/mes)\n' +
+        '• Apto 2 hab — Las Mercedes ($62,000 / $480/mes)\n' +
+        '• Casa 4 hab — El Hatillo ($140,000 / $900/mes)\n' +
+        '• Local comercial — Chacao ($95,000 / $750/mes)\n\n' +
+        '📍 *Interior:*\n' +
+        '• Casa 4 hab — Maracaibo, Zulia ($70,000 / $520/mes)\n' +
+        '• Apto 3 hab — Valencia, Carabobo ($55,000 / $400/mes)\n\n' +
+        '¿De cuál propiedad te gustaría el material?'
+    },
+    {
+      claves: ['maracaibo','zulia','bella vista','foto','fotos','imágenes'],
+      intencion: null,
+      respuesta:
+        '🏡 *Casa 4 habitaciones — Maracaibo, Zulia*\n\n' +
+        '📍 *Ubicación:* Urb. Bella Vista\n' +
+        'Una de las zonas más exclusivas y seguras de Maracaibo.\n' +
+        'A 10 min del C.C. Lago Mall y del Lago de Maracaibo.\n\n' +
+        '📐 *Características:*\n' +
+        '• 4 habitaciones (master con baño en suite)\n' +
+        '• 3 baños completos + área de servicio\n' +
+        '• Sala, comedor y cocina remodelada\n' +
+        '• Piscina y jardín privado\n' +
+        '• Estacionamiento para 2 vehículos\n' +
+        '• Planta eléctrica 10 KVA ⚡\n' +
+        '• Cisterna de agua 10.000 litros 💧\n\n' +
+        '💰 *Venta:* $70,000 USD\n' +
+        '🔑 *Alquiler:* $520 USD/mes\n\n' +
+        '📸 Tenemos fotos, video y planos disponibles.\n' +
+        '¿Te los enviamos por WhatsApp o prefieres agendar una visita?'
+    },
+    {
+      claves: ['valencia','carabobo','terrazas','sambil valencia','foto','fotos','imágenes'],
+      intencion: null,
+      respuesta:
+        '🏢 *Apartamento 3 habitaciones — Valencia, Carabobo*\n\n' +
+        '📍 *Ubicación:* Urb. Terrazas de Valencia\n' +
+        'Zona residencial tranquila y bien conectada.\n' +
+        'A 15 min del C.C. Sambil Valencia.\n\n' +
+        '📐 *Características:*\n' +
+        '• 3 habitaciones con closets empotrados\n' +
+        '• 2 baños completos\n' +
+        '• Sala-comedor amplio\n' +
+        '• Cocina con isla desayunador\n' +
+        '• Área de lavado integrada\n' +
+        '• Estacionamiento cubierto\n' +
+        '• Edificio con portero, área social y jardines\n\n' +
+        '💰 *Venta:* $55,000 USD\n' +
+        '🔑 *Alquiler:* $400 USD/mes\n\n' +
+        '📸 Tenemos fotos y recorrido virtual.\n' +
+        '¿Te los enviamos o agendamos una visita?'
+    },
+    {
+      claves: ['interior','provincia','estado'],
       intencion: null,
       respuesta:
         'Propiedades en el interior del país 📍\n\n' +
-        '• *Valencia, Carabobo* — Apto 3 hab | Venta: $55,000 | Alquiler: $400/mes\n' +
-        '• *Maracaibo, Zulia* — Casa 4 hab | Venta: $70,000 | Alquiler: $520/mes\n\n' +
-        '¿Te interesa alguna? Coordino visita o te envío fotos.'
+        '🏡 *Maracaibo, Zulia* — Casa 4 hab\n' +
+        '   Urb. Bella Vista | Piscina | Planta eléctrica\n' +
+        '   Venta: $70,000 USD | Alquiler: $520/mes\n\n' +
+        '🏢 *Valencia, Carabobo* — Apto 3 hab\n' +
+        '   Urb. Terrazas de Valencia | Edificio con portero\n' +
+        '   Venta: $55,000 USD | Alquiler: $400/mes\n\n' +
+        '¿Te interesa alguna? Puedo enviarte fotos o coordinar una visita.'
     },
     {
       claves: ['precio','costo','cuánto','cuanto','presupuesto'],
