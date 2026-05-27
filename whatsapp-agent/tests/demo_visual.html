@@ -957,7 +957,12 @@ function esConfirmacion(msg) {
 }
 
 function extraerNombre(msg) {
-  const skip = new Set(['hola','buenos','buenas','gracias','quiero','necesito','para','una','un','me','mi','mi','soy']);
+  const skip = new Set([
+    'hola','buenos','buenas','gracias','quiero','necesito','para','una','un','me','mi','soy',
+    // días de la semana — no extraer como nombres
+    'lunes','martes','miércoles','miercoles','jueves','viernes','sábado','sabado','domingo',
+    'hoy','mañana','esta','este','próximo','proximo','siguiente'
+  ]);
   const words = msg.trim().split(/\s+/);
   const cands = words.filter(w => w.length > 2 && w[0] === w[0].toUpperCase() && !skip.has(w.toLowerCase()));
   if (cands.length > 0) return cands.slice(0,2).join(' ');
@@ -1063,9 +1068,20 @@ function processMessage(msg) {
     }
   }
 
-  /* ── Clínica & Inmobiliaria: generic pidiendo_datos ──────── */
+  /* ── Clínica & Inmobiliaria: confirmar fecha ─────────────── */
+  // IMPORTANTE: este bloque va ANTES de pidiendo_datos porque cuando
+  // el estado ya es 'pidiendo_fecha' el bloque de abajo no se ejecutaría.
+  if (estado === 'pidiendo_fecha') {
+    const confirmTxt = data.confirmar(nombreCliente || 'Cliente', msg);
+    estado = 'confirmado';
+    nombreCliente = null;
+    agentReply(confirmTxt, typingDelay(confirmTxt) * 0.7);
+    return;
+  }
+
+  /* ── Clínica & Inmobiliaria: recoger nombre ───────────────── */
   if (estado === 'pidiendo_datos') {
-    // Check if user is escaping the flow
+    // Verificar si el usuario está cambiando de tema (fuga del flujo)
     const nueva = buscarRespuesta(msg, data.respuestas);
     const escapando = nueva && nueva.intencion == null && !esConfirmacion(msg);
     if (escapando) {
@@ -1075,30 +1091,21 @@ function processMessage(msg) {
       return;
     }
 
-    if (estado === 'pidiendo_datos' && nombreCliente === null) {
-      // First data entry — extract name, ask for day if no day in message
+    if (nombreCliente === null) {
       const hasDia  = tieneDia(msg);
       const hasHora = tieneHora(msg);
+
       if (hasDia || hasHora) {
-        // Has day/time already: confirm
-        nombreCliente = extraerNombre(msg);
-        const confirmTxt = data.confirmar(nombreCliente, msg);
+        // El usuario dio día/hora sin nombre previo → confirmar sin nombre personalizado
+        const confirmTxt = data.confirmar('estimado cliente', msg);
         estado = 'confirmado';
-        nombreCliente = null;
         agentReply(confirmTxt, typingDelay(confirmTxt) * 0.7);
       } else {
-        // Just got name
+        // Solo recibimos el nombre → pedir día y hora
         nombreCliente = extraerNombre(msg);
         agentReply(`Perfecto, *${nombreCliente}* 😊\n\n¿Qué día y hora te viene mejor?\nEjemplo: _viernes a las 11am_ o _sábado en la mañana_`);
         estado = 'pidiendo_fecha';
       }
-      return;
-    }
-    if (estado === 'pidiendo_fecha') {
-      const confirmTxt = data.confirmar(nombreCliente || 'Cliente', msg);
-      estado = 'confirmado';
-      nombreCliente = null;
-      agentReply(confirmTxt, typingDelay(confirmTxt) * 0.7);
       return;
     }
   }
