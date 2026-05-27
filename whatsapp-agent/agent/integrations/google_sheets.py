@@ -16,7 +16,7 @@ Requiere:
 
 import os
 import logging
-from datetime import datetime, date, time as dtime
+from datetime import datetime
 from typing import Optional
 
 logger = logging.getLogger(__name__)
@@ -31,8 +31,8 @@ HEADERS_LEADS = ["Fecha", "Teléfono", "Nombre", "Interés", "Fuente", "Estado"]
 
 # ── Cache del cliente gspread ─────────────────────────────────────────────────
 
-_client_cache: Optional[object]     = None   # gspread.AsyncClient
-_spreadsheet_cache: Optional[object] = None  # gspread.Spreadsheet
+_client_cache: Optional[object]      = None   # gspread.Client
+_spreadsheet_cache: Optional[object] = None   # gspread.Spreadsheet
 
 
 def _esta_configurado() -> bool:
@@ -127,7 +127,7 @@ async def registrar_cita(
         return False
 
     try:
-        ahora    = datetime.now()
+        ahora     = datetime.now()
         fecha_hoy = ahora.strftime("%d/%m/%Y")
         hora_hoy  = ahora.strftime("%H:%M")
 
@@ -234,9 +234,9 @@ async def obtener_citas_hoy() -> list[dict]:
         return []
 
     try:
-        hoy       = datetime.now().strftime("%d/%m/%Y")
-        todas     = hoja.get_all_records()
-        de_hoy    = [f for f in todas if f.get("Fecha") == hoy]
+        hoy    = datetime.now().strftime("%d/%m/%Y")
+        todas  = hoja.get_all_records()
+        de_hoy = [f for f in todas if f.get("Fecha") == hoy]
         logger.info("Citas de hoy (%s): %d encontradas.", hoy, len(de_hoy))
         return de_hoy
 

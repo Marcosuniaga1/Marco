@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgentKit — Demo Visual</title>
+<style>
+  /* ── Reset & Base ───────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a1628 0%, #0d2137 35%, #112240 60%, #0a1628 100%);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px 60px;
+    overflow-x: hidden;
+  }
+
+  /* ── Page header ────────────────────────────────────────── */
+  .page-header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .page-header h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(90deg, #43e97b, #38f9d7, #4facfe);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+  }
+  .page-header p {
+    color: rgba(255,255,255,0.55);
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Demo cards ─────────────────────────────────────────── */
+  .demo-cards {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 44px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .demo-card {
+    cursor: pointer;
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 18px 22px;
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(12px);
+    transition: all 0.25s ease;
+    text-align: center;
+    min-width: 160px;
+    user-select: none;
+  }
+  .demo-card:hover {
+    background: rgba(255,255,255,0.09);
+    border-color: rgba(255,255,255,0.25);
+    transform: translateY(-2px);
+  }
+  .demo-card.active {
+    border-color: var(--card-color);
+    background: rgba(255,255,255,0.08);
+    box-shadow: 0 0 24px -4px var(--card-color);
+  }
+  .demo-card .card-emoji { font-size: 1.8rem; display: block; margin-bottom: 6px; }
+  .demo-card .card-name  { color: #fff; font-weight: 700; font-size: 0.9rem; display: block; }
+  .demo-card .card-agent { font-size: 0.78rem; margin-top: 3px; display: block; opacity: 0.65; color: #fff; }
+
+  /* ── Phone frame ────────────────────────────────────────── */
+  .phone-wrap {
+    position: relative;
+    width: 395px;
+    filter: drop-shadow(0 32px 80px rgba(0,0,0,0.7)) drop-shadow(0 8px 24px rgba(0,0,0,0.4));
+  }
+  .phone-frame {
+    width: 375px;
+    background: #1a1a1a;
+    border-radius: 50px;
+    padding: 14px 10px 18px;
+    margin: 0 auto;
+    position: relative;
+    border: 2px solid #3a3a3a;
+    box-shadow:
+      inset 0 0 0 1px rgba(255,255,255,0.07),
+      0 0 0 1px rgba(0,0,0,0.8);
+  }
+
+  /* Side buttons */
+  .phone-frame::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 100px;
+    width: 4px;
+    height: 36px;
+    background: #2a2a2a;
+    border-radius: 3px 0 0 3px;
+    box-shadow: 0 50px 0 #2a2a2a, 0 90px 0 #2a2a2a;
+  }
+  .phone-frame::after {
+    content: '';
+    position: absolute;
+    right: -4px;
+    top: 140px;
+    width: 4px;
+    height: 64px;
+    background: #2a2a2a;
+    border-radius: 0 3px 3px 0;
+  }
+
+  /* Notch */
+  .phone-notch {
+    width: 120px;
+    height: 26px;
+    background: #1a1a1a;
+    border-radius: 0 0 18px 18px;
+    margin: 0 auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    z-index: 10;
+  }
+  .notch-camera {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #2d2d2d;
+    border: 1px solid #3a3a3a;
+  }
+  .notch-speaker {
+    width: 52px; height: 5px;
+    border-radius: 3px;
+    background: #2d2d2d;
+  }
+
+  /* Screen */
+  .phone-screen {
+    background: #ECE5DD;
+    border-radius: 36px;
+    overflow: hidden;
+    height: 720px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* ── WhatsApp Header ────────────────────────────────────── */
+  .wa-header {
+    background: #128C7E;
+    padding: 10px 14px 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 5;
+  }
+  .wa-header-back {
+    color: rgba(255,255,255,0.85);
+    font-size: 1.3rem;
+    cursor: pointer;
+    line-height: 1;
+    margin-right: 2px;
+  }
+  .wa-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .wa-header-info { flex: 1; min-width: 0; }
+  .wa-header-name {
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .wa-header-status {
+    color: rgba(255,255,255,0.75);
+    font-size: 0.7rem;
+    margin-top: 1px;
+  }
+  .wa-header-actions {
+    display: flex; gap: 14px; align-items: center;
+  }
+  .wa-header-actions span {
+    color: rgba(255,255,255,0.85);
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+
+  /* ── Chat wallpaper ─────────────────────────────────────── */
+  .wa-chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 10px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    scroll-behavior: smooth;
+    position: relative;
+  }
+  .wa-chat::-webkit-scrollbar { width: 3px; }
+  .wa-chat::-webkit-scrollbar-track { background: transparent; }
+  .wa-chat::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 2px; }
+
+  /* SVG wallpaper pattern */
+  .wa-chat {
+    background-color: #ECE5DD;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cg fill='none' stroke='%23C8B8AA' stroke-width='0.6' opacity='0.45'%3E%3Cpath d='M15 30 C15 22 22 15 30 15 C38 15 45 22 45 30 C45 38 38 45 30 45'/%3E%3Cpath d='M10 10 L50 10 L50 50 L10 50 Z' stroke-dasharray='3,8'/%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3Cpath d='M0 0 L60 60 M60 0 L0 60' stroke-dasharray='2,18'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* Date separator */
+  .date-sep {
+    text-align: center;
+    margin: 8px 0 6px;
+    pointer-events: none;
+  }
+  .date-sep span {
+    background: rgba(225,245,254,0.92);
+    color: #54656f;
+    font-size: 0.68rem;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  }
+
+  /* Bubbles */
+  .bubble-row {
+    display: flex;
+    margin-bottom: 2px;
+  }
+  .bubble-row.agent { justify-content: flex-start; }
+  .bubble-row.user  { justify-content: flex-end; }
+
+  .bubble {
+    max-width: 82%;
+    padding: 7px 10px 4px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    position: relative;
+    word-break: break-word;
+    animation: bubblePop 0.18s ease-out;
+  }
+
+  @keyframes bubblePop {
+    from { opacity: 0; transform: scale(0.93) translateY(4px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .bubble.agent {
+    background: #fff;
+    border-radius: 0px 8px 8px 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+    color: #111;
+  }
+  .bubble.agent::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -8px;
+    border-width: 0 8px 8px 0;
+    border-style: solid;
+    border-color: transparent #fff transparent transparent;
+  }
+
+  .bubble.user {
+    background: #DCF8C6;
+    border-radius: 8px 0px 8px 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+    color: #111;
+  }
+  .bubble.user::after {
+    content: '';
+    position: absolute;
+    top: 0; right: -8px;
+    border-width: 0 0 8px 8px;
+    border-style: solid;
+    border-color: transparent transparent transparent #DCF8C6;
+  }
+
+  .bubble-time {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 3px;
+    margin-top: 2px;
+  }
+  .bubble-time span {
+    font-size: 0.64rem;
+    color: rgba(0,0,0,0.38);
+    white-space: nowrap;
+  }
+  .bubble.user .bubble-time span { color: rgba(0,0,0,0.38); }
+  .tick { font-size: 0.7rem; color: #53bdeb; }
+
+  /* Typing indicator */
+  .typing-indicator {
+    display: none;
+    align-items: flex-end;
+    gap: 3px;
+    padding: 9px 12px 8px;
+    background: #fff;
+    border-radius: 0 10px 10px 10px;
+    max-width: 60px;
+    margin-left: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+    animation: bubblePop 0.18s ease-out;
+  }
+  .typing-indicator.show { display: flex; }
+  .typing-indicator .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #90a0aa;
+    animation: typingDot 1.2s infinite ease-in-out;
+    flex-shrink: 0;
+  }
+  .typing-indicator .dot:nth-child(1) { animation-delay: 0s; }
+  .typing-indicator .dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-indicator .dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes typingDot {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30%            { transform: translateY(-5px); opacity: 1; }
+  }
+
+  /* ── Input bar ──────────────────────────────────────────── */
+  .wa-input-bar {
+    background: #f0f0f0;
+    padding: 8px 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    border-top: 1px solid rgba(0,0,0,0.07);
+  }
+  .wa-input-emoji {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #54656f;
+    flex-shrink: 0;
+  }
+  .wa-input {
+    flex: 1;
+    background: #fff;
+    border: none;
+    border-radius: 22px;
+    padding: 9px 14px;
+    font-size: 0.84rem;
+    outline: none;
+    color: #111;
+    font-family: inherit;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    resize: none;
+    max-height: 80px;
+    overflow-y: auto;
+    line-height: 1.4;
+  }
+  .wa-input::placeholder { color: #aaa; }
+  .wa-send {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: #128C7E;
+    border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .wa-send:hover { background: #0d7a6e; }
+  .wa-send svg { width: 18px; height: 18px; fill: #fff; }
+
+  /* ── Responsive ─────────────────────────────────────────── */
+  @media (max-width: 420px) {
+    .phone-frame { width: 340px; border-radius: 40px; }
+    .phone-screen { border-radius: 28px; height: 640px; }
+    .page-header h1 { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>AgentKit — Demo Visual</h1>
+  <p>Selecciona un negocio y chatea con el agente · sin servidor, todo en el navegador</p>
+</div>
+
+<!-- Demo selector cards -->
+<div class="demo-cards">
+  <div class="demo-card active" id="card-clinica" style="--card-color:#26a69a;" onclick="switchDemo('clinica')">
+    <span class="card-emoji">🏥</span>
+    <span class="card-name">Clínica MediVida</span>
+    <span class="card-agent">Agente: Valeria</span>
+  </div>
+  <div class="demo-card" id="card-inmobiliaria" style="--card-color:#1e88e5;" onclick="switchDemo('inmobiliaria')">
+    <span class="card-emoji">🏠</span>
+    <span class="card-name">ProHogar</span>
+    <span class="card-agent">Agente: Carlos</span>
+  </div>
+  <div class="demo-card" id="card-restaurante" style="--card-color:#e53935;" onclick="switchDemo('restaurante')">
+    <span class="card-emoji">🍽️</span>
+    <span class="card-name">El Criollo</span>
+    <span class="card-agent">Agente: Luna</span>
+  </div>
+</div>
+
+<!-- Phone frame -->
+<div class="phone-wrap">
+  <div class="phone-frame">
+    <div class="phone-notch">
+      <div class="notch-speaker"></div>
+      <div class="notch-camera"></div>
+    </div>
+    <div class="phone-screen">
+
+      <!-- WhatsApp header -->
+      <div class="wa-header" id="waHeader">
+        <div class="wa-header-back">‹</div>
+        <div class="wa-avatar" id="waAvatar">🏥</div>
+        <div class="wa-header-info">
+          <div class="wa-header-name" id="waName">Clínica MediVida</div>
+          <div class="wa-header-status" id="waStatus">Valeria · en línea</div>
+        </div>
+        <div class="wa-header-actions">
+          <span>📹</span>
+          <span>📞</span>
+          <span>⋮</span>
+        </div>
+      </div>
+
+      <!-- Chat area -->
+      <div class="wa-chat" id="waChat">
+        <div class="date-sep"><span id="todayLabel">Hoy</span></div>
+        <!-- Messages injected here -->
+        <div class="bubble-row agent" id="typingRow" style="display:none;">
+          <div class="typing-indicator show" id="typingIndicator">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input bar -->
+      <div class="wa-input-bar">
+        <button class="wa-input-emoji" title="Emoji">😊</button>
+        <textarea class="wa-input" id="waInput" placeholder="Escribe un mensaje..." rows="1"></textarea>
+        <button class="wa-send" id="waSend" onclick="sendMessage()" title="Enviar">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+
+    </div><!-- /phone-screen -->
+  </div><!-- /phone-frame -->
+</div><!-- /phone-wrap -->
+
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════════════
+   UTILITY
+═══════════════════════════════════════════════════════════ */
+function now() {
+  return new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit', hour12: false });
+}
+
+function coincide(clave, msg) {
+  if (clave.length <= 4) {
+    const re = new RegExp('\\b' + clave.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+    return re.test(msg);
+  }
+  return msg.toLowerCase().includes(clave.toLowerCase());
+}
+
+function buscarRespuesta(mensaje, respuestas) {
+  const msg = mensaje.toLowerCase();
+  let mejor = null, maxScore = 0;
+  for (const item of respuestas) {
+    let score = 0;
+    for (const c of item.claves) {
+      if (coincide(c, msg)) score++;
+    }
+    if (score > maxScore) { maxScore = score; mejor = item; }
+  }
+  return mejor;
+}
+
+function parseBold(txt) {
+  return txt.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
+}
+
+function formatMsg(txt) {
+  return parseBold(txt)
+    .replace(/\n/g, '<br>');
+}
+
+function typingDelay(txt) {
+  // ~28ms per char, clamped 600–3200ms
+  return Math.min(3200, Math.max(600, txt.length * 28));
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DATA — CLÍNICA
+═══════════════════════════════════════════════════════════ */
+const CLINICA_DATA = {
+  agent:   'Valeria',
+  empresa: 'Clínica MediVida',
+  color:   '#075E54',
+  header:  '#128C7E',
+  avatar:  '🏥',
+  respuestas: [
+    {
+      claves: ['hola','buenas','buenos','hey'],
+      intencion: null,
+      respuesta:
+        '¡Hola! 😊 Bienvenido a *Clínica MediVida*. Soy Valeria, tu asistente virtual.\n\n' +
+        '¿En qué puedo ayudarte hoy?\n' +
+        '• 📅 Agendar una cita\n' +
+        '• 💊 Especialidades y precios\n' +
+        '• 🔬 Laboratorio\n' +
+        '• 📍 Ubicación y horarios\n\n' +
+        '¿Qué necesitas?'
+    },
+    {
+      claves: ['cita','consulta','agendar','reservar'],
+      intencion: 'cita_general',
+      respuesta:
+        'Con gusto te agendo 📅 Contamos con:\n\n' +
+        '👨‍⚕️ *Medicina General* — $15 USD\n' +
+        '❤️ *Cardiología* — $45 USD\n' +
+        '🧠 *Neurología* — $50 USD\n' +
+        '👶 *Pediatría* — $30 USD\n' +
+        '🦴 *Traumatología* — $40 USD\n' +
+        '👁️ *Oftalmología* — $35 USD\n\n' +
+        '¿Con qué especialista te agendo?'
+    },
+    {
+      claves: ['pediatra','pediatría','niño','hijo'],
+      intencion: 'especialidad',
+      respuesta:
+        'Nuestro pediatra es el *Dr. Carlos Martínez* 👶\n\n' +
+        '📅 Disponibilidad: Lunes, Miércoles y Viernes 9am–5pm\n' +
+        '💰 Consulta: $30 USD\n\n' +
+        'Para apartar tu cita dime:\n' +
+        '• Tu *nombre completo*\n' +
+        '• El *día y hora* que prefieres\n\n' +
+        '¿Cuándo les viene bien?'
+    },
+    {
+      claves: ['cardiología','corazón','cardiólogo'],
+      intencion: 'especialidad',
+      respuesta:
+        'El especialista en cardiología es el *Dr. Javier Rodríguez* ❤️\n\n' +
+        '📅 Disponibilidad: Martes y Jueves 8am–4pm\n' +
+        '💰 Consulta: $45 USD\n\n' +
+        'Para apartar tu cita dime tu *nombre* y el *día y hora* que prefieres.'
+    },
+    {
+      claves: ['medicina general','general'],
+      intencion: 'especialidad',
+      respuesta:
+        'Nuestra médica general es la *Dra. Ana López* 🩺\n\n' +
+        '📅 Lun–Vie 8am–6pm | Sáb 9am–1pm\n' +
+        '💰 Consulta: $15 USD\n' +
+        '✅ Atiende urgencias sin cita previa\n\n' +
+        'Dime tu *nombre* y *cuándo* te viene bien.'
+    },
+    {
+      claves: ['laboratorio','examen','análisis','sangre'],
+      intencion: null,
+      respuesta:
+        'Sí, contamos con laboratorio propio 🔬 Resultados el mismo día.\n\n' +
+        '💰 Precios:\n' +
+        '• Hemograma completo: $12\n' +
+        '• Química sanguínea: $18\n' +
+        '• Perfil lipídico: $15\n' +
+        '• Glicemia en ayunas: $8\n' +
+        '• Examen de orina: $10\n' +
+        '• *Paquete chequeo completo: $45*\n\n' +
+        '🕐 Lun–Vie 7am–12pm. No necesitas cita.\n\n' +
+        '¿Necesitas saber si requieres ayuno?'
+    },
+    {
+      claves: ['precio','costo','cuánto','cuanto'],
+      intencion: null,
+      respuesta:
+        'Nuestros precios 💰\n\n' +
+        '👨‍⚕️ Medicina General: $15 USD\n' +
+        '❤️ Cardiología: $45 USD\n' +
+        '🧠 Neurología: $50 USD\n' +
+        '👶 Pediatría: $30 USD\n' +
+        '🦴 Traumatología: $40 USD\n' +
+        '👁️ Oftalmología: $35 USD\n\n' +
+        '🔬 Laboratorio desde $8 USD\n' +
+        '📦 Paquete chequeo: $45 USD\n\n' +
+        '¿Te agendo una cita?'
+    },
+    {
+      claves: ['horario','hora','abren','cuando'],
+      intencion: null,
+      respuesta:
+        'Nuestro horario 🕐\n\n' +
+        '📅 Lunes a Viernes: 8am – 8pm\n' +
+        '📅 Sábados: 9am – 3pm\n' +
+        '🔬 Laboratorio: 7am – 12pm\n' +
+        '🚨 Urgencias: 24 horas\n' +
+        '❌ Domingos: cerrado (urgencias activas)\n\n' +
+        '¿Te agendo una cita? Dime qué especialidad y cuándo.'
+    },
+    {
+      claves: ['gracias','perfecto','listo','genial'],
+      intencion: null,
+      respuesta:
+        '¡Con mucho gusto! 😊 Es un placer ayudarte.\n\n' +
+        '¡Que tengas un excelente día! 🌟\n' +
+        'Recuerda que estamos disponibles de Lun–Vie 8am–8pm.\n' +
+        '📞 +52 55-4567-8901'
+    }
+  ],
+  intencionesCita: ['cita_general','especialidad','visita'],
+  confirmar: (nombre, detalle) =>
+    `✅ *Tu cita está confirmada.*\n\n` +
+    `👤 Paciente: ${nombre}\n` +
+    `📅 ${detalle}\n` +
+    `📍 Clínica MediVida, Av. Insurgentes Sur 1234, CDMX\n` +
+    `📞 +52 55-4567-8901\n\n` +
+    `Llega 10 min antes. ¡Te esperamos! 😊`,
+  default:
+    'Gracias por tu mensaje 😊 Puedo ayudarte con:\n' +
+    '📅 Citas — 💰 Precios — 🔬 Laboratorio — 📍 Ubicación\n\n' +
+    '¿Sobre qué necesitas información?'
+};
+
+/* ═══════════════════════════════════════════════════════════
+   DATA — INMOBILIARIA
+═══════════════════════════════════════════════════════════ */
+const INMOBILIARIA_DATA = {
+  agent:   'Carlos',
+  empresa: 'ProHogar Inmobiliaria',
+  color:   '#1565C0',
+  header:  '#1976D2',
+  avatar:  '🏠',
+  respuestas: [
+    {
+      claves: ['hola','buenas','buenos','hey'],
+      intencion: null,
+      respuesta:
+        '¡Hola! Bienvenido a *ProHogar Inmobiliaria* 🏠\n\n' +
+        'Soy Carlos, tu asesor virtual. Más de 10 años ayudando a familias\n' +
+        'venezolanas a encontrar su hogar ideal.\n\n' +
+        '¿En qué puedo ayudarte?\n' +
+        '• 🏠 Ver propiedades disponibles\n' +
+        '• 💰 Precios de venta o alquiler\n' +
+        '• 📋 Agendar una visita\n' +
+        '• 📄 Trámites y documentos\n\n' +
+        '¿Qué estás buscando?'
+    },
+    {
+      claves: ['comprar','venta','adquirir','precio de venta'],
+      intencion: 'venta',
+      respuesta:
+        'Excelente decisión 🏠 Propiedades en venta:\n\n' +
+        '📍 *Caracas:*\n' +
+        '• Apto 3 hab — Altamira → *$85,000*\n' +
+        '• Casa 4 hab — El Hatillo → *$140,000*\n' +
+        '• Apto 2 hab — Las Mercedes → *$62,000*\n' +
+        '• Local comercial — Chacao → *$95,000*\n\n' +
+        '📍 *Interior:*\n' +
+        '• Apto 3 hab — Valencia → *$55,000*\n' +
+        '• Casa 4 hab — Maracaibo → *$70,000*\n\n' +
+        'Todos en *USD*. Aceptamos Zelle y cripto.\n\n' +
+        '¿Cuál sector te interesa?'
+    },
+    {
+      claves: ['alquilar','alquiler','arrendar','arriendo','renta'],
+      intencion: 'alquiler',
+      respuesta:
+        'Excelentes opciones en alquiler 🔑\n\n' +
+        '📍 *Caracas:*\n' +
+        '• Apto 3 hab — Altamira → *$650/mes*\n' +
+        '• Casa 4 hab — El Hatillo → *$900/mes*\n' +
+        '• Apto 2 hab — Las Mercedes → *$480/mes*\n' +
+        '• Local — Chacao → *$750/mes*\n\n' +
+        '📍 *Interior:*\n' +
+        '• Apto 3 hab — Valencia → *$400/mes*\n' +
+        '• Casa 4 hab — Maracaibo → *$520/mes*\n\n' +
+        'Contratos mínimo 6 meses. Depósito = 2 mensualidades.\n\n' +
+        '¿Cuántas habitaciones necesitas y en qué zona?'
+    },
+    {
+      claves: ['visita','visitar','conocer','mostrar','ver la propiedad'],
+      intencion: 'visita',
+      respuesta:
+        'Con mucho gusto coordinamos una visita 📅\n\n' +
+        'Realizamos visitas de Lunes a Sábado, 9am a 5pm.\n\n' +
+        'Para agendarla necesito:\n' +
+        '• Tu *nombre completo*\n' +
+        '• La propiedad o zona de interés\n' +
+        '• El *día y hora* que te viene bien\n\n' +
+        '¿Me das esos datos?'
+    },
+    {
+      claves: ['altamira','hatillo','mercedes','chacao','caracas'],
+      intencion: null,
+      respuesta:
+        'Propiedades disponibles en Caracas 📍\n\n' +
+        '• *Altamira* — Apto 3 hab | Venta: $85,000 | Alquiler: $650/mes\n' +
+        '• *Las Mercedes* — Apto 2 hab | Venta: $62,000 | Alquiler: $480/mes\n' +
+        '• *El Hatillo* — Casa 4 hab | Venta: $140,000 | Alquiler: $900/mes\n' +
+        '• *Chacao* — Local comercial | Venta: $95,000 | Alquiler: $750/mes\n\n' +
+        '¿Te interesa alguna? Puedo agendarte una visita.'
+    },
+    {
+      claves: ['valencia','carabobo','maracaibo','zulia','interior'],
+      intencion: null,
+      respuesta:
+        'Propiedades en el interior del país 📍\n\n' +
+        '• *Valencia, Carabobo* — Apto 3 hab | Venta: $55,000 | Alquiler: $400/mes\n' +
+        '• *Maracaibo, Zulia* — Casa 4 hab | Venta: $70,000 | Alquiler: $520/mes\n\n' +
+        '¿Te interesa alguna? Coordino visita o te envío fotos.'
+    },
+    {
+      claves: ['precio','costo','cuánto','cuanto','presupuesto'],
+      intencion: null,
+      respuesta:
+        'Nuestros precios 💰\n\n' +
+        '🏠 *En venta:* desde $55,000 hasta $140,000 USD\n' +
+        '🔑 *En alquiler:* desde $400 hasta $900 USD/mes\n\n' +
+        'Todos incluyen:\n' +
+        '✅ Avalúo actualizado\n' +
+        '✅ Estudio de título\n' +
+        '✅ Asesoría legal completa\n\n' +
+        '¿Cuál es tu rango de presupuesto?'
+    },
+    {
+      claves: ['documentos','trámites','papeles','requisitos','contrato'],
+      intencion: null,
+      respuesta:
+        'Para comprar en Venezuela necesitas 📄\n\n' +
+        '*Comprador:* Cédula, RIF, referencias bancarias, declaración de fondos.\n\n' +
+        '*Vendedor:* Documento de propiedad, solvencias (HIDROCAPITAL, electricidad), cédula catastral.\n\n' +
+        'Nosotros te guiamos en cada paso 😊'
+    },
+    {
+      claves: ['gracias','perfecto','listo','genial','excelente'],
+      intencion: null,
+      respuesta:
+        '¡Con mucho gusto! 😊 Es un placer ayudarte.\n\n' +
+        'Estamos disponibles Lunes a Sábado 9am–6pm.\n' +
+        '📞 +58 412-555-7890\n' +
+        '📍 Av. Francisco de Miranda, Chacao, Caracas\n\n' +
+        '¡Hasta pronto! 🏠'
+    }
+  ],
+  intencionesCita: ['visita'],
+  confirmar: (nombre, detalle) =>
+    `🎉 *Tu visita está agendada.*\n\n` +
+    `👤 Cliente: ${nombre}\n` +
+    `👤 Asesor: Carlos Rodríguez\n` +
+    `📅 ${detalle}\n` +
+    `📍 Av. Francisco de Miranda, Chacao, Caracas\n` +
+    `📞 +58 412-555-7890\n\n` +
+    `¡Te esperamos! 😊`,
+  default:
+    'Gracias por tu mensaje 😊 En ProHogar puedo ayudarte con:\n' +
+    '🏠 Propiedades en venta o alquiler\n' +
+    '📅 Visitas a inmuebles\n' +
+    '📄 Trámites y documentación\n\n' +
+    '¿Sobre qué necesitas información?'
+};
+
+/* ═══════════════════════════════════════════════════════════
+   DATA — RESTAURANTE
+═══════════════════════════════════════════════════════════ */
+const RESTAURANTE_DATA = {
+  agent:   'Luna',
+  empresa: 'El Criollo',
+  color:   '#B71C1C',
+  header:  '#C62828',
+  avatar:  '🍽️',
+  respuestas: [
+    {
+      claves: ['hola','buenas','buenos','hey'],
+      intencion: null,
+      respuesta:
+        '¡Bienvenido a *El Criollo* 🇻🇪! Soy Luna, tu asistente.\n\n' +
+        'Somos un restaurante de comida venezolana en Las Mercedes, Caracas.\n' +
+        'Abrimos todos los días de 11am a 10pm.\n\n' +
+        '¿En qué puedo ayudarte?\n' +
+        '• 🍽️ Ver el menú\n' +
+        '• 🛵 Hacer un pedido para delivery\n' +
+        '• 📅 Reservar una mesa\n' +
+        '• 📍 Ubicación y horarios\n\n' +
+        '¿Qué deseas?'
+    },
+    {
+      claves: ['menú','menu','carta','qué tienen','comida'],
+      intencion: null,
+      respuesta:
+        'Aquí nuestro menú 🍽️\n\n' +
+        '*🍳 Desayunos (11am–12pm)*\n' +
+        '• Arepa reina pepiada — $4\n' +
+        '• Cachapa con queso de mano — $5\n' +
+        '• Tequeños (6 uds) — $4\n\n' +
+        '*🍖 Platos principales*\n' +
+        '• Pabellón criollo — $8\n' +
+        '• Asado negro con arroz y tajadas — $10\n' +
+        '• Pollo en salsa criolla — $9\n' +
+        '• Hallaca (temporada) — $3.50 c/u\n\n' +
+        '*🍹 Bebidas*\n' +
+        '• Papelón con limón — $2\n' +
+        '• Jugo natural — $2.50\n' +
+        '• Malta / Refresco — $1.50\n\n' +
+        'Todos los precios en *USD* 💵\n\n' +
+        '¿Te animas a pedir algo o prefieres reservar una mesa?'
+    },
+    {
+      claves: ['arepa','pabellón','cachapa','tequeño','tequeños','hallaca','hallacas'],
+      intencion: null,
+      respuesta:
+        '¡Nuestras especialidades venezolanas! 🇻🇪\n\n' +
+        '• *Arepa reina pepiada* (pollo, aguacate, mayo) — $4\n' +
+        '• *Cachapa con queso de mano* — $5\n' +
+        '• *Tequeños* (6 unidades) — $4\n' +
+        '• *Pabellón criollo* — $8\n' +
+        '• *Asado negro* con arroz y tajadas — $10\n' +
+        '• *Pollo en salsa criolla* — $9\n' +
+        '• *Hallaca* (disponible todo el año) — $3.50 c/u\n\n' +
+        '¿Quieres hacer un pedido o reservar una mesa?'
+    },
+    {
+      claves: ['delivery','domicilio','a domicilio','envío','envio','traer'],
+      intencion: 'pedido',
+      respuesta:
+        'Hacemos delivery en Caracas 🛵\n\n' +
+        '📍 Cobertura: Las Mercedes, Chacao, Altamira, El Rosal, La Castellana.\n' +
+        '⏱️ Tiempo: 30–45 minutos\n' +
+        '💵 Costo delivery: $2 (gratis en pedidos mayores a $20)\n' +
+        '💳 Pago: Efectivo USD, Zelle, Pago Móvil, Binance Pay\n\n' +
+        'Para tu pedido dime tu *nombre* primero 😊'
+    },
+    {
+      claves: ['reserva','reservar','mesa','reservación','para cenar','para almorzar'],
+      intencion: 'reserva',
+      respuesta:
+        'Con gusto te aparto una mesa 📅\n\n' +
+        '📍 Estamos en Las Mercedes, Caracas\n' +
+        '🕐 Todos los días 11am–10pm\n' +
+        '👥 Capacidad: hasta 50 personas\n\n' +
+        'Para la reserva necesito tu *nombre* 😊'
+    },
+    {
+      claves: ['precio','costo','cuánto','cuanto'],
+      intencion: null,
+      respuesta:
+        'Nuestros precios en USD 💵\n\n' +
+        '• Arepas: $4–$4.50\n' +
+        '• Cachapa: $5\n' +
+        '• Platos principales: $8–$10\n' +
+        '• Hallacas: $3.50 c/u\n' +
+        '• Bebidas: $1.50–$2.50\n\n' +
+        'Delivery: $2 (gratis en pedidos +$20)\n\n' +
+        '¿Quieres ver el menú completo o hacer un pedido?'
+    },
+    {
+      claves: ['pago','pagar','zelle','efectivo','pago móvil','binance'],
+      intencion: null,
+      respuesta:
+        'Aceptamos varios métodos 💳\n\n' +
+        '✅ Efectivo USD\n' +
+        '✅ Zelle\n' +
+        '✅ Pago Móvil\n' +
+        '✅ Binance Pay (USDT)\n' +
+        '✅ Tarjeta débito/crédito (punto de venta)\n\n' +
+        '¿Quieres hacer un pedido o reservar?'
+    },
+    {
+      claves: ['horario','hora','abierto','abren','cierran'],
+      intencion: null,
+      respuesta:
+        'Nuestro horario 🕐\n\n' +
+        '📅 *Lun–Jue:* 11am – 9pm\n' +
+        '📅 *Vie–Sáb:* 11am – 10:30pm\n' +
+        '📅 *Domingos:* 11am – 8pm\n\n' +
+        'Delivery disponible en todos los horarios.\n\n' +
+        '¿Quieres reservar o hacer un pedido?'
+    },
+    {
+      claves: ['gracias','perfecto','listo','genial','excelente'],
+      intencion: null,
+      respuesta:
+        '¡Con mucho gusto! 😊 Es un placer atenderte.\n\n' +
+        'Síguenos en Instagram: *@elcriollovzla*\n' +
+        '¡Buen provecho y hasta pronto! 🇻🇪🍽️'
+    }
+  ],
+  intencionesCita: ['pedido','reserva'],
+  confirmarPedido: (nombre, direccion, items) =>
+    `🛵 *¡Tu pedido está en camino!*\n\n` +
+    `👤 ${nombre}\n` +
+    `📋 ${items}\n` +
+    `📍 Entrega en: ${direccion}\n` +
+    `⏱️ Tiempo estimado: 30–45 minutos\n` +
+    `📞 +58 412-888-3456\n\n` +
+    `¡Buen provecho! 🍽️🇻🇪`,
+  confirmarReserva: (nombre, detalle, personas) =>
+    `🎉 *¡Tu reserva está confirmada!*\n\n` +
+    `👤 ${nombre}\n` +
+    `📅 ${detalle}\n` +
+    (personas ? `👥 ${personas} personas\n` : '') +
+    `📍 Calle La Trinidad, Las Mercedes, Caracas\n` +
+    `📞 +58 412-888-3456\n\n` +
+    `¡Te esperamos! 🇻🇪`,
+  default:
+    'Gracias por tu mensaje 😊 En El Criollo puedo ayudarte con:\n' +
+    '🍽️ Menú — 🛵 Delivery — 📅 Reservas — 📍 Ubicación\n\n' +
+    '¿Sobre qué necesitas información?'
+};
+
+const DEMOS = { clinica: CLINICA_DATA, inmobiliaria: INMOBILIARIA_DATA, restaurante: RESTAURANTE_DATA };
+
+/* ═══════════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════════ */
+let currentDemo = 'clinica';
+let estado      = 'general';   // general | pidiendo_nombre | pidiendo_fecha | pidiendo_items | confirmado
+let intencionActual = null;
+let nombreCliente   = null;
+let datosPedido     = {};
+
+const DIAS     = ['lunes','martes','miércoles','miercoles','jueves','viernes','sábado','sabado','domingo','hoy','mañana','esta noche','esta tarde'];
+const CONFIRMS = ['sí','si','claro','dale','me interesa','quiero','va','ok','perfecto','bueno','adelante'];
+
+function esConfirmacion(msg) {
+  const m = msg.toLowerCase();
+  return CONFIRMS.some(c => m.includes(c)) || DIAS.some(d => m.includes(d));
+}
+
+function extraerNombre(msg) {
+  const skip = new Set(['hola','buenos','buenas','gracias','quiero','necesito','para','una','un','me','mi','mi','soy']);
+  const words = msg.trim().split(/\s+/);
+  const cands = words.filter(w => w.length > 2 && w[0] === w[0].toUpperCase() && !skip.has(w.toLowerCase()));
+  if (cands.length > 0) return cands.slice(0,2).join(' ');
+  return msg.trim().replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function tieneDia(msg) {
+  return DIAS.some(d => msg.toLowerCase().includes(d));
+}
+
+function tieneHora(msg) {
+  return /\d{1,2}(am|pm|:\d{2})/i.test(msg);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DOM HELPERS
+═══════════════════════════════════════════════════════════ */
+const chat    = document.getElementById('waChat');
+const typingR = document.getElementById('typingRow');
+const inputEl = document.getElementById('waInput');
+
+function scrollBottom() {
+  setTimeout(() => { chat.scrollTop = chat.scrollHeight; }, 50);
+}
+
+function addBubble(role, text, callback) {
+  const row = document.createElement('div');
+  row.className = `bubble-row ${role}`;
+  const bub = document.createElement('div');
+  bub.className = `bubble ${role}`;
+  bub.innerHTML = formatMsg(text) +
+    `<div class="bubble-time">` +
+    `<span>${now()}</span>` +
+    (role === 'user' ? `<span class="tick">✓✓</span>` : '') +
+    `</div>`;
+  row.appendChild(bub);
+  // Insert before typing indicator row
+  chat.insertBefore(row, typingR);
+  scrollBottom();
+  if (callback) callback();
+}
+
+function showTyping() {
+  typingR.style.display = 'flex';
+  scrollBottom();
+}
+
+function hideTyping() {
+  typingR.style.display = 'none';
+}
+
+function agentReply(text, delay) {
+  showTyping();
+  setTimeout(() => {
+    hideTyping();
+    addBubble('agent', text);
+  }, delay || typingDelay(text));
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BRAIN
+═══════════════════════════════════════════════════════════ */
+function processMessage(msg) {
+  const data = DEMOS[currentDemo];
+  const msgL = msg.toLowerCase();
+
+  /* ── Restaurante: multi-step order flow ─────────────────── */
+  if (currentDemo === 'restaurante') {
+
+    if (estado === 'pidiendo_nombre_pedido') {
+      datosPedido.nombre = extraerNombre(msg);
+      estado = 'pidiendo_direccion_pedido';
+      agentReply(`Anotado, *${datosPedido.nombre}* 📝\n\n¿Cuál es tu *dirección* de entrega? (Sector/Calle, Caracas)`);
+      return;
+    }
+    if (estado === 'pidiendo_direccion_pedido') {
+      datosPedido.direccion = msg;
+      estado = 'pidiendo_items_pedido';
+      agentReply(`Perfecto 📍 Entregamos en *${msg}*.\n\n¿Qué deseas ordenar? Puedes pedir varios platos.\n_Ejemplo: 2 arepas reina pepiada, 1 pabellón criollo, 2 papelones_`);
+      return;
+    }
+    if (estado === 'pidiendo_items_pedido') {
+      const confirmTxt = data.confirmarPedido(datosPedido.nombre || 'Cliente', datosPedido.direccion || 'dirección indicada', msg);
+      estado = 'confirmado';
+      datosPedido = {};
+      agentReply(confirmTxt, typingDelay(confirmTxt) * 0.7);
+      return;
+    }
+    if (estado === 'pidiendo_nombre_reserva') {
+      nombreCliente = extraerNombre(msg);
+      estado = 'pidiendo_fecha_reserva';
+      agentReply(`¡Perfecto, *${nombreCliente}*! 😊\n\n¿Para qué *fecha y hora* y *cuántas personas*?\nEjemplo: _viernes a las 7pm para 4 personas_`);
+      return;
+    }
+    if (estado === 'pidiendo_fecha_reserva') {
+      const personasM = msg.match(/(\d+)\s*(person|pax|comens)/i);
+      const personas  = personasM ? personasM[1] : '';
+      const confirmTxt = data.confirmarReserva(nombreCliente || 'Cliente', msg, personas);
+      estado = 'confirmado';
+      nombreCliente = null;
+      agentReply(confirmTxt, typingDelay(confirmTxt) * 0.7);
+      return;
+    }
+  }
+
+  /* ── Clínica & Inmobiliaria: generic pidiendo_datos ──────── */
+  if (estado === 'pidiendo_datos') {
+    // Check if user is escaping the flow
+    const nueva = buscarRespuesta(msg, data.respuestas);
+    const escapando = nueva && nueva.intencion == null && !esConfirmacion(msg);
+    if (escapando) {
+      estado = 'general';
+      intencionActual = null;
+      agentReply(nueva.respuesta);
+      return;
+    }
+
+    if (estado === 'pidiendo_datos' && nombreCliente === null) {
+      // First data entry — extract name, ask for day if no day in message
+      const hasDia  = tieneDia(msg);
+      const hasHora = tieneHora(msg);
+      if (hasDia || hasHora) {
+        // Has day/time already: confirm
+        nombreCliente = extraerNombre(msg);
+        const confirmTxt = data.confirmar(nombreCliente, msg);
+        estado = 'confirmado';
+        nombreCliente = null;
+        agentReply(confirmTxt, typingDelay(confirmTxt) * 0.7);
+      } else {
+        // Just got name
+        nombreCliente = extraerNombre(msg);
+        agentReply(`Perfecto, *${nombreCliente}* 😊\n\n¿Qué día y hora te viene mejor?\nEjemplo: _viernes a las 11am_ o _sábado en la mañana_`);
+        estado = 'pidiendo_fecha';
+      }
+      return;
+    }
+    if (estado === 'pidiendo_fecha') {
+      const confirmTxt = data.confirmar(nombreCliente || 'Cliente', msg);
+      estado = 'confirmado';
+      nombreCliente = null;
+      agentReply(confirmTxt, typingDelay(confirmTxt) * 0.7);
+      return;
+    }
+  }
+
+  /* ── General matching ───────────────────────────────────── */
+  const resultado = buscarRespuesta(msg, data.respuestas);
+
+  if (resultado) {
+    agentReply(resultado.respuesta);
+    // Trigger data-collection flows
+    if (currentDemo === 'restaurante') {
+      if (resultado.intencion === 'pedido') {
+        estado = 'pidiendo_nombre_pedido';
+        datosPedido = {};
+      } else if (resultado.intencion === 'reserva') {
+        estado = 'pidiendo_nombre_reserva';
+        nombreCliente = null;
+      }
+    } else {
+      if (resultado.intencion && data.intencionesCita.includes(resultado.intencion)) {
+        estado = 'pidiendo_datos';
+        intencionActual = resultado.intencion;
+        nombreCliente = null;
+      }
+    }
+  } else {
+    agentReply(data.default);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SEND
+═══════════════════════════════════════════════════════════ */
+function sendMessage() {
+  const msg = inputEl.value.trim();
+  if (!msg) return;
+  inputEl.value = '';
+  inputEl.style.height = 'auto';
+  addBubble('user', msg);
+  setTimeout(() => processMessage(msg), 120);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SWITCH DEMO
+═══════════════════════════════════════════════════════════ */
+function switchDemo(name) {
+  if (currentDemo === name) return;
+
+  // Update cards
+  document.querySelectorAll('.demo-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('card-' + name).classList.add('active');
+
+  currentDemo     = name;
+  estado          = 'general';
+  intencionActual = null;
+  nombreCliente   = null;
+  datosPedido     = {};
+
+  const data = DEMOS[name];
+
+  // Update header
+  document.getElementById('waHeader').style.background = data.header;
+  document.getElementById('waAvatar').textContent      = data.avatar;
+  document.getElementById('waName').textContent        = data.empresa;
+  document.getElementById('waStatus').textContent      = `${data.agent} · en línea`;
+  document.getElementById('waSend').style.background   = data.header;
+
+  // Clear messages
+  const toRemove = [];
+  for (const child of chat.children) {
+    if (child.id !== 'typingRow' && !child.classList.contains('date-sep')) {
+      toRemove.push(child);
+    }
+  }
+  toRemove.forEach(el => el.remove());
+
+  // Auto-greet
+  setTimeout(() => {
+    const greeting = data.respuestas.find(r => r.claves.includes('hola'));
+    if (greeting) agentReply(greeting.respuesta, 700);
+  }, 300);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════ */
+// Today date label
+document.getElementById('todayLabel').textContent = new Date().toLocaleDateString('es', {
+  weekday: 'long', day: 'numeric', month: 'long'
+});
+
+// Enter to send (Shift+Enter = newline)
+inputEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+
+// Auto-resize textarea
+inputEl.addEventListener('input', () => {
+  inputEl.style.height = 'auto';
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 80) + 'px';
+});
+
+// Initial greeting
+window.addEventListener('load', () => {
+  const data = DEMOS[currentDemo];
+  const greeting = data.respuestas.find(r => r.claves.includes('hola'));
+  if (greeting) agentReply(greeting.respuesta, 900);
+});
+</script>
+</body>
+</html>
