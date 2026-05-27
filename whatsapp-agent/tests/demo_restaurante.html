@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restaurante El Criollo — Demo Interactivo</title>
+<style>
+  /* ── Reset & Base ───────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a1628 0%, #0d2137 35%, #112240 60%, #0a1628 100%);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px 80px;
+    overflow-x: hidden;
+  }
+
+  /* ── Page header ────────────────────────────────────────── */
+  .page-header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .page-header h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(90deg, #C62828, #ef5350, #ff8a80);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+  }
+  .page-header p {
+    color: rgba(255,255,255,0.55);
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Phone frame ────────────────────────────────────────── */
+  .phone-wrap {
+    position: relative;
+    width: 395px;
+    filter: drop-shadow(0 32px 80px rgba(0,0,0,0.7)) drop-shadow(0 8px 24px rgba(0,0,0,0.4));
+  }
+  .phone-frame {
+    width: 375px;
+    background: #1a1a1a;
+    border-radius: 50px;
+    padding: 14px 10px 18px;
+    margin: 0 auto;
+    position: relative;
+    border: 2px solid #3a3a3a;
+    box-shadow:
+      inset 0 0 0 1px rgba(255,255,255,0.07),
+      0 0 0 1px rgba(0,0,0,0.8);
+  }
+
+  /* Side buttons */
+  .phone-frame::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 100px;
+    width: 4px;
+    height: 36px;
+    background: #2a2a2a;
+    border-radius: 3px 0 0 3px;
+    box-shadow: 0 50px 0 #2a2a2a, 0 90px 0 #2a2a2a;
+  }
+  .phone-frame::after {
+    content: '';
+    position: absolute;
+    right: -4px;
+    top: 140px;
+    width: 4px;
+    height: 64px;
+    background: #2a2a2a;
+    border-radius: 0 3px 3px 0;
+  }
+
+  /* Notch */
+  .phone-notch {
+    width: 120px;
+    height: 26px;
+    background: #1a1a1a;
+    border-radius: 0 0 18px 18px;
+    margin: 0 auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    z-index: 10;
+  }
+  .notch-camera {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #2d2d2d;
+    border: 1px solid #3a3a3a;
+  }
+  .notch-speaker {
+    width: 52px; height: 5px;
+    border-radius: 3px;
+    background: #2d2d2d;
+  }
+
+  /* Screen */
+  .phone-screen {
+    background: #ECE5DD;
+    border-radius: 36px;
+    overflow: hidden;
+    height: 720px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* ── WhatsApp Header ────────────────────────────────────── */
+  .wa-header {
+    background: #C62828;
+    padding: 10px 14px 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 5;
+  }
+  .wa-header-back {
+    color: rgba(255,255,255,0.85);
+    font-size: 1.3rem;
+    cursor: pointer;
+    line-height: 1;
+    margin-right: 2px;
+  }
+  .wa-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .wa-header-info { flex: 1; min-width: 0; }
+  .wa-header-name {
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .wa-header-status {
+    color: rgba(255,255,255,0.75);
+    font-size: 0.7rem;
+    margin-top: 1px;
+  }
+  .wa-header-actions {
+    display: flex; gap: 14px; align-items: center;
+  }
+  .wa-header-actions span {
+    color: rgba(255,255,255,0.85);
+    font-size: 1.1rem;
+    cursor: pointer;
+  }
+
+  /* ── Chat wallpaper ─────────────────────────────────────── */
+  .wa-chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 10px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    scroll-behavior: smooth;
+    position: relative;
+  }
+  .wa-chat::-webkit-scrollbar { width: 3px; }
+  .wa-chat::-webkit-scrollbar-track { background: transparent; }
+  .wa-chat::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 2px; }
+
+  /* SVG wallpaper pattern */
+  .wa-chat {
+    background-color: #ECE5DD;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cg fill='none' stroke='%23C8B8AA' stroke-width='0.6' opacity='0.45'%3E%3Cpath d='M15 30 C15 22 22 15 30 15 C38 15 45 22 45 30 C45 38 38 45 30 45'/%3E%3Cpath d='M10 10 L50 10 L50 50 L10 50 Z' stroke-dasharray='3,8'/%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3Cpath d='M0 0 L60 60 M60 0 L0 60' stroke-dasharray='2,18'/%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* Date separator */
+  .date-sep {
+    text-align: center;
+    margin: 8px 0 6px;
+    pointer-events: none;
+  }
+  .date-sep span {
+    background: rgba(225,245,254,0.92);
+    color: #54656f;
+    font-size: 0.68rem;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  }
+
+  /* Bubbles */
+  .bubble-row {
+    display: flex;
+    margin-bottom: 2px;
+  }
+  .bubble-row.agent { justify-content: flex-start; }
+  .bubble-row.user  { justify-content: flex-end; }
+
+  .bubble {
+    max-width: 82%;
+    padding: 7px 10px 4px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    position: relative;
+    word-break: break-word;
+    animation: bubblePop 0.18s ease-out;
+  }
+
+  @keyframes bubblePop {
+    from { opacity: 0; transform: scale(0.93) translateY(4px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .bubble.agent {
+    background: #fff;
+    border-radius: 0px 8px 8px 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+    color: #111;
+  }
+  .bubble.agent::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -8px;
+    border-width: 0 8px 8px 0;
+    border-style: solid;
+    border-color: transparent #fff transparent transparent;
+  }
+
+  .bubble.user {
+    background: #DCF8C6;
+    border-radius: 8px 0px 8px 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+    color: #111;
+  }
+  .bubble.user::after {
+    content: '';
+    position: absolute;
+    top: 0; right: -8px;
+    border-width: 0 0 8px 8px;
+    border-style: solid;
+    border-color: transparent transparent transparent #DCF8C6;
+  }
+
+  .bubble-time {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 3px;
+    margin-top: 2px;
+  }
+  .bubble-time span {
+    font-size: 0.64rem;
+    color: rgba(0,0,0,0.38);
+    white-space: nowrap;
+  }
+  .bubble.user .bubble-time span { color: rgba(0,0,0,0.38); }
+  .tick { font-size: 0.7rem; color: #53bdeb; }
+
+  /* Typing indicator */
+  .typing-indicator {
+    display: none;
+    align-items: flex-end;
+    gap: 3px;
+    padding: 9px 12px 8px;
+    background: #fff;
+    border-radius: 0 10px 10px 10px;
+    max-width: 60px;
+    margin-left: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+    animation: bubblePop 0.18s ease-out;
+  }
+  .typing-indicator.show { display: flex; }
+  .typing-indicator .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #90a0aa;
+    animation: typingDot 1.2s infinite ease-in-out;
+    flex-shrink: 0;
+  }
+  .typing-indicator .dot:nth-child(1) { animation-delay: 0s; }
+  .typing-indicator .dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-indicator .dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes typingDot {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30%            { transform: translateY(-5px); opacity: 1; }
+  }
+
+  /* ── Input bar ──────────────────────────────────────────── */
+  .wa-input-bar {
+    background: #f0f0f0;
+    padding: 8px 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    border-top: 1px solid rgba(0,0,0,0.07);
+  }
+  .wa-input-emoji {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #54656f;
+    flex-shrink: 0;
+  }
+  .wa-input {
+    flex: 1;
+    background: #fff;
+    border: none;
+    border-radius: 22px;
+    padding: 9px 14px;
+    font-size: 0.84rem;
+    outline: none;
+    color: #111;
+    font-family: inherit;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    resize: none;
+    max-height: 80px;
+    overflow-y: auto;
+    line-height: 1.4;
+  }
+  .wa-input::placeholder { color: #aaa; }
+  .wa-send {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: #C62828;
+    border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .wa-send:hover { background: #b71c1c; }
+  .wa-send svg { width: 18px; height: 18px; fill: #fff; }
+
+  /* ── Back link ──────────────────────────────────────────── */
+  .back-link {
+    margin-top: 28px;
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.35);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: rgba(255,255,255,0.65); }
+
+  /* ── Responsive ─────────────────────────────────────────── */
+  @media (max-width: 420px) {
+    .phone-frame { width: 340px; border-radius: 40px; }
+    .phone-screen { border-radius: 28px; height: 640px; }
+    .page-header h1 { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>🍽️ Restaurante El Criollo</h1>
+  <p>Agente: Luna — Demo interactivo</p>
+</div>
+
+<!-- Phone frame -->
+<div class="phone-wrap">
+  <div class="phone-frame">
+    <div class="phone-notch">
+      <div class="notch-speaker"></div>
+      <div class="notch-camera"></div>
+    </div>
+    <div class="phone-screen">
+
+      <!-- WhatsApp header -->
+      <div class="wa-header">
+        <div class="wa-header-back">‹</div>
+        <div class="wa-avatar">🍽️</div>
+        <div class="wa-header-info">
+          <div class="wa-header-name">El Criollo</div>
+          <div class="wa-header-status">Luna · en línea</div>
+        </div>
+        <div class="wa-header-actions">
+          <span>📹</span>
+          <span>📞</span>
+          <span>⋮</span>
+        </div>
+      </div>
+
+      <!-- Chat area -->
+      <div class="wa-chat" id="waChat">
+        <div class="date-sep"><span id="todayLabel">Hoy</span></div>
+        <!-- Messages injected here -->
+        <div class="bubble-row agent" id="typingRow" style="display:none;">
+          <div class="typing-indicator show" id="typingIndicator">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input bar -->
+      <div class="wa-input-bar">
+        <button class="wa-input-emoji" title="Emoji">😊</button>
+        <textarea class="wa-input" id="waInput" placeholder="Escribe un mensaje..." rows="1"></textarea>
+        <button class="wa-send" id="waSend" onclick="sendMessage()" title="Enviar">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+
+    </div><!-- /phone-screen -->
+  </div><!-- /phone-frame -->
+</div><!-- /phone-wrap -->
+
+<a class="back-link" href="demo_visual.html">← Ver todas las demos</a>
+
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════════════
+   UTILITY
+═══════════════════════════════════════════════════════════ */
+function now() {
+  return new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit', hour12: false });
+}
+
+function coincide(clave, msg) {
+  if (clave.length <= 4) {
+    const re = new RegExp('\\b' + clave.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+    return re.test(msg);
+  }
+  return msg.toLowerCase().includes(clave.toLowerCase());
+}
+
+function buscarRespuesta(mensaje, respuestas) {
+  const msg = mensaje.toLowerCase();
+  let mejor = null, maxScore = 0;
+  for (const item of respuestas) {
+    let score = 0;
+    for (const c of item.claves) {
+      if (coincide(c, msg)) score++;
+    }
+    if (score > maxScore) { maxScore = score; mejor = item; }
+  }
+  return mejor;
+}
+
+function parseBold(txt) {
+  return txt.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
+}
+
+function formatMsg(txt) {
+  return parseBold(txt)
+    .replace(/\n/g, '<br>');
+}
+
+function typingDelay(txt) {
+  return Math.min(3200, Math.max(600, txt.length * 28));
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DATA — RESTAURANTE
+═══════════════════════════════════════════════════════════ */
+const RESTAURANTE_DATA = {
+  agent:   'Luna',
+  empresa: 'El Criollo',
+  color:   '#B71C1C',
+  header:  '#C62828',
+  avatar:  '🍽️',
+  respuestas: [
+    {
+      claves: ['hola','buenas','buenos','hey'],
+      intencion: null,
+      respuesta:
+        '¡Bienvenido a *El Criollo* 🇻🇪! Soy Luna, tu asistente.\n\n' +
+        'Somos un restaurante de comida venezolana en Las Mercedes, Caracas.\n' +
+        'Abrimos todos los días de 11am a 10pm.\n\n' +
+        '¿En qué puedo ayudarte?\n' +
+        '• 🍽️ Ver el menú\n' +
+        '• 🛵 Hacer un pedido para delivery\n' +
+        '• 📅 Reservar una mesa\n' +
+        '• 📍 Ubicación y horarios\n\n' +
+        '¿Qué deseas?'
+    },
+    {
+      claves: ['menú','menu','carta','qué tienen','comida'],
+      intencion: null,
+      respuesta:
+        'Aquí nuestro menú 🍽️\n\n' +
+        '*🍳 Desayunos (11am–12pm)*\n' +
+        '• Arepa reina pepiada — $4\n' +
+        '• Cachapa con queso de mano — $5\n' +
+        '• Tequeños (6 uds) — $4\n\n' +
+        '*🍖 Platos principales*\n' +
+        '• Pabellón criollo — $8\n' +
+        '• Asado negro con arroz y tajadas — $10\n' +
+        '• Pollo en salsa criolla — $9\n' +
+        '• Hallaca (temporada) — $3.50 c/u\n\n' +
+        '*🍹 Bebidas*\n' +
+        '• Papelón con limón — $2\n' +
+        '• Jugo natural — $2.50\n' +
+        '• Malta / Refresco — $1.50\n\n' +
+        'Todos los precios en *USD* 💵\n\n' +
+        '¿Te animas a pedir algo o prefieres reservar una mesa?'
+    },
+    {
+      claves: ['arepa','pabellón','cachapa','tequeño','tequeños','hallaca','hallacas'],
+      intencion: null,
+      respuesta:
+        '¡Nuestras especialidades venezolanas! 🇻🇪\n\n' +
+        '• *Arepa reina pepiada* (pollo, aguacate, mayo) — $4\n' +
+        '• *Cachapa con queso de mano* — $5\n' +
+        '• *Tequeños* (6 unidades) — $4\n' +
+        '• *Pabellón criollo* — $8\n' +
+        '• *Asado negro* con arroz y tajadas — $10\n' +
+        '• *Pollo en salsa criolla* — $9\n' +
+        '• *Hallaca* (disponible todo el año) — $3.50 c/u\n\n' +
+        '¿Quieres hacer un pedido o reservar una mesa?'
+    },
+    {
+      claves: ['delivery','domicilio','a domicilio','envío','envio','traer'],
+      intencion: 'pedido',
+      respuesta:
+        'Hacemos delivery en Caracas 🛵\n\n' +
+        '📍 Cobertura: Las Mercedes, Chacao, Altamira, El Rosal, La Castellana.\n' +
+        '⏱️ Tiempo: 30–45 minutos\n' +
+        '💵 Costo delivery: $2 (gratis en pedidos mayores a $20)\n' +
+        '💳 Pago: Efectivo USD, Zelle, Pago Móvil, Binance Pay\n\n' +
+        'Para tu pedido dime tu *nombre* primero 😊'
+    },
+    {
+      claves: ['reserva','reservar','mesa','reservación','para cenar','para almorzar'],
+      intencion: 'reserva',
+      respuesta:
+        'Con gusto te aparto una mesa 📅\n\n' +
+        '📍 Estamos en Las Mercedes, Caracas\n' +
+        '🕐 Todos los días 11am–10pm\n' +
+        '👥 Capacidad: hasta 50 personas\n\n' +
+        'Para la reserva necesito tu *nombre* 😊'
+    },
+    {
+      claves: ['precio','costo','cuánto','cuanto'],
+      intencion: null,
+      respuesta:
+        'Nuestros precios en USD 💵\n\n' +
+        '• Arepas: $4–$4.50\n' +
+        '• Cachapa: $5\n' +
+        '• Platos principales: $8–$10\n' +
+        '• Hallacas: $3.50 c/u\n' +
+        '• Bebidas: $1.50–$2.50\n\n' +
+        'Delivery: $2 (gratis en pedidos +$20)\n\n' +
+        '¿Quieres ver el menú completo o hacer un pedido?'
+    },
+    {
+      claves: ['pago','pagar','zelle','efectivo','pago móvil','binance'],
+      intencion: null,
+      respuesta:
+        'Aceptamos varios métodos 💳\n\n' +
+        '✅ Efectivo USD\n' +
+        '✅ Zelle\n' +
+        '✅ Pago Móvil\n' +
+        '✅ Binance Pay (USDT)\n' +
+        '✅ Tarjeta débito/crédito (punto de venta)\n\n' +
+        '¿Quieres hacer un pedido o reservar?'
+    },
+    {
+      claves: ['horario','hora','abierto','abren','cierran'],
+      intencion: null,
+      respuesta:
+        'Nuestro horario 🕐\n\n' +
+        '📅 *Lun–Jue:* 11am – 9pm\n' +
+        '📅 *Vie–Sáb:* 11am – 10:30pm\n' +
+        '📅 *Domingos:* 11am – 8pm\n\n' +
+        'Delivery disponible en todos los horarios.\n\n' +
+        '¿Quieres reservar o hacer un pedido?'
+    },
+    {
+      claves: ['gracias','perfecto','listo','genial','excelente'],
+      intencion: null,
+      respuesta:
+        '¡Con mucho gusto! 😊 Es un placer atenderte.\n\n' +
+        'Síguenos en Instagram: *@elcriollovzla*\n' +
+        '¡Buen provecho y hasta pronto! 🇻🇪🍽️'
+    }
+  ],
+  intencionesCita: ['pedido','reserva'],
+  confirmarPedido: (nombre, direccion, items) =>
+    `🛵 *¡Tu pedido está en camino!*\n\n` +
+    `👤 ${nombre}\n` +
+    `📋 ${items}\n` +
+    `📍 Entrega en: ${direccion}\n` +
+    `⏱️ Tiempo estimado: 30–45 minutos\n` +
+    `📞 +58 412-888-3456\n\n` +
+    `¡Buen provecho! 🍽️🇻🇪`,
+  confirmarReserva: (nombre, detalle, personas) =>
+    `🎉 *¡Tu reserva está confirmada!*\n\n` +
+    `👤 ${nombre}\n` +
+    `📅 ${detalle}\n` +
+    (personas ? `👥 ${personas} personas\n` : '') +
+    `📍 Calle La Trinidad, Las Mercedes, Caracas\n` +
+    `📞 +58 412-888-3456\n\n` +
+    `¡Te esperamos! 🇻🇪`,
+  default:
+    'Gracias por tu mensaje 😊 En El Criollo puedo ayudarte con:\n' +
+    '🍽️ Menú — 🛵 Delivery — 📅 Reservas — 📍 Ubicación\n\n' +
+    '¿Sobre qué necesitas información?'
+};
+
+/* ═══════════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════════ */
+// estados delivery:  general → pidiendo_nombre_pedido → pidiendo_direccion_pedido → pidiendo_items_pedido → confirmado
+// estados reserva:   general → pidiendo_nombre_reserva → pidiendo_fecha_reserva → confirmado
+let estado        = 'general';
+let nombreCliente = null;
+let datosPedido   = {};
+
+function extraerNombre(msg) {
+  const skip = new Set([
+    'hola','buenos','buenas','gracias','quiero','necesito','para','una','un','me','mi','soy',
+    'lunes','martes','miércoles','miercoles','jueves','viernes','sábado','sabado','domingo',
+    'hoy','mañana','esta','este','próximo','proximo','siguiente'
+  ]);
+  const words = msg.trim().split(/\s+/);
+  const cands = words.filter(w => w.length > 2 && w[0] === w[0].toUpperCase() && !skip.has(w.toLowerCase()));
+  if (cands.length > 0) return cands.slice(0,2).join(' ');
+  return msg.trim().replace(/\b\w/g, c => c.toUpperCase());
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DOM HELPERS
+═══════════════════════════════════════════════════════════ */
+const chat    = document.getElementById('waChat');
+const typingR = document.getElementById('typingRow');
+const inputEl = document.getElementById('waInput');
+
+function scrollBottom() {
+  setTimeout(() => { chat.scrollTop = chat.scrollHeight; }, 50);
+}
+
+function addBubble(role, text, callback) {
+  const row = document.createElement('div');
+  row.className = `bubble-row ${role}`;
+  const bub = document.createElement('div');
+  bub.className = `bubble ${role}`;
+  bub.innerHTML = formatMsg(text) +
+    `<div class="bubble-time">` +
+    `<span>${now()}</span>` +
+    (role === 'user' ? `<span class="tick">✓✓</span>` : '') +
+    `</div>`;
+  row.appendChild(bub);
+  chat.insertBefore(row, typingR);
+  scrollBottom();
+  if (callback) callback();
+}
+
+function showTyping() {
+  typingR.style.display = 'flex';
+  scrollBottom();
+}
+
+function hideTyping() {
+  typingR.style.display = 'none';
+}
+
+function agentReply(text, delay) {
+  showTyping();
+  setTimeout(() => {
+    hideTyping();
+    addBubble('agent', text);
+  }, delay || typingDelay(text));
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BRAIN
+═══════════════════════════════════════════════════════════ */
+function processMessage(msg) {
+  const data = RESTAURANTE_DATA;
+
+  /* ── Delivery multi-step ─────────────────────────────────── */
+  if (estado === 'pidiendo_nombre_pedido') {
+    datosPedido.nombre = extraerNombre(msg);
+    estado = 'pidiendo_direccion_pedido';
+    agentReply(`Anotado, *${datosPedido.nombre}* 📝\n\n¿Cuál es tu *dirección* de entrega? (Sector/Calle, Caracas)`);
+    return;
+  }
+  if (estado === 'pidiendo_direccion_pedido') {
+    datosPedido.direccion = msg;
+    estado = 'pidiendo_items_pedido';
+    agentReply(`Perfecto 📍 Entregamos en *${msg}*.\n\n¿Qué deseas ordenar? Puedes pedir varios platos.\n_Ejemplo: 2 arepas reina pepiada, 1 pabellón criollo, 2 papelones_`);
+    return;
+  }
+  if (estado === 'pidiendo_items_pedido') {
+    const confirmTxt = data.confirmarPedido(datosPedido.nombre || 'Cliente', datosPedido.direccion || 'dirección indicada', msg);
+    estado = 'confirmado';
+    datosPedido = {};
+    agentReply(confirmTxt, typingDelay(confirmTxt) * 0.7);
+    return;
+  }
+
+  /* ── Reserva multi-step ──────────────────────────────────── */
+  if (estado === 'pidiendo_nombre_reserva') {
+    nombreCliente = extraerNombre(msg);
+    estado = 'pidiendo_fecha_reserva';
+    agentReply(`¡Perfecto, *${nombreCliente}*! 😊\n\n¿Para qué *fecha y hora* y *cuántas personas*?\nEjemplo: _viernes a las 7pm para 4 personas_`);
+    return;
+  }
+  if (estado === 'pidiendo_fecha_reserva') {
+    const personasM = msg.match(/(\d+)\s*(person|pax|comens)/i);
+    const personas  = personasM ? personasM[1] : '';
+    const confirmTxt = data.confirmarReserva(nombreCliente || 'Cliente', msg, personas);
+    estado = 'confirmado';
+    nombreCliente = null;
+    agentReply(confirmTxt, typingDelay(confirmTxt) * 0.7);
+    return;
+  }
+
+  /* ── General matching ───────────────────────────────────── */
+  const resultado = buscarRespuesta(msg, data.respuestas);
+
+  if (resultado) {
+    agentReply(resultado.respuesta);
+
+    if (resultado.intencion === 'pedido') {
+      estado = 'pidiendo_nombre_pedido';
+      datosPedido = {};
+    } else if (resultado.intencion === 'reserva') {
+      estado = 'pidiendo_nombre_reserva';
+      nombreCliente = null;
+    }
+  } else {
+    agentReply(data.default);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SEND
+═══════════════════════════════════════════════════════════ */
+function sendMessage() {
+  const msg = inputEl.value.trim();
+  if (!msg) return;
+  inputEl.value = '';
+  inputEl.style.height = 'auto';
+  addBubble('user', msg);
+  setTimeout(() => processMessage(msg), 120);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════ */
+document.getElementById('todayLabel').textContent = new Date().toLocaleDateString('es', {
+  weekday: 'long', day: 'numeric', month: 'long'
+});
+
+inputEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+
+inputEl.addEventListener('input', () => {
+  inputEl.style.height = 'auto';
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 80) + 'px';
+});
+
+window.addEventListener('load', () => {
+  const greeting = RESTAURANTE_DATA.respuestas.find(r => r.claves.includes('hola'));
+  if (greeting) agentReply(greeting.respuesta, 900);
+});
+</script>
+</body>
+</html>
