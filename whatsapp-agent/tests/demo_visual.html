@@ -533,120 +533,220 @@ const CLINICA_DATA = {
       claves: ['hola','buenas','buenos','hey'],
       intencion: null,
       respuesta:
-        '¡Hola! 😊 Bienvenido a *Clínica MediVida*. Soy Valeria, tu asistente virtual.\n\n' +
-        '¿En qué puedo ayudarte hoy?\n' +
-        '• 📅 Agendar una cita\n' +
-        '• 💊 Especialidades y precios\n' +
-        '• 🔬 Laboratorio\n' +
+        '¡Hola! 😊 Bienvenido a *Clínica MediVida*.\n' +
+        'Soy Valeria, tu asistente virtual.\n\n' +
+        '¿En qué puedo ayudarte?\n' +
+        '• 📅 Agendar una cita médica\n' +
+        '• 🔬 Laboratorio y análisis\n' +
+        '• 💰 Precios y especialidades\n' +
         '• 📍 Ubicación y horarios\n\n' +
         '¿Qué necesitas?'
     },
     {
-      claves: ['cita','consulta','agendar','reservar'],
+      claves: ['cita','consulta','agendar','reservar','quiero ver','doctor','médico','medico'],
       intencion: 'cita_general',
       respuesta:
-        'Con gusto te agendo 📅 Contamos con:\n\n' +
-        '👨‍⚕️ *Medicina General* — $15 USD\n' +
-        '❤️ *Cardiología* — $45 USD\n' +
-        '🧠 *Neurología* — $50 USD\n' +
-        '👶 *Pediatría* — $30 USD\n' +
-        '🦴 *Traumatología* — $40 USD\n' +
-        '👁️ *Oftalmología* — $35 USD\n\n' +
-        '¿Con qué especialista te agendo?'
+        'Con gusto te agendo tu cita 📅\n\n' +
+        'Contamos con estas especialidades:\n\n' +
+        '🩺 *Medicina General* — $15 USD · Dra. Ana López\n' +
+        '❤️  *Cardiología* — $45 USD · Dr. Javier Rodríguez\n' +
+        '🧠 *Neurología* — $50 USD · Dr. Ricardo Ramírez\n' +
+        '👶 *Pediatría* — $30 USD · Dr. Carlos Martínez\n' +
+        '🦴 *Traumatología* — $40 USD · Dr. Héctor Torres\n' +
+        '👁️  *Oftalmología* — $35 USD · Dra. Luisa Pérez\n\n' +
+        '¿Con qué especialista deseas la cita?'
     },
     {
-      claves: ['pediatra','pediatría','niño','hijo'],
+      claves: ['pediatra','pediatría','pediatria','niño','niña','hijo','hija','bebé','bebe','infantil'],
       intencion: 'especialidad',
+      especialidad: 'Pediatría',
+      doctor: 'Dr. Carlos Martínez',
+      precio: '$30',
+      horarios: 'Lun, Mié y Vie 9am–5pm · Sáb 10am–2pm',
       respuesta:
-        'Nuestro pediatra es el *Dr. Carlos Martínez* 👶\n\n' +
-        '📅 Disponibilidad: Lunes, Miércoles y Viernes 9am–5pm\n' +
-        '💰 Consulta: $30 USD\n\n' +
-        'Para apartar tu cita dime:\n' +
-        '• Tu *nombre completo*\n' +
-        '• El *día y hora* que prefieres\n\n' +
-        '¿Cuándo les viene bien?'
+        '👶 *Pediatría*\n' +
+        '👨‍⚕️ Médico: *Dr. Carlos Martínez*\n\n' +
+        '📅 Horarios disponibles:\n' +
+        '• Lunes, Miércoles y Viernes: 9am – 5pm\n' +
+        '• Sábados: 10am – 2pm\n\n' +
+        '💰 Costo de consulta: *$30 USD*\n\n' +
+        '¿Qué día y hora te viene mejor?'
     },
     {
-      claves: ['cardiología','corazón','cardiólogo'],
+      claves: ['cardiología','cardiologia','corazón','corazon','cardiólogo','cardiologo','presión','presion','hipertensión'],
       intencion: 'especialidad',
+      especialidad: 'Cardiología',
+      doctor: 'Dr. Javier Rodríguez',
+      precio: '$45',
+      horarios: 'Mar y Jue 8am–4pm',
       respuesta:
-        'El especialista en cardiología es el *Dr. Javier Rodríguez* ❤️\n\n' +
-        '📅 Disponibilidad: Martes y Jueves 8am–4pm\n' +
-        '💰 Consulta: $45 USD\n\n' +
-        'Para apartar tu cita dime tu *nombre* y el *día y hora* que prefieres.'
+        '❤️ *Cardiología*\n' +
+        '👨‍⚕️ Médico: *Dr. Javier Rodríguez*\n\n' +
+        '📅 Horarios disponibles:\n' +
+        '• Martes y Jueves: 8am – 4pm\n\n' +
+        '💰 Costo de consulta: *$45 USD*\n' +
+        '✅ Incluye electrocardiograma básico\n\n' +
+        '¿Qué día y hora te viene mejor?'
+    },
+    {
+      claves: ['neurología','neurologia','neurólogo','neurologo','cabeza','migraña','migrana','mareo','epilepsia'],
+      intencion: 'especialidad',
+      especialidad: 'Neurología',
+      doctor: 'Dr. Ricardo Ramírez',
+      precio: '$50',
+      horarios: 'Mar, Jue y Vie 9am–3pm',
+      respuesta:
+        '🧠 *Neurología*\n' +
+        '👨‍⚕️ Médico: *Dr. Ricardo Ramírez*\n\n' +
+        '📅 Horarios disponibles:\n' +
+        '• Martes, Jueves y Viernes: 9am – 3pm\n\n' +
+        '💰 Costo de consulta: *$50 USD*\n\n' +
+        '¿Qué día y hora te viene mejor?'
+    },
+    {
+      claves: ['traumatología','traumatologia','traumatólogo','hueso','fractura','rodilla','columna','espalda','ortopedia'],
+      intencion: 'especialidad',
+      especialidad: 'Traumatología',
+      doctor: 'Dr. Héctor Torres',
+      precio: '$40',
+      horarios: 'Lun, Mié y Vie 8am–2pm',
+      respuesta:
+        '🦴 *Traumatología*\n' +
+        '👨‍⚕️ Médico: *Dr. Héctor Torres*\n\n' +
+        '📅 Horarios disponibles:\n' +
+        '• Lunes, Miércoles y Viernes: 8am – 2pm\n\n' +
+        '💰 Costo de consulta: *$40 USD*\n\n' +
+        '¿Qué día y hora te viene mejor?'
+    },
+    {
+      claves: ['oftalmología','oftalmologia','oculista','ojo','ojos','vista','visión','vision','lentes','anteojos'],
+      intencion: 'especialidad',
+      especialidad: 'Oftalmología',
+      doctor: 'Dra. Luisa Pérez',
+      precio: '$35',
+      horarios: 'Mar y Jue 9am–1pm · Sáb 9am–12pm',
+      respuesta:
+        '👁️ *Oftalmología*\n' +
+        '👩‍⚕️ Médico: *Dra. Luisa Pérez*\n\n' +
+        '📅 Horarios disponibles:\n' +
+        '• Martes y Jueves: 9am – 1pm\n' +
+        '• Sábados: 9am – 12pm\n\n' +
+        '💰 Costo de consulta: *$35 USD*\n' +
+        '✅ Incluye examen de agudeza visual\n\n' +
+        '¿Qué día y hora te viene mejor?'
     },
     {
       claves: ['medicina general','general'],
       intencion: 'especialidad',
+      especialidad: 'Medicina General',
+      doctor: 'Dra. Ana López',
+      precio: '$15',
+      horarios: 'Lun–Vie 8am–6pm · Sáb 9am–1pm',
       respuesta:
-        'Nuestra médica general es la *Dra. Ana López* 🩺\n\n' +
-        '📅 Lun–Vie 8am–6pm | Sáb 9am–1pm\n' +
-        '💰 Consulta: $15 USD\n' +
-        '✅ Atiende urgencias sin cita previa\n\n' +
-        'Dime tu *nombre* y *cuándo* te viene bien.'
+        '🩺 *Medicina General*\n' +
+        '👩‍⚕️ Médico: *Dra. Ana López*\n\n' +
+        '📅 Horarios disponibles:\n' +
+        '• Lunes a Viernes: 8am – 6pm\n' +
+        '• Sábados: 9am – 1pm\n' +
+        '✅ También atiende urgencias sin cita previa\n\n' +
+        '💰 Costo de consulta: *$15 USD*\n\n' +
+        '¿Qué día y hora te viene mejor?'
     },
     {
-      claves: ['laboratorio','examen','análisis','sangre'],
+      claves: ['laboratorio','examen','análisis','analisis','sangre','lab','prueba'],
       intencion: null,
       respuesta:
-        'Sí, contamos con laboratorio propio 🔬 Resultados el mismo día.\n\n' +
-        '💰 Precios:\n' +
-        '• Hemograma completo: $12\n' +
-        '• Química sanguínea: $18\n' +
-        '• Perfil lipídico: $15\n' +
-        '• Glicemia en ayunas: $8\n' +
-        '• Examen de orina: $10\n' +
-        '• *Paquete chequeo completo: $45*\n\n' +
-        '🕐 Lun–Vie 7am–12pm. No necesitas cita.\n\n' +
-        '¿Necesitas saber si requieres ayuno?'
+        '🔬 *Laboratorio Clínico MediVida*\n\n' +
+        '🕐 Horario: Lunes a Sábado, 7am – 12pm\n' +
+        'Resultados en 4–6 horas. Sin cita previa.\n\n' +
+        '*Precios:*\n' +
+        '• Hemograma completo — $12\n' +
+        '• Química sanguínea — $18\n' +
+        '• Perfil lipídico — $15\n' +
+        '• Glicemia en ayunas — $8\n' +
+        '• Examen de orina — $10\n' +
+        '• *📦 Paquete chequeo general — $45*\n' +
+        '  _(incluye 12 exámenes completos)_\n\n' +
+        '¿Necesitas saber si requieres ayuno para algún examen?'
     },
     {
-      claves: ['precio','costo','cuánto','cuanto'],
+      claves: ['pago','zelle','transferencia','western','remesa','pagar','efectivo','cómo pago','como pago','métodos','metodos'],
       intencion: null,
       respuesta:
-        'Nuestros precios 💰\n\n' +
-        '👨‍⚕️ Medicina General: $15 USD\n' +
-        '❤️ Cardiología: $45 USD\n' +
-        '🧠 Neurología: $50 USD\n' +
-        '👶 Pediatría: $30 USD\n' +
-        '🦴 Traumatología: $40 USD\n' +
-        '👁️ Oftalmología: $35 USD\n\n' +
+        '💳 *Métodos de pago aceptados:*\n\n' +
+        '• 💵 Efectivo (USD o MXN)\n' +
+        '• 💳 Tarjeta de crédito/débito\n' +
+        '• 🏦 Transferencia bancaria\n' +
+        '• 📲 Zelle (desde EE.UU.)\n' +
+        '• 📱 Pago Móvil (Venezuela)\n' +
+        '• 🌍 Western Union / Remesas internacionales\n\n' +
+        '_No se requiere pago por adelantado._\n' +
+        '_El cobro se realiza al llegar a tu consulta._\n\n' +
+        '¿Deseas agendar tu cita?'
+    },
+    {
+      claves: ['precio','costo','cuánto','cuanto','tarifa','vale'],
+      intencion: null,
+      respuesta:
+        '💰 *Precios de consultas:*\n\n' +
+        '🩺 Medicina General — $15 USD\n' +
+        '❤️  Cardiología — $45 USD\n' +
+        '🧠 Neurología — $50 USD\n' +
+        '👶 Pediatría — $30 USD\n' +
+        '🦴 Traumatología — $40 USD\n' +
+        '👁️  Oftalmología — $35 USD\n\n' +
         '🔬 Laboratorio desde $8 USD\n' +
-        '📦 Paquete chequeo: $45 USD\n\n' +
+        '📦 Paquete chequeo completo: $45 USD\n\n' +
+        'Aceptamos efectivo, Zelle, tarjeta, Pago Móvil y Western Union.\n\n' +
         '¿Te agendo una cita?'
     },
     {
-      claves: ['horario','hora','abren','cuando'],
+      claves: ['horario','hora','abren','cuando','abierto','atienden'],
       intencion: null,
       respuesta:
-        'Nuestro horario 🕐\n\n' +
-        '📅 Lunes a Viernes: 8am – 8pm\n' +
-        '📅 Sábados: 9am – 3pm\n' +
-        '🔬 Laboratorio: 7am – 12pm\n' +
-        '🚨 Urgencias: 24 horas\n' +
-        '❌ Domingos: cerrado (urgencias activas)\n\n' +
-        '¿Te agendo una cita? Dime qué especialidad y cuándo.'
+        '🕐 *Horarios de atención:*\n\n' +
+        '🏥 Clínica general: Lun–Vie 8am–8pm · Sáb 9am–3pm\n' +
+        '🔬 Laboratorio: Lun–Sáb 7am–12pm\n' +
+        '🚨 Urgencias: 24 horas, todos los días\n\n' +
+        '📍 Av. Insurgentes Sur 1234, Col. Del Valle, CDMX\n\n' +
+        '¿Te agendo una cita? Dime qué especialidad prefieres.'
     },
     {
-      claves: ['gracias','perfecto','listo','genial'],
+      claves: ['gracias','perfecto','listo','genial','excelente'],
       intencion: null,
       respuesta:
         '¡Con mucho gusto! 😊 Es un placer ayudarte.\n\n' +
-        '¡Que tengas un excelente día! 🌟\n' +
-        'Recuerda que estamos disponibles de Lun–Vie 8am–8pm.\n' +
-        '📞 +52 55-4567-8901'
+        '📍 Av. Insurgentes Sur 1234, Col. Del Valle, CDMX\n' +
+        '📞 +52 55-4567-8901\n' +
+        '🕐 Lun–Vie 8am–8pm\n\n' +
+        '¡Que tengas un excelente día! 🌟'
     }
   ],
-  intencionesCita: ['cita_general','especialidad','visita'],
-  confirmar: (nombre, detalle) =>
-    `✅ *Tu cita está confirmada.*\n\n` +
-    `👤 Paciente: ${nombre}\n` +
-    `📅 ${detalle}\n` +
-    `📍 Clínica MediVida, Av. Insurgentes Sur 1234, CDMX\n` +
-    `📞 +52 55-4567-8901\n\n` +
-    `Llega 10 min antes. ¡Te esperamos! 😊`,
+  intencionesCita: ['especialidad'],   // solo especialidad activa el flujo de cita
+  confirmar: (nombre, fecha, info) =>
+    `✅ *¡Cita confirmada!* 🎉\n\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `📋 *RESUMEN DE TU CITA*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `👤 Paciente: *${nombre}*\n` +
+    `👨‍⚕️ Médico: ${info ? info.doctor : 'Por asignar en recepción'}\n` +
+    `🏥 Especialidad: ${info ? info.especialidad : 'Por confirmar'}\n` +
+    `📅 Fecha/hora: ${fecha}\n` +
+    `📍 Clínica MediVida\n` +
+    `   Av. Insurgentes Sur 1234, CDMX\n\n` +
+    `💰 Costo de consulta: ${info ? '*' + info.precio + ' USD*' : 'Ver en recepción'}\n\n` +
+    `💳 *Métodos de pago aceptados:*\n` +
+    `• 💵 Efectivo (USD o MXN)\n` +
+    `• 💳 Tarjeta de crédito/débito\n` +
+    `• 🏦 Transferencia bancaria\n` +
+    `• 📲 Zelle (desde EE.UU.)\n` +
+    `• 📱 Pago Móvil (Venezuela)\n` +
+    `• 🌍 Western Union / Remesas\n\n` +
+    `_El pago se realiza al llegar. Sin anticipos._\n\n` +
+    `📞 Cambios o dudas: *+52 55-4567-8901*\n` +
+    `⏰ Por favor llega 10 min antes. ¡Te esperamos! 😊`,
   default:
-    'Gracias por tu mensaje 😊 Puedo ayudarte con:\n' +
+    'Gracias por tu mensaje 😊 En Clínica MediVida puedo ayudarte con:\n' +
     '📅 Citas — 💰 Precios — 🔬 Laboratorio — 📍 Ubicación\n\n' +
     '¿Sobre qué necesitas información?'
 };
@@ -773,14 +873,26 @@ const INMOBILIARIA_DATA = {
     }
   ],
   intencionesCita: ['visita'],
-  confirmar: (nombre, detalle) =>
-    `🎉 *Tu visita está agendada.*\n\n` +
-    `👤 Cliente: ${nombre}\n` +
-    `👤 Asesor: Carlos Rodríguez\n` +
-    `📅 ${detalle}\n` +
-    `📍 Av. Francisco de Miranda, Chacao, Caracas\n` +
-    `📞 +58 412-555-7890\n\n` +
-    `¡Te esperamos! 😊`,
+  confirmar: (nombre, fecha, info) =>
+    `🎉 *¡Visita agendada!*\n\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `📋 *RESUMEN DE TU VISITA*\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `👤 Cliente: *${nombre}*\n` +
+    `👔 Asesor: Carlos Rodríguez\n` +
+    `📅 Fecha/hora: ${fecha}\n` +
+    `📍 Av. Francisco de Miranda, Chacao, Caracas\n\n` +
+    `💰 *Sin costo* por la visita\n\n` +
+    `💳 *Formas de pago* (si adquieres la propiedad):\n` +
+    `• 📲 Zelle (USD, desde EE.UU. o Venezuela)\n` +
+    `• 🔐 USDT / Cripto\n` +
+    `• 💵 Efectivo USD\n` +
+    `• 🏦 Transferencia bancaria\n` +
+    `• 📱 Pago Móvil (Venezuela)\n` +
+    `• 🌍 Western Union / Remesas internacionales\n\n` +
+    `📞 *+58 412-555-7890*\n` +
+    `Te llamaremos 1 hora antes para confirmar.\n` +
+    `¡Te esperamos! 🏠`,
   default:
     'Gracias por tu mensaje 😊 En ProHogar puedo ayudarte con:\n' +
     '🏠 Propiedades en venta o alquiler\n' +
@@ -943,10 +1055,16 @@ const DEMOS = { clinica: CLINICA_DATA, inmobiliaria: INMOBILIARIA_DATA, restaura
    STATE
 ═══════════════════════════════════════════════════════════ */
 let currentDemo = 'clinica';
-let estado      = 'general';   // general | pidiendo_nombre | pidiendo_fecha | pidiendo_items | confirmado
-let intencionActual = null;
-let nombreCliente   = null;
-let datosPedido     = {};
+let estado           = 'general';
+// estados clínica/inmobiliaria: general → pidiendo_fecha → pidiendo_nombre → confirmado
+// estados restaurante delivery:  general → pidiendo_nombre_pedido → pidiendo_direccion_pedido → pidiendo_items_pedido → confirmado
+// estados restaurante reserva:   general → pidiendo_nombre_reserva → pidiendo_fecha_reserva → confirmado
+
+let intencionActual  = null;
+let nombreCliente    = null;
+let fechaCita        = null;   // fecha/hora guardada en paso pidiendo_fecha
+let infoEspecialidad = null;   // { especialidad, doctor, precio, horarios } de la cita actual
+let datosPedido      = {};
 
 const DIAS     = ['lunes','martes','miércoles','miercoles','jueves','viernes','sábado','sabado','domingo','hoy','mañana','esta noche','esta tarde'];
 const CONFIRMS = ['sí','si','claro','dale','me interesa','quiero','va','ok','perfecto','bueno','adelante'];
@@ -1068,46 +1186,29 @@ function processMessage(msg) {
     }
   }
 
-  /* ── Clínica & Inmobiliaria: confirmar fecha ─────────────── */
-  // IMPORTANTE: este bloque va ANTES de pidiendo_datos porque cuando
-  // el estado ya es 'pidiendo_fecha' el bloque de abajo no se ejecutaría.
-  if (estado === 'pidiendo_fecha') {
-    const confirmTxt = data.confirmar(nombreCliente || 'Cliente', msg);
-    estado = 'confirmado';
+  /* ── Clínica & Inmobiliaria: paso 2 — recoger nombre ───────
+     El agente ya tiene la fecha; ahora pide nombre y confirma.  */
+  if (estado === 'pidiendo_nombre') {
+    nombreCliente = extraerNombre(msg);
+    const confirmTxt = data.confirmar(nombreCliente, fechaCita || msg, infoEspecialidad);
+    estado        = 'confirmado';
+    fechaCita     = null;
+    infoEspecialidad = null;
     nombreCliente = null;
-    agentReply(confirmTxt, typingDelay(confirmTxt) * 0.7);
+    agentReply(confirmTxt, typingDelay(confirmTxt) * 0.6);
     return;
   }
 
-  /* ── Clínica & Inmobiliaria: recoger nombre ───────────────── */
-  if (estado === 'pidiendo_datos') {
-    // Verificar si el usuario está cambiando de tema (fuga del flujo)
-    const nueva = buscarRespuesta(msg, data.respuestas);
-    const escapando = nueva && nueva.intencion == null && !esConfirmacion(msg);
-    if (escapando) {
-      estado = 'general';
-      intencionActual = null;
-      agentReply(nueva.respuesta);
-      return;
-    }
-
-    if (nombreCliente === null) {
-      const hasDia  = tieneDia(msg);
-      const hasHora = tieneHora(msg);
-
-      if (hasDia || hasHora) {
-        // El usuario dio día/hora sin nombre previo → confirmar sin nombre personalizado
-        const confirmTxt = data.confirmar('estimado cliente', msg);
-        estado = 'confirmado';
-        agentReply(confirmTxt, typingDelay(confirmTxt) * 0.7);
-      } else {
-        // Solo recibimos el nombre → pedir día y hora
-        nombreCliente = extraerNombre(msg);
-        agentReply(`Perfecto, *${nombreCliente}* 😊\n\n¿Qué día y hora te viene mejor?\nEjemplo: _viernes a las 11am_ o _sábado en la mañana_`);
-        estado = 'pidiendo_fecha';
-      }
-      return;
-    }
+  /* ── Clínica & Inmobiliaria: paso 1 — recoger fecha/hora ────
+     El agente ya sabe la especialidad; pide fecha y pasa a nombre. */
+  if (estado === 'pidiendo_fecha') {
+    fechaCita = msg;
+    agentReply(
+      `Perfecto, anotado para *${msg}* 📅\n\n` +
+      `¿Me das tu *nombre completo* para confirmar la cita?`
+    );
+    estado = 'pidiendo_nombre';
+    return;
   }
 
   /* ── General matching ───────────────────────────────────── */
@@ -1115,7 +1216,7 @@ function processMessage(msg) {
 
   if (resultado) {
     agentReply(resultado.respuesta);
-    // Trigger data-collection flows
+
     if (currentDemo === 'restaurante') {
       if (resultado.intencion === 'pedido') {
         estado = 'pidiendo_nombre_pedido';
@@ -1125,10 +1226,19 @@ function processMessage(msg) {
         nombreCliente = null;
       }
     } else {
+      // Clínica e Inmobiliaria: activar flujo de cita/visita
       if (resultado.intencion && data.intencionesCita.includes(resultado.intencion)) {
-        estado = 'pidiendo_datos';
+        // Guardar info de especialidad para el resumen final
+        infoEspecialidad = resultado.especialidad ? {
+          especialidad: resultado.especialidad,
+          doctor:       resultado.doctor,
+          precio:       resultado.precio,
+          horarios:     resultado.horarios || ''
+        } : null;
+        estado        = 'pidiendo_fecha';
         intencionActual = resultado.intencion;
         nombreCliente = null;
+        fechaCita     = null;
       }
     }
   } else {
@@ -1158,11 +1268,13 @@ function switchDemo(name) {
   document.querySelectorAll('.demo-card').forEach(c => c.classList.remove('active'));
   document.getElementById('card-' + name).classList.add('active');
 
-  currentDemo     = name;
-  estado          = 'general';
-  intencionActual = null;
-  nombreCliente   = null;
-  datosPedido     = {};
+  currentDemo      = name;
+  estado           = 'general';
+  intencionActual  = null;
+  nombreCliente    = null;
+  fechaCita        = null;
+  infoEspecialidad = null;
+  datosPedido      = {};
 
   const data = DEMOS[name];
 
