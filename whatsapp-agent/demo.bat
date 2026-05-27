@@ -1,73 +1,73 @@
 @echo off
 chcp 65001 >nul
 cls
-echo.
-echo ============================================================
-echo    Clinica MediVida -- Demo Agente Valeria
-echo ============================================================
-echo.
-echo  Buscando Python...
-echo.
 
-:: Intentar con 'python'
+:: Buscar Python
+set PYTHON_CMD=
 python --version >nul 2>&1
-if not errorlevel 1 (
-    set PYTHON_CMD=python
-    goto :run
+if not errorlevel 1 set PYTHON_CMD=python
+if "%PYTHON_CMD%"=="" (
+    py --version >nul 2>&1
+    if not errorlevel 1 set PYTHON_CMD=py
 )
-
-:: Intentar con 'py' (launcher de Windows)
-py --version >nul 2>&1
-if not errorlevel 1 (
-    set PYTHON_CMD=py
-    goto :run
-)
-
-:: Intentar rutas comunes de instalacion
-for %%P in (
-    "%LOCALAPPDATA%\Programs\Python\Python313\python.exe"
-    "%LOCALAPPDATA%\Programs\Python\Python312\python.exe"
-    "%LOCALAPPDATA%\Programs\Python\Python311\python.exe"
-    "%LOCALAPPDATA%\Programs\Python\Python310\python.exe"
-    "C:\Python313\python.exe"
-    "C:\Python312\python.exe"
-    "C:\Python311\python.exe"
-    "C:\Python310\python.exe"
-) do (
-    if exist %%P (
-        set PYTHON_CMD=%%P
-        goto :run
+if "%PYTHON_CMD%"=="" (
+    for %%P in (
+        "%LOCALAPPDATA%\Programs\Python\Python315\python.exe"
+        "%LOCALAPPDATA%\Programs\Python\Python313\python.exe"
+        "%LOCALAPPDATA%\Programs\Python\Python312\python.exe"
+        "%LOCALAPPDATA%\Programs\Python\Python311\python.exe"
+    ) do (
+        if exist %%P (
+            set PYTHON_CMD=%%P
+            goto :menu
+        )
     )
+    echo  ERROR: Python no encontrado. Instala desde python.org
+    pause
+    exit /b 1
 )
 
-:: No se encontro Python
-echo  *** Python no encontrado ***
-echo.
-echo  Opciones para solucionarlo:
-echo.
-echo  OPCION A - Reinstalar Python correctamente:
-echo    1. Ve a https://python.org/downloads
-echo    2. Descarga e instala Python
-echo    3. En la PRIMERA pantalla del instalador, abajo del todo,
-echo       marca la casilla "Add Python to PATH"
-echo    4. Haz clic en "Install Now"
-echo.
-echo  OPCION B - Si Python ya esta instalado:
-echo    1. Abre esta ventana (cmd)
-echo    2. Escribe: py --version
-echo    3. Si muestra Python 3.x, escribe en cmd:
-echo       py "%~dp0tests\demo_clinica.py"
+:menu
+cls
 echo.
 echo ============================================================
-pause
-exit /b 1
+echo    AgentKit — Demos de Agentes WhatsApp con IA
+echo ============================================================
+echo.
+echo   Elige la demo que quieres ver:
+echo.
+echo   [1]  Clinica MediVida       (salud, citas, laboratorio)
+echo   [2]  ProHogar Inmobiliaria  (venta, alquiler, visitas)
+echo   [3]  Restaurante El Criollo (menu, delivery, reservas)
+echo.
+echo ============================================================
+echo.
+set /p OPCION="   Tu eleccion (1, 2 o 3): "
 
-:run
-echo  Python encontrado: %PYTHON_CMD%
-echo.
-echo  Iniciando demo de Clinica MediVida...
-echo.
+if "%OPCION%"=="1" goto :clinica
+if "%OPCION%"=="2" goto :inmobiliaria
+if "%OPCION%"=="3" goto :restaurante
+
+echo  Opcion no valida. Escribe 1, 2 o 3.
+pause
+goto :menu
+
+:clinica
+cls
 %PYTHON_CMD% "%~dp0tests\demo_clinica.py"
+goto :fin
+
+:inmobiliaria
+cls
+%PYTHON_CMD% "%~dp0tests\demo_inmobiliaria.py"
+goto :fin
+
+:restaurante
+cls
+%PYTHON_CMD% "%~dp0tests\demo_restaurante.py"
+goto :fin
+
+:fin
 echo.
 echo  Demo finalizado.
 pause
