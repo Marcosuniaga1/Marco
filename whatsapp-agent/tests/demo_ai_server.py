@@ -159,6 +159,137 @@ SYSTEM_PROMPTS = {
     'restaurante': RESTAURANTE_PROMPT,
 }
 
+# ─── Closing instructions (appended to each prompt) ─────────────────────────────
+# Tell Claude to "close" by calling the registration tool once it has the data.
+
+CLOSING = {
+    'clinica': (
+        "\n\nCIERRE DE CITA:\n"
+        "Cuando el paciente confirme una cita y ya tengas su nombre, la especialidad, "
+        "el día y la hora, usa la herramienta 'agendar_cita' para registrarla. "
+        "Si te falta algún dato, pídelo de forma natural antes de registrar. "
+        "Después de registrar, confirma con un mensaje cálido y breve."
+    ),
+    'inmobiliaria': (
+        "\n\nCIERRE DE VISITA:\n"
+        "Cuando el cliente confirme una visita o asesoría y ya tengas su nombre, la "
+        "propiedad o tipo de propiedad de interés, el día y la hora, usa la herramienta "
+        "'agendar_visita' para registrarla. Si falta algún dato, pídelo con naturalidad "
+        "antes de registrar. Después, confirma con un mensaje breve y profesional."
+    ),
+    'restaurante': (
+        "\n\nCIERRE DE RESERVA O PEDIDO:\n"
+        "Cuando el cliente confirme una RESERVA y tengas su nombre, número de personas, "
+        "fecha y hora, usa 'registrar_reserva'. Cuando confirme un PEDIDO de delivery y "
+        "tengas su nombre, los platos, la dirección y el teléfono, usa 'registrar_pedido'. "
+        "Si falta un dato, pídelo con simpatía antes de registrar. Después, confirma con "
+        "alegría y de forma breve."
+    ),
+}
+
+# ─── Tool definitions per demo ──────────────────────────────────────────────────
+
+TOOLS = {
+    'clinica': [{
+        'name': 'agendar_cita',
+        'description': 'Registra una cita médica confirmada por el paciente. Úsala solo cuando el paciente haya confirmado y tengas todos los datos requeridos.',
+        'input_schema': {
+            'type': 'object',
+            'properties': {
+                'nombre': {'type': 'string', 'description': 'Nombre completo del paciente'},
+                'especialidad': {'type': 'string', 'description': 'Especialidad médica de la cita'},
+                'fecha': {'type': 'string', 'description': 'Día de la cita (ej. "lunes 2 de junio")'},
+                'hora': {'type': 'string', 'description': 'Hora de la cita (ej. "10:00 am")'},
+                'contacto': {'type': 'string', 'description': 'Teléfono u otro contacto (opcional)'},
+            },
+            'required': ['nombre', 'especialidad', 'fecha', 'hora'],
+        },
+    }],
+    'inmobiliaria': [{
+        'name': 'agendar_visita',
+        'description': 'Registra una visita a una propiedad o una asesoría confirmada por el cliente. Úsala solo cuando el cliente haya confirmado y tengas todos los datos.',
+        'input_schema': {
+            'type': 'object',
+            'properties': {
+                'nombre': {'type': 'string', 'description': 'Nombre del cliente'},
+                'propiedad': {'type': 'string', 'description': 'Propiedad o tipo de propiedad de interés'},
+                'fecha': {'type': 'string', 'description': 'Día de la visita'},
+                'hora': {'type': 'string', 'description': 'Hora de la visita'},
+                'contacto': {'type': 'string', 'description': 'Teléfono u otro contacto (opcional)'},
+            },
+            'required': ['nombre', 'propiedad', 'fecha', 'hora'],
+        },
+    }],
+    'restaurante': [
+        {
+            'name': 'registrar_reserva',
+            'description': 'Registra una reserva de mesa confirmada por el cliente. Úsala solo cuando tengas todos los datos.',
+            'input_schema': {
+                'type': 'object',
+                'properties': {
+                    'nombre': {'type': 'string', 'description': 'Nombre del cliente'},
+                    'personas': {'type': 'string', 'description': 'Número de personas'},
+                    'fecha': {'type': 'string', 'description': 'Fecha de la reserva'},
+                    'hora': {'type': 'string', 'description': 'Hora de la reserva'},
+                    'contacto': {'type': 'string', 'description': 'Teléfono u otro contacto (opcional)'},
+                },
+                'required': ['nombre', 'personas', 'fecha', 'hora'],
+            },
+        },
+        {
+            'name': 'registrar_pedido',
+            'description': 'Registra un pedido de delivery confirmado por el cliente. Úsala solo cuando tengas todos los datos.',
+            'input_schema': {
+                'type': 'object',
+                'properties': {
+                    'nombre': {'type': 'string', 'description': 'Nombre del cliente'},
+                    'items': {'type': 'string', 'description': 'Platos pedidos'},
+                    'direccion': {'type': 'string', 'description': 'Dirección de entrega'},
+                    'contacto': {'type': 'string', 'description': 'Teléfono de contacto'},
+                },
+                'required': ['nombre', 'items', 'direccion'],
+            },
+        },
+    ],
+}
+
+# Human-readable labels for each tool, shown on the confirmation card.
+TOOL_LABELS = {
+    'agendar_cita':      {'title': 'Cita agendada',      'icon': '📅'},
+    'agendar_visita':    {'title': 'Visita agendada',    'icon': '🏠'},
+    'registrar_reserva': {'title': 'Reserva confirmada', 'icon': '🪑'},
+    'registrar_pedido':  {'title': 'Pedido registrado',  'icon': '📦'},
+}
+
+RESERVAS_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'reservas.json')
+
+
+def guardar_reserva(demo, tipo, datos):
+    """Append a confirmed booking to reservas.json and return the record."""
+    import datetime
+    record = {
+        'demo': demo,
+        'tipo': tipo,
+        'datos': datos,
+        'registrado': datetime.datetime.now().isoformat(timespec='seconds'),
+    }
+    try:
+        if os.path.exists(RESERVAS_FILE):
+            with open(RESERVAS_FILE, 'r', encoding='utf-8') as f:
+                registros = json.load(f)
+        else:
+            registros = []
+    except (json.JSONDecodeError, OSError):
+        registros = []
+
+    registros.append(record)
+    with open(RESERVAS_FILE, 'w', encoding='utf-8') as f:
+        json.dump(registros, f, ensure_ascii=False, indent=2)
+
+    print(f'  ✓ {tipo} registrada → {datos}')
+    return record
+
+
 # ─── HTTP Handler ──────────────────────────────────────────────────────────────
 
 class DemoHandler(SimpleHTTPRequestHandler):
@@ -196,23 +327,56 @@ class DemoHandler(SimpleHTTPRequestHandler):
             demo = body.get('demo', self.demo_name)
             messages = body.get('messages', [])
 
-            system_prompt = SYSTEM_PROMPTS.get(demo, CLINICA_PROMPT)
+            system_prompt = SYSTEM_PROMPTS.get(demo, CLINICA_PROMPT) + CLOSING.get(demo, '')
+            tools = TOOLS.get(demo, [])
 
             client = anthropic.Anthropic()
+            booking = None
+
             response = client.messages.create(
                 model='claude-opus-4-7',
                 max_tokens=512,
                 system=system_prompt,
                 messages=messages,
+                tools=tools,
             )
 
-            reply = response.content[0].text
+            # Tool-use loop: execute any registration tool, feed results back,
+            # then let Claude produce the final confirmation message.
+            while response.stop_reason == 'tool_use':
+                tool_results = []
+                for block in response.content:
+                    if block.type == 'tool_use':
+                        record = guardar_reserva(demo, block.name, block.input)
+                        label = TOOL_LABELS.get(block.name, {'title': 'Registro', 'icon': '✅'})
+                        booking = {
+                            'tipo': block.name,
+                            'titulo': label['title'],
+                            'icono': label['icon'],
+                            'datos': record['datos'],
+                        }
+                        tool_results.append({
+                            'type': 'tool_result',
+                            'tool_use_id': block.id,
+                            'content': 'Registrado correctamente en el sistema.',
+                        })
+                messages.append({'role': 'assistant', 'content': response.content})
+                messages.append({'role': 'user', 'content': tool_results})
+                response = client.messages.create(
+                    model='claude-opus-4-7',
+                    max_tokens=512,
+                    system=system_prompt,
+                    messages=messages,
+                    tools=tools,
+                )
+
+            reply = ''.join(b.text for b in response.content if b.type == 'text')
 
             self.send_response(200)
             self._cors_headers()
             self.send_header('Content-Type', 'application/json; charset=utf-8')
             self.end_headers()
-            self.wfile.write(json.dumps({'reply': reply}).encode('utf-8'))
+            self.wfile.write(json.dumps({'reply': reply, 'booking': booking}).encode('utf-8'))
 
         except anthropic.AuthenticationError:
             self._error(401, 'ANTHROPIC_API_KEY inválida o no configurada.')

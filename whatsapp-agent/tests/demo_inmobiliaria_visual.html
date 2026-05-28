@@ -165,6 +165,39 @@
   }
   .error-banner.show { display: block; }
 
+  /* Booking confirmation card */
+  .booking-card {
+    align-self: flex-start;
+    max-width: 86%;
+    background: #fff;
+    border-radius: 0 10px 10px 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    border-left: 4px solid #25D366;
+    margin: 4px 0 4px 4px;
+    padding: 10px 12px;
+    animation: bubblePop 0.18s ease-out;
+  }
+  .booking-card .bc-head {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 0.82rem; font-weight: 700; color: #1976D2;
+    margin-bottom: 7px;
+  }
+  .booking-card .bc-head .bc-check {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #25D366; color: #fff; font-size: 0.7rem;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .booking-card .bc-row {
+    display: flex; gap: 6px; font-size: 0.76rem; line-height: 1.5;
+    color: #333; padding: 1px 0;
+  }
+  .booking-card .bc-row .bc-key { color: #888; min-width: 92px; text-transform: capitalize; }
+  .booking-card .bc-row .bc-val { color: #111; font-weight: 600; }
+  .booking-card .bc-foot {
+    margin-top: 7px; padding-top: 6px; border-top: 1px solid #eee;
+    font-size: 0.68rem; color: #25a35a; font-weight: 600;
+  }
+
   @media (max-width: 420px) {
     .phone-frame { width: 340px; border-radius: 40px; }
     .phone-screen { border-radius: 28px; height: 640px; }
@@ -257,6 +290,20 @@ function appendBubble(role, text) {
   chat.scrollTop = chat.scrollHeight;
 }
 function showTyping(visible) { typingRow.classList.toggle('show', visible); chat.scrollTop = chat.scrollHeight; }
+function appendBookingCard(booking) {
+  const card = document.createElement('div');
+  card.className = 'booking-card';
+  let rows = '';
+  for (const [key, val] of Object.entries(booking.datos)) {
+    if (val) rows += `<div class="bc-row"><span class="bc-key">${key}</span><span class="bc-val">${val}</span></div>`;
+  }
+  card.innerHTML =
+    `<div class="bc-head"><span class="bc-check">✓</span>${booking.icono} ${booking.titulo}</div>` +
+    rows +
+    `<div class="bc-foot">Guardado en el sistema ✓</div>`;
+  chat.insertBefore(card, typingRow);
+  chat.scrollTop = chat.scrollHeight;
+}
 function showError(msg) { errorEl.textContent = msg; errorEl.classList.add('show'); setTimeout(() => errorEl.classList.remove('show'), 6000); }
 function setInputEnabled(enabled) { input.disabled = !enabled; sendBtn.disabled = !enabled; if (enabled) input.focus(); }
 
@@ -278,7 +325,8 @@ async function sendToAI(userText) {
     if (!res.ok || data.error) throw new Error(data.error || `Error ${res.status}`);
 
     showTyping(false);
-    appendBubble('agent', data.reply);
+    if (data.reply) appendBubble('agent', data.reply);
+    if (data.booking) appendBookingCard(data.booking);
     conversationHistory.push({ role: 'assistant', content: data.reply });
     statusEl.textContent = 'Carlos · en línea';
   } catch (err) {

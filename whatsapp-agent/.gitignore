@@ -6,6 +6,9 @@
 *.sqlite
 *.sqlite3
 
+# Reservas generadas por las demos de IA
+tests/reservas.json
+
 # Python
 __pycache__/
 *.py[cod]
