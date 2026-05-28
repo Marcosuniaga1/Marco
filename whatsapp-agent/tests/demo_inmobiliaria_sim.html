@@ -168,153 +168,420 @@ function agentReply(text, booking) {
 
 function n(s){ return s?s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''):''; }
 function c(msg,words){ return words.some(w=>n(msg).includes(w)); }
+function afirmativo(mn){ return c(mn,['si','sí','dale','ok','yes','claro','perfecto','listo','confirmo','adelante','bueno','correcto','ese','esa','eso','me interesa','interesa','quiero','quisiera']); }
+function negativo(mn){ return c(mn,['no ','no.','no,','nope','nel','tampoco']); }
 
-const STATE = { fase:'inicio', tipo:null, propiedad:null, nombre:null, fecha:null, hora:null };
-
-const PROPIEDADES_VENTA = [
-  { keys:['zona norte','norte'], nombre:'Casa Zona Norte', desc:'3 hab, 2 baños, 180m²', precio:'$145,000', extra:'Piscina, cochera doble' },
-  { keys:['centro','apartamento centro','apto centro'], nombre:'Apartamento Centro', desc:'2 hab, 1 baño, 85m²', precio:'$78,500', extra:'Piso 5, vistas panorámicas' },
-  { keys:['las palmas','palmas','residencial'], nombre:'Casa Las Palmas', desc:'4 hab, 3 baños, 250m²', precio:'$220,000', extra:'Jardín privado' },
-  { keys:['local','comercial','negocio'], nombre:'Local Comercial Av. Principal', desc:'60m²', precio:'$95,000', extra:'Alta circulación peatonal' },
+/* ─── Catálogo ────────────────────────────────────────────── */
+const VENTA = [
+  { id:'norte',    keys:['norte','zona norte'],                          nombre:'Casa Zona Norte',            desc:'3 hab · 2 baños · 180 m²', precio:'$145,000', extra:'Piscina y cochera doble' },
+  { id:'centro',   keys:['centro','apto centro','apartamento centro'],   nombre:'Apartamento Centro',          desc:'2 hab · 1 baño · 85 m²',   precio:'$78,500',  extra:'Piso 5, vistas panorámicas' },
+  { id:'palmas',   keys:['palmas','las palmas','residencial'],            nombre:'Casa Las Palmas',             desc:'4 hab · 3 baños · 250 m²',  precio:'$220,000', extra:'Jardín privado' },
+  { id:'local',    keys:['local','comercial','negocio','tienda'],        nombre:'Local Comercial Av. Principal',desc:'60 m²',                     precio:'$95,000',  extra:'Alta circulación peatonal' },
+];
+const ALQUILER = [
+  { id:'miraflores', keys:['miraflores','amoblado','amueblado'],         nombre:'Apartamento Miraflores (amoblado)', desc:'1 hab · 45 m²',           precio:'$350/mes', extra:'Servicios incluidos' },
+  { id:'pinar',      keys:['pinar','casa familiar','3 hab'],             nombre:'Casa El Pinar',                    desc:'3 hab · 2 baños · 150 m²', precio:'$600/mes', extra:'Garaje incluido' },
+  { id:'oficina',    keys:['oficina','ejecutiva','empresarial','trabajo'],nombre:'Oficina Centro Empresarial',       desc:'40 m²',                    precio:'$450/mes', extra:'Recepción compartida' },
+];
+const NO_DISP = [
+  { keys:['airbnb','vacacional','vacaciones','turismo'],      texto:'arriendo vacacional tipo Airbnb' },
+  { keys:['terreno','tierra','lote','parcela'],               texto:'venta de terrenos o lotes' },
+  { keys:['industrial','bodega','galpon','galpón'],           texto:'propiedades industriales o galpones' },
+  { keys:['extranjero','otro pais','otro país','miami','new york','españa','colombia'], texto:'propiedades en el extranjero' },
 ];
 
-const PROPIEDADES_ALQUILER = [
-  { keys:['miraflores','amoblado','amueblado','amoblada'], nombre:'Apartamento Miraflores (amoblado)', desc:'1 hab, 45m²', precio:'$350/mes', extra:'Servicios incluidos' },
-  { keys:['pinar','casa familiar','familia'], nombre:'Casa El Pinar', desc:'3 hab, 2 baños, 150m²', precio:'$600/mes', extra:'Garaje incluido' },
-  { keys:['oficina','ejecutiva','empresarial'], nombre:'Oficina Centro Empresarial', desc:'40m²', precio:'$450/mes', extra:'Recepción compartida' },
-];
+/* ─── Estado central ──────────────────────────────────────── */
+// fase controla qué se espera del PRÓXIMO mensaje del usuario.
+// tema recuerda de qué se habló por última vez (para contexto).
+const S = {
+  fase: 'inicio',
+  tema: null,       // 'venta'|'alquiler'|'vender'|'financiamiento'|'valuacion'
+  prop: null,       // propiedad de interés actual
+  banco: null,
+  nombre: null,
+  fecha: null,
+  hora: null,
+  presupuesto: null,
+};
 
-const NO_DISPONIBLES = [
-  { keys:['airbnb','vacacional','vacaciones','temporada','turismo'], texto:'Arriendo vacacional tipo Airbnb' },
-  { keys:['terreno','tierra','lote','parcela'], texto:'Venta de terrenos' },
-  { keys:['industrial','bodega','galpón','galpon'], texto:'Propiedades industriales o galpones' },
-  { keys:['otro pais','otro país','extranjero','internacional'], texto:'Propiedades en el extranjero' },
-];
+function resetDatos(){ S.nombre=S.fecha=S.hora=S.prop=S.banco=null; }
 
-function detectarNoDisp(msg){ return NO_DISPONIBLES.find(nd=>nd.keys.some(k=>n(msg).includes(k)))||null; }
-function detectarPropVenta(msg){ return PROPIEDADES_VENTA.find(p=>p.keys.some(k=>n(msg).includes(k)))||null; }
-function detectarPropAlquiler(msg){ return PROPIEDADES_ALQUILER.find(p=>p.keys.some(k=>n(msg).includes(k)))||null; }
+function propVenta(mn){ return VENTA.find(p=>p.keys.some(k=>n(mn).includes(k)))||null; }
+function propAlquiler(mn){ return ALQUILER.find(p=>p.keys.some(k=>n(mn).includes(k)))||null; }
+function noDisp(mn){ return NO_DISP.find(nd=>nd.keys.some(k=>n(mn).includes(k)))||null; }
 
+/* ─── Acciones de cierre ──────────────────────────────────── */
+async function iniciarVisita(propiedad) {
+  S.prop   = propiedad;
+  S.fase   = 'visita_nombre';
+  S.tema   = S.tema || 'venta';
+  await agentReply(`¡Genial! Agendo tu visita a *${propiedad}*.\n\n¿Me das tu nombre completo? 👤`);
+}
+
+async function iniciarAsesorFinanciero(banco) {
+  S.banco = banco || S.banco || 'el banco de tu preferencia';
+  S.fase  = 'fin_nombre';
+  await agentReply(`Perfecto, te conecto con un asesor de *${S.banco}* sin ningún costo. 💳\n\n¿Me das tu nombre para coordinar la llamada? 👤`);
+}
+
+async function iniciarValuacion() {
+  S.fase = 'val_nombre';
+  S.tema = 'valuacion';
+  await agentReply('Con gusto hacemos la valuación de tu propiedad. Es *gratuita* y sin compromiso. 🏠\n\n¿Me das tu nombre para agendar la visita del tasador? 👤');
+}
+
+/* ─── Motor principal ─────────────────────────────────────── */
 async function procesar(msg) {
-  const m=msg.trim(), mn=n(m);
+  const m = msg.trim();
+  const mn = n(m);
 
-  if(STATE.fase==='inicio'){
-    STATE.fase='menu';
-    await agentReply('¡Hola! 👋 Soy *Carlos*, asesor de *ProHogar Inmobiliaria*.\n\nEstamos para ayudarte a encontrar la propiedad ideal o gestionar la tuya.\n\n¿Qué estás buscando hoy?\n• 🏠 *Comprar* una propiedad\n• 🔑 *Alquilar* un espacio\n• 💼 *Vender* tu propiedad\n• 📊 *Valuar* un inmueble');
-    return;
-  }
+  /* ══ FASES CON PREGUNTA ABIERTA — tienen prioridad absoluta ══ */
 
-  if(STATE.fase==='recoger_nombre'){
-    STATE.nombre=m; STATE.fase='recoger_fecha';
-    await agentReply(`Perfecto, *${STATE.nombre}*. ¿Qué día te viene bien para la visita o asesoría? 📅`);
-    return;
-  }
-  if(STATE.fase==='recoger_fecha'){
-    STATE.fecha=m; STATE.fase='recoger_hora';
-    await agentReply(`Anotado — *${STATE.fecha}*. ¿A qué hora te quedaría mejor? ⏰`);
-    return;
-  }
-  if(STATE.fase==='recoger_hora'){
-    STATE.hora=m; STATE.fase='confirmar';
+  if (S.fase === 'inicio') {
+    S.fase = 'libre';
     await agentReply(
-      '¡Excelente! Te confirmo los datos:\n\n'+
-      `🏠 *Propiedad:* ${STATE.propiedad}\n`+
-      `👤 *Cliente:* ${STATE.nombre}\n`+
-      `📅 *Fecha:* ${STATE.fecha}\n`+
-      `⏰ *Hora:* ${STATE.hora}\n\n`+
-      '¿Confirmo la visita? Responde *sí* para agendar.'
+      '¡Hola! 👋 Soy *Carlos*, asesor de *ProHogar Inmobiliaria*.\n\n' +
+      'Llevamos más de 10 años ayudando a personas a encontrar su lugar ideal. ' +
+      '¿En qué te puedo ayudar hoy?\n\n' +
+      '• 🏠 *Comprar* una propiedad\n' +
+      '• 🔑 *Alquilar* un espacio\n' +
+      '• 💼 *Vender* la tuya\n' +
+      '• 💳 *Financiamiento* para tu compra'
     );
     return;
   }
-  if(STATE.fase==='confirmar'){
-    if(c(mn,['si','sí','confirmo','dale','ok','yes','listo','correcto','perfecto','agenda'])){
-      STATE.fase='cerrado';
+
+  // Recoger nombre para VISITA
+  if (S.fase === 'visita_nombre') {
+    S.nombre = m; S.fase = 'visita_fecha';
+    await agentReply(`Un placer, *${S.nombre}*. ¿Qué día te viene bien para la visita? 📅\n(Estamos disponibles Lun–Sáb)`);
+    return;
+  }
+  if (S.fase === 'visita_fecha') {
+    S.fecha = m; S.fase = 'visita_hora';
+    await agentReply(`Perfecto — *${S.fecha}*. ¿A qué hora te quedaría mejor? ⏰`);
+    return;
+  }
+  if (S.fase === 'visita_hora') {
+    S.hora = m; S.fase = 'visita_confirmar';
+    await agentReply(
+      'Déjame confirmarte los datos antes de agendar:\n\n' +
+      `🏠 *Propiedad:* ${S.prop}\n` +
+      `👤 *Nombre:* ${S.nombre}\n` +
+      `📅 *Fecha:* ${S.fecha}\n` +
+      `⏰ *Hora:* ${S.hora}\n\n` +
+      '¿Todo correcto? Responde *sí* para confirmar. ✅'
+    );
+    return;
+  }
+  if (S.fase === 'visita_confirmar') {
+    if (afirmativo(mn)) {
+      S.fase = 'cerrado';
       await agentReply(
-        '¡Visita confirmada! 🎉 Un asesor se pondrá en contacto contigo para los detalles finales.\n\nSi necesitas cambiar algo, escríbenos con anticipación. ¿Podemos ayudarte en algo más?',
-        { icono:'🏠', titulo:'Visita agendada', campos:{ 'propiedad':STATE.propiedad, 'cliente':STATE.nombre, 'fecha':STATE.fecha, 'hora':STATE.hora } }
+        '¡Visita confirmada! 🎉 Te esperamos con todo listo.\n\n' +
+        'Un asesor te contactará para confirmar la dirección exacta. ' +
+        '¿Hay algo más en lo que pueda ayudarte?',
+        { icono:'🏠', titulo:'Visita agendada', campos:{ 'propiedad':S.prop, 'cliente':S.nombre, 'fecha':S.fecha, 'hora':S.hora } }
       );
     } else {
-      STATE.fase='menu';
-      await agentReply('Sin problema, cuéntame qué quieres ajustar. 😊');
+      S.fase = 'libre';
+      await agentReply('Sin problema. ¿Qué dato quieres cambiar? 😊');
     }
     return;
   }
-  if(STATE.fase==='cerrado'){
-    STATE.fase='menu'; STATE.propiedad=STATE.nombre=STATE.fecha=STATE.hora=null;
-    await agentReply('¡Con gusto! ¿En qué más puedo ayudarte? 🏠');
+
+  // Recoger nombre para ASESOR FINANCIERO
+  if (S.fase === 'fin_nombre') {
+    S.nombre = m; S.fase = 'fin_fecha';
+    await agentReply(`Perfecto, *${S.nombre}*. ¿Qué día te viene bien para la llamada con el asesor? 📅`);
+    return;
+  }
+  if (S.fase === 'fin_fecha') {
+    S.fecha = m; S.fase = 'fin_hora';
+    await agentReply(`Anotado — *${S.fecha}*. ¿A qué hora te llaman? ⏰`);
+    return;
+  }
+  if (S.fase === 'fin_hora') {
+    S.hora = m; S.fase = 'fin_confirmar';
+    await agentReply(
+      'Perfecto, te confirmo:\n\n' +
+      `💳 *Banco:* ${S.banco}\n` +
+      `👤 *Nombre:* ${S.nombre}\n` +
+      `📅 *Fecha:* ${S.fecha}\n` +
+      `⏰ *Hora:* ${S.hora}\n\n` +
+      '¿Confirmo la llamada con el asesor financiero? Responde *sí*. ✅'
+    );
+    return;
+  }
+  if (S.fase === 'fin_confirmar') {
+    if (afirmativo(mn)) {
+      S.fase = 'cerrado';
+      await agentReply(
+        '¡Listo! El asesor de *' + S.banco + '* te llamará en el horario acordado. 📞\n\n' +
+        'Con esa pre-aprobación podrás ver las propiedades con una idea clara de tu presupuesto. ' +
+        '¿Te muestro las opciones en venta mientras tanto?',
+        { icono:'💳', titulo:'Llamada con asesor financiero', campos:{ 'banco':S.banco, 'cliente':S.nombre, 'fecha':S.fecha, 'hora':S.hora } }
+      );
+    } else {
+      S.fase = 'libre';
+      await agentReply('Claro, dime qué quieres ajustar. 😊');
+    }
     return;
   }
 
+  // Recoger nombre para VALUACIÓN
+  if (S.fase === 'val_nombre') {
+    S.nombre = m; S.fase = 'val_fecha';
+    await agentReply(`Perfecto, *${S.nombre}*. ¿Qué día viene bien para que el tasador visite la propiedad? 📅`);
+    return;
+  }
+  if (S.fase === 'val_fecha') {
+    S.fecha = m; S.fase = 'val_confirmar';
+    await agentReply(`Anotado — *${S.fecha}*. ¿Puedes darme también una hora aproximada? ⏰`);
+    return;
+  }
+  if (S.fase === 'val_confirmar') {
+    S.hora = m; S.fase = 'libre';
+    await agentReply(
+      '¡Visita de valuación agendada! 🎉\n\n' +
+      `📅 *${S.nombre}* · ${S.fecha} · ${S.hora}\n\n` +
+      'Con el reporte en mano definimos juntos la estrategia de precio y publicación. ' +
+      '¿Tienes alguna pregunta sobre el proceso de venta?',
+      { icono:'📊', titulo:'Valuación agendada', campos:{ 'propietario':S.nombre, 'fecha':S.fecha, 'hora':S.hora } }
+    );
+    resetDatos();
+    return;
+  }
+
+  // Estado cerrado — siguiente mensaje abre nueva conversación
+  if (S.fase === 'cerrado') {
+    S.fase = 'libre'; resetDatos();
+    await agentReply('¡Con mucho gusto! ¿En qué más te puedo ayudar? 🏠');
+    return;
+  }
+
+  /* ══ FASE LIBRE — detección de intención ══ */
+
   // Saludo
-  if(c(mn,['hola','buenas','buenos','hey','saludos'])){
-    await agentReply('¡Hola! 👋 Soy *Carlos* de *ProHogar Inmobiliaria*. ¿Buscas comprar, alquilar o vender una propiedad?');
+  if (c(mn,['hola','buenas','buenos','hey','saludos','buen dia','buenas tardes','buenas noches'])) {
+    await agentReply('¡Hola de nuevo! 😊 ¿En qué te puedo ayudar?\n\n• 🏠 Comprar · 🔑 Alquilar · 💼 Vender · 💳 Financiamiento');
     return;
   }
 
   // No disponible
-  const nd=detectarNoDisp(mn);
-  if(nd){
-    await agentReply(`Entiendo que buscas *${nd.texto}* — ese tipo de propiedad no lo manejamos directamente.\n\nLo que sí tenemos es:\n🏠 *Propiedades en venta* desde $78,500\n🔑 *Alquileres* desde $350/mes\n💼 *Asesoría de compra/venta* con acompañamiento legal\n\n¿Te gustaría que te mostremos alguna opción? También podemos coordinar una llamada si prefieres. 😊`);
+  const nd = noDisp(mn);
+  if (nd) {
+    S.tema = 'venta';
+    await agentReply(
+      `Ese tipo de propiedad (*${nd.texto}*) no lo manejamos directamente. ` +
+      'Pero sí tenemos opciones que podrían interesarte:\n\n' +
+      '🏠 *Propiedades en venta* desde $78,500\n' +
+      '🔑 *Alquileres* desde $350/mes\n\n' +
+      '¿Quieres comprar o alquilar? Te muestro lo que tenemos disponible ahora. 😊'
+    );
     return;
   }
 
-  // Compra
-  if(c(mn,['comprar','venta','vender','adquirir','precio de venta','cuanto vale','compra'])){
-    const prop=detectarPropVenta(mn);
-    if(prop){
-      STATE.propiedad=prop.nombre; STATE.tipo='venta'; STATE.fase='recoger_nombre';
-      await agentReply(`🏠 *${prop.nombre}*\n📐 ${prop.desc}\n💰 Precio: *${prop.precio}*\n✨ ${prop.extra}\n\n¡Es una excelente opción! ¿Quieres agendar una visita? Para empezar, ¿me das tu nombre completo?`);
+  // ── FINANCIAMIENTO ──────────────────────────────────────────
+  if (c(mn,['financiamiento','financiar','credito','crédito','hipoteca','prestamo','préstamo','banco','cuotas','mensualidad'])) {
+    // Si ya estamos en tema financiamiento y el usuario menciona un banco → ir directo a agendar
+    const bancosConocidos = [
+      { keys:['banco nacional','nacional'], nombre:'Banco Nacional' },
+      { keys:['bancopro','banco pro'],      nombre:'BancoPro' },
+    ];
+    const bancoMencionado = bancosConocidos.find(b=>b.keys.some(k=>n(mn).includes(k)));
+    if (bancoMencionado) {
+      await iniciarAsesorFinanciero(bancoMencionado.nombre);
+      return;
+    }
+    S.tema = 'financiamiento';
+    S.fase = 'fin_elegir_banco';
+    await agentReply(
+      '¡Excelente decisión! Financiar es la opción más inteligente para muchos compradores. 💳\n\n' +
+      'Tenemos alianza con dos bancos:\n\n' +
+      '🏦 *Banco Nacional* — hasta 20 años · tasa preferencial · aprobación en 7 días\n' +
+      '🏦 *BancoPro* — hasta 15 años · aprobación express en 3 días hábiles\n\n' +
+      '¿Con cuál te gustaría empezar? Puedo conectarte con un asesor sin costo. 😊'
+    );
+    return;
+  }
+
+  // Respuesta a la pregunta "¿Con cuál banco?"
+  if (S.fase === 'fin_elegir_banco') {
+    const bancosConocidos = [
+      { keys:['nacional','banco nacional','el primero','primero','1'], nombre:'Banco Nacional' },
+      { keys:['pro','bancopro','banco pro','el segundo','segundo','2'],nombre:'BancoPro' },
+    ];
+    const bancoElegido = bancosConocidos.find(b=>b.keys.some(k=>n(mn).includes(k)));
+    if (bancoElegido || afirmativo(mn)) {
+      await iniciarAsesorFinanciero(bancoElegido ? bancoElegido.nombre : 'Banco Nacional');
+    } else if (negativo(mn)) {
+      S.fase = 'libre'; S.tema = null;
+      await agentReply('Sin problema. Si en algún momento necesitas financiamiento, aquí estaremos. ¿Te muestro las propiedades disponibles? 🏠');
     } else {
-      await agentReply('¡Perfecto! Tenemos propiedades en venta:\n\n🏠 *Casa Zona Norte* — $145,000 · 3 hab, piscina\n🏢 *Apto Centro* — $78,500 · 2 hab, vistas\n🏡 *Casa Las Palmas* — $220,000 · 4 hab, jardín\n🏪 *Local Comercial* — $95,000 · 60m², Av. Principal\n\n¿Cuál te llama más la atención o cuáles son tus prioridades?');
+      await agentReply('¿Con cuál de los dos prefieres empezar — *Banco Nacional* o *BancoPro*? 🏦');
     }
     return;
   }
 
-  // Alquiler
-  if(c(mn,['alquilar','arrendar','rentar','alquiler','arriendo','renta','alquilar'])){
-    const prop=detectarPropAlquiler(mn);
-    if(prop){
-      STATE.propiedad=prop.nombre; STATE.tipo='alquiler'; STATE.fase='recoger_nombre';
-      await agentReply(`🔑 *${prop.nombre}*\n📐 ${prop.desc}\n💰 Renta: *${prop.precio}*\n✨ ${prop.extra}\n\n¿Quieres agendar una visita? Para comenzar, ¿me das tu nombre?`);
+  // ── COMPRAR ─────────────────────────────────────────────────
+  if (c(mn,['comprar','quiero comprar','busco comprar','adquirir','me interesa comprar']) ||
+      (S.tema === 'venta' && afirmativo(mn) && S.fase === 'libre')) {
+    S.tema = 'venta';
+    const pv = propVenta(mn);
+    if (pv) {
+      await iniciarVisita(pv.nombre);
+    } else if (S.presupuesto) {
+      // Filtrar por presupuesto aproximado
+      await agentReply(
+        `Con un presupuesto de *${S.presupuesto}* tienes buenas opciones:\n\n` +
+        '🏢 *Apartamento Centro* — $78,500 · 2 hab, vistas panorámicas\n' +
+        '🏠 *Casa Zona Norte* — $145,000 · 3 hab, piscina\n' +
+        '🏡 *Casa Las Palmas* — $220,000 · 4 hab, jardín privado\n\n' +
+        '¿Cuál te llama la atención? Puedo contarte más de cualquiera. 😊'
+      );
     } else {
-      await agentReply('Tenemos opciones en alquiler:\n\n🛏️ *Apto Miraflores amoblado* — $350/mes · 1 hab · Servicios incluidos\n🏡 *Casa El Pinar* — $600/mes · 3 hab, garaje\n💼 *Oficina Centro Empresarial* — $450/mes · 40m²\n\n¿Cuál se adapta mejor a lo que buscas?');
+      S.fase = 'libre';
+      await agentReply(
+        '¡Perfecto, te ayudo a encontrar la opción ideal! 🏠\n\n' +
+        'Para afinarte las mejores opciones — ¿tienes un presupuesto aproximado en mente?\n' +
+        '(Nuestras propiedades van desde *$78,500* hasta *$220,000*)'
+      );
+      S.fase = 'compra_presupuesto';
     }
     return;
   }
 
-  // Vender
-  if(c(mn,['vendo','vender mi','quiero vender','tengo una casa','tengo un apartamento','tengo una propiedad'])){
-    await agentReply('¡Excelente decisión! En ProHogar te acompañamos en todo el proceso de venta. 💼\n\nNuestro servicio incluye:\n• Valuación gratuita de tu inmueble\n• Fotografía y publicación profesional\n• Acompañamiento legal hasta el cierre\n• Red de compradores activos\n\n¿Te llamo para coordinar la valuación? Dame tu nombre y disponibilidad. 📞');
-    STATE.propiedad='Valuación / venta de propiedad'; STATE.tipo='venta'; STATE.fase='recoger_nombre';
+  // Respuesta a "¿cuál es tu presupuesto?"
+  if (S.fase === 'compra_presupuesto') {
+    S.presupuesto = m; S.fase = 'libre'; S.tema = 'venta';
+    await agentReply(
+      `Con un presupuesto de *${m}* te recomiendo estas opciones:\n\n` +
+      '🏢 *Apartamento Centro* — $78,500 · 2 hab · vistas panorámicas\n' +
+      '🏠 *Casa Zona Norte* — $145,000 · 3 hab · piscina y cochera\n' +
+      '🏡 *Casa Las Palmas* — $220,000 · 4 hab · jardín privado\n\n' +
+      '¿Cuál te interesa conocer primero? La podemos visitar esta semana. 😊'
+    );
     return;
   }
 
-  // Financiamiento
-  if(c(mn,['credito','crédito','financiamiento','hipoteca','prestamo','préstamo','banco','cuotas'])){
-    await agentReply('💳 *Financiamiento disponible*\n\nTenemos alianzas con:\n• *Banco Nacional* — hasta 20 años, tasa preferencial\n• *BancoPro* — aprobación en 5 días hábiles\n\nPodemos conectarte directamente con un asesor financiero sin costo.\n\n¿Te interesa evaluar tu capacidad de crédito?');
+  // Mención de una propiedad específica de venta en cualquier momento
+  const pvDirecta = propVenta(mn);
+  if (pvDirecta && S.tema === 'venta') {
+    await iniciarVisita(pvDirecta.nombre);
     return;
   }
 
-  // Precios / presupuesto
-  if(c(mn,['precio','cuanto','cuánto','presupuesto','rango','barato','economico','económico'])){
-    await agentReply('Tenemos opciones para diferentes presupuestos:\n\n*En venta:* desde $78,500 hasta $220,000\n*En alquiler:* desde $350/mes hasta $600/mes\n\n¿Me cuentas cuál es tu presupuesto aproximado y qué tipo de propiedad necesitas? Así te muestro las mejores opciones. 🏠');
+  // ── ALQUILAR ────────────────────────────────────────────────
+  if (c(mn,['alquilar','arrendar','rentar','alquiler','arriendo','en alquiler','busco alquiler'])) {
+    S.tema = 'alquiler';
+    const pa = propAlquiler(mn);
+    if (pa) {
+      await iniciarVisita(pa.nombre);
+    } else {
+      S.fase = 'libre';
+      await agentReply(
+        'Tenemos estas opciones en alquiler disponibles ahora:\n\n' +
+        '🛏️ *Apartamento Miraflores* — $350/mes · 1 hab · amoblado, servicios incluidos\n' +
+        '🏡 *Casa El Pinar* — $600/mes · 3 hab · garaje incluido\n' +
+        '💼 *Oficina Centro Empresarial* — $450/mes · 40 m² · recepción compartida\n\n' +
+        '¿Cuál se acerca más a lo que buscas? 😊'
+      );
+    }
     return;
   }
 
-  // Qué son
-  if(c(mn,['que son','qué son','quienes son','sobre ustedes','como funcionan','cómo funcionan','su empresa'])){
-    await agentReply('Somos *ProHogar Inmobiliaria*, una empresa con más de 10 años conectando personas con sus propiedades ideales. 🏠\n\nNos especializamos en:\n• Compra y venta residencial y comercial\n• Gestión de alquileres\n• Asesoría legal y financiera integral\n\nNuestra propuesta es simple: acompañamos al cliente en cada paso, con transparencia y sin sorpresas.\n\n¿En qué puedo ayudarte hoy?');
+  // Mención de propiedad de alquiler en contexto alquiler
+  const paDirecta = propAlquiler(mn);
+  if (paDirecta && S.tema === 'alquiler') {
+    await iniciarVisita(paDirecta.nombre);
     return;
   }
 
-  // Gracias
-  if(c(mn,['gracias','muchas gracias','hasta luego','adios','adiós','chao','bye'])){
-    await agentReply('¡Con mucho gusto! 😊 Cuando quieras seguir buscando, aquí estaremos. ¡Hasta pronto!');
+  // ── VENDER SU PROPIEDAD ──────────────────────────────────────
+  if (c(mn,['vender','vendo','quiero vender','tengo una casa','tengo un apto','tengo un apartamento','tengo una propiedad','poner en venta'])) {
+    S.tema = 'vender';
+    S.fase = 'libre';
+    await agentReply(
+      '¡Excelente! Te acompañamos en todo el proceso de venta. 💼\n\n' +
+      'Nuestro servicio incluye:\n' +
+      '✅ Valuación gratuita de tu inmueble\n' +
+      '✅ Fotografía y publicación profesional\n' +
+      '✅ Acompañamiento legal hasta el cierre\n' +
+      '✅ Red de más de 500 compradores activos\n\n' +
+      '¿Quieres que agendemos la valuación? Es sin costo y sin compromiso. 😊'
+    );
     return;
   }
 
-  await agentReply('Entendido — ¿me podrías contar un poco más qué necesitas? 😊\n\nPuedo ayudarte con:\n• 🏠 Comprar o alquilar una propiedad\n• 💼 Vender o valuar un inmueble\n• 💳 Opciones de financiamiento');
+  // Respuesta afirmativa a "¿quieres agendar la valuación?"
+  if (S.tema === 'vender' && afirmativo(mn)) {
+    await iniciarValuacion();
+    return;
+  }
+
+  // ── PRECIOS / PRESUPUESTO ────────────────────────────────────
+  if (c(mn,['precio','cuanto','cuánto','presupuesto','cuesta','vale','cuestan','cobran','caro','barato','economico'])) {
+    if (S.tema === 'alquiler') {
+      await agentReply('En alquiler nuestros precios son:\n\n🛏️ Apartamento amoblado — *$350/mes*\n🏡 Casa 3 hab — *$600/mes*\n💼 Oficina 40 m² — *$450/mes*\n\n¿Cuál se ajusta mejor a tu presupuesto? 😊');
+    } else {
+      S.fase = 'compra_presupuesto'; S.tema = 'venta';
+      await agentReply('Nuestras propiedades en venta van desde *$78,500* hasta *$220,000*.\n\n¿Tienes un presupuesto aproximado en mente? Así te filtro las mejores opciones. 🏠');
+    }
+    return;
+  }
+
+  // ── QUIÉNES SON / SOBRE PROHAGAR ────────────────────────────
+  if (c(mn,['quienes son','quiénes son','que son','qué son','sobre ustedes','como funcionan','su empresa','años','experiencia','trayectoria'])) {
+    await agentReply(
+      'Somos *ProHogar Inmobiliaria*, con más de 10 años en el mercado. 🏠\n\n' +
+      'Nuestra propuesta es simple: te acompañamos en cada etapa — desde la primera visita hasta la firma del contrato — con total transparencia y sin sorpresas.\n\n' +
+      'Hemos cerrado más de 800 transacciones y mantenemos una red de clientes activos que nos permite conectar compradores y vendedores rápidamente.\n\n' +
+      '¿Estás buscando comprar, alquilar o vender? 😊'
+    );
+    return;
+  }
+
+  // ── GRACIAS / DESPEDIDA ──────────────────────────────────────
+  if (c(mn,['gracias','muchas gracias','hasta luego','adios','adiós','chao','bye','ok gracias'])) {
+    await agentReply('¡Un placer! 😊 Cuando estés listo para el próximo paso, aquí estaré. ¡Hasta pronto!');
+    return;
+  }
+
+  // ── INTERÉS GENÉRICO (sí/no sin contexto claro) ─────────────
+  if (afirmativo(mn)) {
+    if (S.tema === 'financiamiento' || S.fase === 'fin_elegir_banco') {
+      await iniciarAsesorFinanciero('Banco Nacional');
+    } else if (S.tema === 'vender') {
+      await iniciarValuacion();
+    } else if (S.prop) {
+      await iniciarVisita(S.prop);
+    } else {
+      await agentReply('¡Genial! ¿Con qué quieres que empecemos — comprar, alquilar o necesitas financiamiento? 😊');
+    }
+    return;
+  }
+
+  // ── FALLBACK CONTEXTUAL ──────────────────────────────────────
+  const fallbacks = {
+    venta:         '¿Cuál de las propiedades en venta te llama más la atención? Puedo darte más detalles o agendamos una visita. 🏠',
+    alquiler:      '¿Cuál de las opciones de alquiler te interesa? La podemos visitar cuando quieras. 🔑',
+    financiamiento:'¿Prefieres empezar con *Banco Nacional* o *BancoPro*? En ambos el trámite es sin costo. 💳',
+    vender:        '¿Agendamos la valuación gratuita de tu propiedad? Solo necesito tu nombre y disponibilidad. 📊',
+  };
+  if (S.tema && fallbacks[S.tema]) {
+    await agentReply(fallbacks[S.tema]);
+  } else {
+    await agentReply(
+      'Cuéntame un poco más y te oriento. 😊 Puedo ayudarte con:\n\n' +
+      '• 🏠 *Comprar* una propiedad\n' +
+      '• 🔑 *Alquilar* un espacio\n' +
+      '• 💼 *Vender* la tuya\n' +
+      '• 💳 *Financiamiento* bancario'
+    );
+  }
 }
+
 
 let busy=false;
 async function sendMessage(){
