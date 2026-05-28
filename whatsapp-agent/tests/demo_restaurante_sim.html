@@ -164,7 +164,10 @@ function agentReply(text,booking){
 function n(s){ return s?s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''):''; }
 function c(msg,words){ return words.some(w=>n(msg).includes(w)); }
 
-const ST={fase:'inicio',tipo:null,nombre:null,personas:null,fecha:null,hora:null,items:null,direccion:null};
+const ST={fase:'inicio',tema:null,nombre:null,personas:null,fecha:null,hora:null,items:null,direccion:null,platoSugerido:null};
+function resetDatos(){ ST.nombre=ST.personas=ST.fecha=ST.hora=ST.items=ST.direccion=ST.platoSugerido=null; }
+function afirmativo(mn){ return c(mn,['si','sí','dale','ok','okay','vale','claro','perfecto','listo','confirmo','confirmar','de una','me parece','esa','ese','eso','quiero','quisiera','por supuesto','obvio','genial']); }
+function negativo(mn){ return c(mn,['no ','no.','no,','nop','nel','tampoco','luego','despues','después','ahora no']); }
 
 const NO_DISP=[
   {keys:['sushi','japones','japonesa','temaki','sashimi','ramen'],nombre:'comida japonesa'},
@@ -174,7 +177,6 @@ const NO_DISP=[
   {keys:['kebab','shawarma','arabe','árabe'],nombre:'comida árabe'},
   {keys:['hamburguesa','burger','hot dog'],nombre:'comida rápida tipo burger'},
 ];
-
 function detectarNoDisp(msg){ return NO_DISP.find(nd=>nd.keys.some(k=>n(msg).includes(k)))||null; }
 
 const MENU_ITEMS=[
@@ -191,18 +193,31 @@ const MENU_ITEMS=[
   {keys:['mousse','chocolate'],nombre:'Mousse de chocolate',precio:'$5'},
 ];
 
+/* ── Acciones de cierre ──────────────────────────────────── */
+async function iniciarReserva(){
+  ST.tema='reserva'; ST.fase='res_nombre';
+  await agentReply('¡Con gusto reservo tu mesa! 🪑\nAtendemos Lun–Dom 12pm–11pm, hasta *12 personas*.\n\n¿Me das tu nombre para la reserva? 👤');
+}
+async function iniciarDelivery(platoInicial){
+  ST.tema='delivery'; ST.fase='del_nombre';
+  if(platoInicial) ST.items=platoInicial;
+  await agentReply('¡Perfecto, pedido a domicilio! 📦\nLun–Dom 12pm–10pm · Mínimo $20 · Envío $2.50 zona centro.\n\n¿Me das tu nombre para el pedido? 👤');
+}
+
 async function procesar(msg){
   const m=msg.trim(), mn=n(m);
 
+  /* ══ FASES CON PREGUNTA ABIERTA — prioridad máxima ══ */
+
   if(ST.fase==='inicio'){
-    ST.fase='menu';
+    ST.fase='libre';
     await agentReply('¡Hola! 😄 Bienvenido a *Restaurante El Criollo*, soy Luna.\n\nEspecialistas en cocina criolla con sabores auténticos y calidez de hogar. 🍽️\n\n¿En qué te puedo ayudar?\n• 🪑 Reservar una mesa\n• 📦 Pedir delivery\n• 📋 Ver el menú\n• 📍 Ubicación y horarios');
     return;
   }
 
-  // Flujos de datos
-  if(ST.fase==='res_nombre'){ ST.nombre=m; ST.fase='res_personas'; await agentReply(`Hola *${ST.nombre}*! ¿Para cuántas personas sería la reserva? 👥`); return; }
-  if(ST.fase==='res_personas'){ ST.personas=m; ST.fase='res_fecha'; await agentReply(`Anotado — *${ST.personas} persona${ST.personas==='1'?'':'s'}*. ¿Qué día tienes en mente? 📅`); return; }
+  // ── Flujo RESERVA ──
+  if(ST.fase==='res_nombre'){ ST.nombre=m; ST.fase='res_personas'; await agentReply(`¡Hola *${ST.nombre}*! ¿Para cuántas personas sería la reserva? 👥`); return; }
+  if(ST.fase==='res_personas'){ ST.personas=m; ST.fase='res_fecha'; await agentReply(`Anotado — *${ST.personas}*. ¿Qué día tienes en mente? 📅`); return; }
   if(ST.fase==='res_fecha'){ ST.fecha=m; ST.fase='res_hora'; await agentReply(`Perfecto, *${ST.fecha}*. ¿A qué hora les gustaría llegar? ⏰`); return; }
   if(ST.fase==='res_hora'){
     ST.hora=m; ST.fase='res_confirmar';
@@ -210,42 +225,60 @@ async function procesar(msg){
     return;
   }
   if(ST.fase==='res_confirmar'){
-    if(c(mn,['si','sí','confirmo','dale','ok','yes','listo','confirmar','perfecto'])){
+    if(afirmativo(mn)){
       ST.fase='cerrado';
       await agentReply('¡Reserva confirmada! 🎉 Te esperamos con los brazos abiertos.\n\n📍 Calle Real 27, esq. Av. Bolívar · 📞 555-0200\n\n¡Prepárate para los mejores sabores criollos! ¿Hay algo más?',
         {icono:'🪑',titulo:'Reserva confirmada',campos:{'nombre':ST.nombre,'personas':ST.personas,'fecha':ST.fecha,'hora':ST.hora}});
-    } else {
-      ST.fase='menu'; await agentReply('Sin problema, cuéntame qué quieres ajustar. 😊');
-    }
+    } else { ST.fase='libre'; await agentReply('Sin problema, cuéntame qué quieres ajustar. 😊'); }
     return;
   }
 
-  if(ST.fase==='del_nombre'){ ST.nombre=m; ST.fase='del_items'; await agentReply(`¡Hola *${ST.nombre}*! ¿Qué te gustaría pedir? (Puedes escribirme los platos que quieras 🍽️)`); return; }
-  if(ST.fase==='del_items'){ ST.items=m; ST.fase='del_direccion'; await agentReply(`¡Excelente elección! ¿A qué dirección te enviamos el pedido? 📍`); return; }
+  // ── Flujo DELIVERY ──
+  if(ST.fase==='del_nombre'){
+    ST.nombre=m;
+    if(ST.items){ ST.fase='del_direccion'; await agentReply(`¡Gracias *${ST.nombre}*! Ya tengo tu pedido (*${ST.items}*). ¿A qué dirección te lo enviamos? 📍`); }
+    else { ST.fase='del_items'; await agentReply(`¡Hola *${ST.nombre}*! ¿Qué te gustaría pedir? Escríbeme los platos que quieras 🍽️`); }
+    return;
+  }
+  if(ST.fase==='del_items'){ ST.items=m; ST.fase='del_direccion'; await agentReply('¡Excelente elección! ¿A qué dirección te enviamos el pedido? 📍'); return; }
   if(ST.fase==='del_direccion'){
     ST.direccion=m; ST.fase='del_confirmar';
     await agentReply(`Perfecto, confirmo tu pedido:\n\n📦 *El Criollo — Delivery*\n👤 *Nombre:* ${ST.nombre}\n🍽️ *Pedido:* ${ST.items}\n📍 *Dirección:* ${ST.direccion}\n🚗 *Envío:* $2.50 · ~40 min\n\n¿Confirmo? Responde *sí*. 😊`);
     return;
   }
   if(ST.fase==='del_confirmar'){
-    if(c(mn,['si','sí','confirmo','dale','ok','yes','listo','perfecto'])){
+    if(afirmativo(mn)){
       ST.fase='cerrado';
       await agentReply('¡Pedido registrado! 🎉 En aproximadamente 40 minutos llega tu comida.\n\nCualquier consulta, escríbenos al 555-0200. ¡Buen provecho! 🍽️',
         {icono:'📦',titulo:'Pedido registrado',campos:{'nombre':ST.nombre,'pedido':ST.items,'dirección':ST.direccion,'envío':'$2.50 · ~40 min'}});
-    } else {
-      ST.fase='menu'; await agentReply('Sin problema, cuéntame qué cambias. 😊');
-    }
-    return;
-  }
-  if(ST.fase==='cerrado'){
-    ST.fase='menu'; ST.nombre=ST.personas=ST.fecha=ST.hora=ST.items=ST.direccion=null;
-    await agentReply('¡Con gusto! ¿En qué más puedo ayudarte? 😊');
+    } else { ST.fase='libre'; await agentReply('Sin problema, cuéntame qué cambias. 😊'); }
     return;
   }
 
+  // ── Tras sugerir un plato: ¿delivery o comer aquí? ──
+  if(ST.fase==='plato_decision'){
+    if(c(mn,['delivery','domicilio','llevar','a casa','envia','envía','manda','para llevar'])){ await iniciarDelivery(ST.platoSugerido); return; }
+    if(c(mn,['aqui','aquí','mesa','reserva','reservar','ir','venir','voy','comer alli','comer alla','en el local','en sitio','restaurante'])){ await iniciarReserva(); return; }
+    if(afirmativo(mn)){ await iniciarDelivery(ST.platoSugerido); return; }
+    if(negativo(mn)){ ST.fase='libre'; await agentReply('¡Sin problema! ¿Te muestro el resto del menú o te ayudo con otra cosa? 😊'); return; }
+    // si no aclara, no quedarse en bucle: ofrecer las dos vías
+    await agentReply('¿Prefieres *delivery* a tu casa o *reservar una mesa* para venir a disfrutarlo? 🍽️');
+    return;
+  }
+
+  if(ST.fase==='cerrado'){
+    ST.fase='libre'; resetDatos();
+    if(c(mn,['otra','nuevo','nueva','reserva','pedido','pedir','delivery','si','sí'])) await agentReply('¡Con gusto! ¿Reservamos una mesa o pedimos delivery? 😊');
+    else if(c(mn,['gracias','no','nada','adios','adiós','chao'])) await agentReply('¡Gracias a ti! 😄 Cuando tengas antojo de lo mejor de la cocina criolla, aquí estaremos. ¡Hasta pronto! 🍽️');
+    else await agentReply('¡Aquí sigo! ¿En qué más te puedo ayudar? 😊');
+    return;
+  }
+
+  /* ══ FASE LIBRE — detección de intención ══ */
+
   // Saludo
   if(c(mn,['hola','buenas','buenos','hey','saludos','buen dia'])){
-    await agentReply('¡Hola! 😄 Soy *Luna* de *El Criollo*. ¿Quieres reservar una mesa, pedir delivery o consultar el menú?');
+    await agentReply('¡Hola de nuevo! 😄 ¿Quieres *reservar una mesa*, *pedir delivery* o *ver el menú*?');
     return;
   }
 
@@ -253,26 +286,26 @@ async function procesar(msg){
   const nd=detectarNoDisp(mn);
   if(nd){
     const item=MENU_ITEMS[Math.floor(Math.random()*4)];
-    await agentReply(`Para *${nd.nombre}* no somos el lugar indicado — somos pura cocina criolla latinoamericana 😄\n\nPero si te animas a probar algo diferente, nuestro *${item.nombre}* (${item.precio}) es de los más pedidos. ¡Los clientes vuelven por él!\n\n¿Te hago una reserva o prefieres pedir delivery?`);
+    ST.platoSugerido=item.nombre; ST.fase='plato_decision';
+    await agentReply(`Para *${nd.nombre}* no somos el lugar indicado — somos pura cocina criolla latinoamericana 😄\n\nPero si te animas a algo diferente, nuestro *${item.nombre}* (${item.precio}) es de los más pedidos. ¡Los clientes vuelven por él!\n\n¿Te animas? Lo puedes pedir por *delivery* o venir a disfrutarlo *aquí*. 🍽️`);
     return;
   }
 
   // Reserva
-  if(c(mn,['reserva','reservar','mesa','salón','salon','apartar','apartar mesa'])){
-    ST.tipo='reserva'; ST.fase='res_nombre';
-    await agentReply('¡Con gusto reservo tu mesa! 🪑\nAtendemos Lun–Dom 12pm–11pm, hasta *12 personas*.\n\n¿Me das tu nombre para la reserva?');
+  if(c(mn,['reserva','reservar','mesa','salón','salon','apartar','quiero ir','vamos a comer','cena','almuerzo'])){
+    await iniciarReserva();
     return;
   }
 
-  // Delivery
-  if(c(mn,['delivery','domicilio','llevar','a casa','entregar','pedido','pedir','pido','quiero pedir','quiero ordenar','ordenar'])){
-    ST.tipo='delivery'; ST.fase='del_nombre';
-    await agentReply('¡Perfecto, pedido a domicilio! 📦\nAtendemos Lun–Dom 12pm–10pm · Mínimo $20 · Envío $2.50 zona centro.\n\n¿Me das tu nombre para el pedido?');
+  // Delivery / pedir
+  if(c(mn,['delivery','domicilio','llevar','a casa','entregar','pedido','pedir','pido','quiero pedir','quiero ordenar','ordenar','despachar'])){
+    await iniciarDelivery(null);
     return;
   }
 
   // Menú
-  if(c(mn,['menu','menú','carta','que tienen','qué tienen','platos','que sirven','que comen','que hay'])){
+  if(c(mn,['menu','menú','carta','que tienen','qué tienen','platos','que sirven','que comen','que hay','opciones'])){
+    ST.tema='menu';
     await agentReply('🍽️ *Menú El Criollo*\n\n*Entradas:*\nCeviche clásico $8 · Tequeños con guacamole $6 · Carpaccio de res $10\n\n*Platos principales:*\nPabellón criollo $14 · Lomo a la criolla $16\nChuleta de cerdo $13 · Pasta al pesto con camarones $15\nEnsalada César con pollo $10\n\n*Postres:*\nTres leches $5 · Quesillo casero $4 · Mousse de chocolate $5\n\n*Bebidas:*\nJugos naturales $3 · Cóctel de bienvenida $6\n\n¿Quieres reservar una mesa o pedir delivery? 😊');
     return;
   }
@@ -280,25 +313,26 @@ async function procesar(msg){
   // Plato específico
   const itemDetect=MENU_ITEMS.find(it=>it.keys.some(k=>n(mn).includes(k)));
   if(itemDetect){
-    await agentReply(`*${itemDetect.nombre}* — ${itemDetect.precio} 😋\n¡Es uno de nuestros favoritos! ¿Lo pides por delivery o prefieres venir a disfrutarlo aquí?\n\nDelivery: Lun–Dom 12pm–10pm · Mínimo $20\nReserva: Lun–Dom 12pm–11pm`);
+    ST.platoSugerido=itemDetect.nombre; ST.fase='plato_decision';
+    await agentReply(`*${itemDetect.nombre}* — ${itemDetect.precio} 😋\n¡Es uno de nuestros favoritos! ¿Lo pides por *delivery* o prefieres venir a disfrutarlo *aquí*?\n\nDelivery: Lun–Dom 12pm–10pm · Mínimo $20\nReserva: Lun–Dom 12pm–11pm`);
     return;
   }
 
   // Horarios / ubicación
-  if(c(mn,['donde','dónde','ubicacion','ubicación','dirección','horario','abren','atienden','horarios'])){
-    await agentReply('📍 *Restaurante El Criollo*\nCalle Real 27, esq. Av. Bolívar\n📞 555-0200\n\n⏰ *Horarios*\nLun–Dom: 12pm – 11pm\nDelivery hasta las 10pm\n\n¿Hacemos una reserva o prefieres delivery? 🍽️');
+  if(c(mn,['donde','dónde','ubicacion','ubicación','dirección','horario','abren','atienden','horarios','llegar','queda'])){
+    await agentReply('📍 *Restaurante El Criollo*\nCalle Real 27, esq. Av. Bolívar · 📞 555-0200\n\n⏰ Lun–Dom: 12pm – 11pm · Delivery hasta las 10pm\n\n¿Hacemos una reserva o prefieres delivery? 🍽️');
     return;
   }
 
   // Precios
-  if(c(mn,['precio','cuanto','cuánto','cuesta','cobran','caro','economico'])){
-    await agentReply('Nuestros precios son muy accesibles 😊\n\nEntradas: $6–$10 · Principales: $10–$16 · Postres: $4–$5\nDelivery: envío $2.50, pedido mínimo $20\n\n¿Quieres ver el menú completo o hacemos un pedido?');
+  if(c(mn,['precio','cuanto','cuánto','cuesta','cobran','caro','economico','barato'])){
+    await agentReply('Nuestros precios son muy accesibles 😊\n\nEntradas: $6–$10 · Principales: $10–$16 · Postres: $4–$5\nDelivery: envío $2.50, pedido mínimo $20\n\n¿Quieres ver el menú completo o hacemos un pedido? 🍽️');
     return;
   }
 
   // Sobre el restaurante
-  if(c(mn,['que son','qué son','sobre ustedes','como son','su especialidad','que ofrecen','cuéntame del','cuentame'])){
-    await agentReply('*El Criollo* nació con una misión: traer los sabores auténticos de la cocina latinoamericana a tu mesa, con la calidez de la comida casera. 🍽️❤️\n\nNos especializamos en cocina criolla tradicional — platos con historia, ingredientes frescos y recetas que pasan de generación en generación.\n\nEl ambiente es acogedor, ideal para familias, amigos o una cena especial. Y el delivery llega caliente y a tiempo. 😄\n\n¿Reservas mesa o pedimos algo para ya?');
+  if(c(mn,['que son','qué son','sobre ustedes','como son','su especialidad','que ofrecen','cuéntame del','cuentame','por que ustedes','por qué ustedes'])){
+    await agentReply('*El Criollo* nació con una misión: traer los sabores auténticos de la cocina latinoamericana a tu mesa, con la calidez de la comida casera. 🍽️❤️\n\nNos especializamos en cocina criolla tradicional — platos con historia, ingredientes frescos y recetas que pasan de generación en generación.\n\nEl ambiente es acogedor, ideal para familias, amigos o una cena especial. 😄\n\n¿Reservas mesa o pedimos algo para ya?');
     return;
   }
 
@@ -308,7 +342,20 @@ async function procesar(msg){
     return;
   }
 
-  await agentReply('¡Claro que sí! ¿Me cuentas un poco más qué necesitas? 😊\n\nPuedo ayudarte con:\n• 🪑 Reservar una mesa\n• 📦 Pedir delivery\n• 📋 Ver el menú y precios\n• 📍 Ubicación y horarios');
+  // Afirmativo suelto — resolver según el tema
+  if(afirmativo(mn)){
+    if(ST.tema==='reserva') await iniciarReserva();
+    else if(ST.tema==='delivery') await iniciarDelivery(null);
+    else await agentReply('¡Genial! ¿Reservamos una *mesa* o prefieres *delivery*? 🍽️');
+    return;
+  }
+
+  // Fallback contextual
+  if(ST.tema==='menu'){
+    await agentReply('¿Te animas con alguno? Puedo tomar tu *reserva* o tu *pedido a domicilio*. 😊');
+  } else {
+    await agentReply('¡Claro que sí! ¿Me cuentas un poco más qué necesitas? 😊\n\nPuedo ayudarte con:\n• 🪑 Reservar una mesa\n• 📦 Pedir delivery\n• 📋 Ver el menú y precios\n• 📍 Ubicación y horarios');
+  }
 }
 
 let busy=false;

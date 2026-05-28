@@ -236,18 +236,19 @@ function agentReply(text, booking) {
 }
 
 /* ── Estado de la conversación ───────────────────────────────────────── */
-const STATE = {
-  fase: 'inicio',         // inicio | menu | especialidad | recoger_nombre | recoger_fecha | recoger_hora | confirmar | cerrado
-  especialidad: null,
-  doctor: null,
-  precio: null,
-  nombre: null,
-  fecha: null,
-  hora: null,
+const S = {
+  fase: 'inicio',   // controla qué se espera del PRÓXIMO mensaje
+  tema: null,       // 'cita' | 'laboratorio' | 'precios' — último hilo
+  especialidad: null, doctor: null, precio: null, horarios: null,
+  servicioLab: null,
+  nombre: null, fecha: null, hora: null,
 };
+function resetDatos(){ S.especialidad=S.doctor=S.precio=S.horarios=S.servicioLab=S.nombre=S.fecha=S.hora=null; }
 
 function n(s){ return s ? s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'') : ''; }
 function contiene(msg, palabras){ return palabras.some(p => n(msg).includes(p)); }
+function afirmativo(mn){ return contiene(mn, ['si','sí','dale','ok','okay','vale','claro','perfecto','listo','confirmo','confirmar','agendar','agenda','correcto','va','de una','me parece','esa','ese','quiero','quisiera','por supuesto']); }
+function negativo(mn){ return contiene(mn, ['no ','no.','no,','nop','nel','tampoco','luego','despues','después','ahora no']); }
 
 /* ── Especialidades ──────────────────────────────────────────────────── */
 const ESPECIALIDADES = [
@@ -273,32 +274,35 @@ const ESPECIALIDADES = [
 
 /* Servicios NO disponibles → respuesta empática */
 const NO_DISPONIBLES = [
-  { keys:['dermatolog','piel','acne','acné','dermato'],
-    nombre:'Dermatología' },
-  { keys:['psicolog','psiquiatr','mental','ansiedad','depresion'],
-    nombre:'Psicología/Psiquiatría' },
-  { keys:['ginecolog','gineco','obstetr','embaraz'],
-    nombre:'Ginecología' },
-  { keys:['urolog','urologo','prostata','urinar'],
-    nombre:'Urología' },
-  { keys:['odontolog','dentist','diente','muela','dental'],
-    nombre:'Odontología' },
-  { keys:['nutricion','nutri','dietolog','dieta'],
-    nombre:'Nutrición' },
+  { keys:['dermatolog','piel','acne','acné','dermato'], nombre:'Dermatología' },
+  { keys:['psicolog','psiquiatr','mental','ansiedad','depresion'], nombre:'Psicología/Psiquiatría' },
+  { keys:['ginecolog','gineco','obstetr','embaraz'], nombre:'Ginecología' },
+  { keys:['urolog','urologo','prostata','urinar'], nombre:'Urología' },
+  { keys:['odontolog','dentist','diente','muela','dental'], nombre:'Odontología' },
+  { keys:['nutricion','nutri','dietolog','dieta'], nombre:'Nutrición' },
 ];
 
-function detectarEspecialidad(msg) {
-  for (const e of ESPECIALIDADES) {
-    if (e.keys.some(k => n(msg).includes(k))) return e;
-  }
-  return null;
+function detectarEspecialidad(msg){ return ESPECIALIDADES.find(e=>e.keys.some(k=>n(msg).includes(k)))||null; }
+function detectarNoDisponible(msg){ return NO_DISPONIBLES.find(nd=>nd.keys.some(k=>n(msg).includes(k)))||null; }
+
+/* ── Acciones de cierre ──────────────────────────────────────────────── */
+async function fijarEspecialidad(esp) {
+  S.especialidad = esp.nombre; S.doctor = esp.doctor; S.precio = esp.precio; S.horarios = esp.horarios;
+  S.tema = 'cita'; S.fase = 'cita_nombre';
+  await agentReply(
+    `${esp.icono} *${esp.nombre}*\n` +
+    `👨‍⚕️ Médico: *${esp.doctor}*\n` +
+    `📅 Horarios: ${esp.horarios}\n` +
+    `💰 Costo: *${esp.precio}*\n\n` +
+    '¡Con gusto te agendo la cita! Para empezar, ¿me das tu nombre completo? 👤'
+  );
 }
 
-function detectarNoDisponible(msg) {
-  for (const nd of NO_DISPONIBLES) {
-    if (nd.keys.some(k => n(msg).includes(k))) return nd;
-  }
-  return null;
+async function iniciarLaboratorio() {
+  S.tema = 'laboratorio'; S.fase = 'lab_nombre';
+  S.especialidad = 'Laboratorio clínico'; S.doctor = 'Equipo de laboratorio';
+  S.precio = 'según análisis'; S.horarios = 'Lun–Vie 7:30am–5pm';
+  await agentReply('¡Perfecto, te agendo para el laboratorio! 🔬\n\n¿Me das tu nombre completo? 👤');
 }
 
 /* ── Motor de respuestas ─────────────────────────────────────────────── */
@@ -306,9 +310,10 @@ async function procesar(msg) {
   const m = msg.trim();
   const mn = n(m);
 
-  /* ── FASE: INICIO ───────────────────────────────── */
-  if (STATE.fase === 'inicio') {
-    STATE.fase = 'menu';
+  /* ══ FASES CON PREGUNTA ABIERTA — máxima prioridad ══ */
+
+  if (S.fase === 'inicio') {
+    S.fase = 'libre';
     await agentReply(
       '¡Hola! 😊 Bienvenido a *Clínica MediVida*.\n' +
       'Soy Valeria, tu asistente. Estoy aquí para ayudarte.\n\n' +
@@ -316,165 +321,168 @@ async function procesar(msg) {
       '• 📅 Agendar una cita médica\n' +
       '• 🔬 Información de laboratorio\n' +
       '• 💰 Precios y especialidades\n' +
-      '• 📍 Ubicación y horarios\n\n' +
-      'Escríbeme lo que necesitas.'
+      '• 📍 Ubicación y horarios'
     );
     return;
   }
 
-  /* ── FASE: RECOGER NOMBRE ───────────────────────── */
-  if (STATE.fase === 'recoger_nombre') {
-    STATE.nombre = m;
-    STATE.fase = 'recoger_fecha';
-    await agentReply(`Perfecto, *${STATE.nombre}*. ¿Qué día te viene mejor? 📅\n(Por ejemplo: lunes 2 de junio, o esta semana si prefieres.)`);
+  // Recoger datos de la CITA (vale también para laboratorio)
+  if (S.fase === 'cita_nombre' || S.fase === 'lab_nombre') {
+    S.nombre = m; S.fase = (S.fase === 'lab_nombre') ? 'lab_fecha' : 'cita_fecha';
+    await agentReply(`Perfecto, *${S.nombre}*. ¿Qué día te viene mejor? 📅\n(Por ejemplo: lunes 2 de junio, o "esta semana".)`);
+    return;
+  }
+  if (S.fase === 'cita_fecha' || S.fase === 'lab_fecha') {
+    S.fecha = m; S.fase = (S.fase === 'lab_fecha') ? 'lab_hora' : 'cita_hora';
+    await agentReply(`Anotado — *${S.fecha}*. ¿Y a qué hora te quedaría mejor? ⏰\n(Horario disponible: ${S.horarios})`);
+    return;
+  }
+  if (S.fase === 'cita_hora' || S.fase === 'lab_hora') {
+    S.hora = m; S.fase = (S.fase === 'lab_hora') ? 'lab_confirmar' : 'cita_confirmar';
+    if (S.tema === 'laboratorio') {
+      await agentReply(
+        'Te confirmo los datos del laboratorio:\n\n' +
+        `🔬 *Servicio:* ${S.servicioLab || 'Laboratorio clínico'}\n` +
+        `👤 *Paciente:* ${S.nombre}\n` +
+        `📅 *Fecha:* ${S.fecha}\n` +
+        `⏰ *Hora:* ${S.hora}\n\n` +
+        '¿Confirmo? Responde *sí* para agendar. ✅'
+      );
+    } else {
+      await agentReply(
+        '¡Perfecto! Te confirmo los datos antes de registrar:\n\n' +
+        `🏥 *Especialidad:* ${S.especialidad}\n` +
+        `👨‍⚕️ *Médico:* ${S.doctor}\n` +
+        `👤 *Paciente:* ${S.nombre}\n` +
+        `📅 *Fecha:* ${S.fecha}\n` +
+        `⏰ *Hora:* ${S.hora}\n` +
+        `💰 *Costo:* ${S.precio}\n\n` +
+        '¿Confirmo la cita? Responde *sí* para agendar o *no* para cambiar algo.'
+      );
+    }
     return;
   }
 
-  /* ── FASE: RECOGER FECHA ────────────────────────── */
-  if (STATE.fase === 'recoger_fecha') {
-    STATE.fecha = m;
-    STATE.fase = 'recoger_hora';
-    await agentReply(`Anotado — *${STATE.fecha}*. ¿Y a qué hora te quedaría mejor? ⏰\n(Los horarios disponibles: ${STATE.horarios || 'según agenda del médico'})`);
-    return;
-  }
-
-  /* ── FASE: RECOGER HORA ─────────────────────────── */
-  if (STATE.fase === 'recoger_hora') {
-    STATE.hora = m;
-    STATE.fase = 'confirmar';
-    await agentReply(
-      '¡Perfecto! Te confirmo los datos antes de registrar:\n\n' +
-      `🏥 *Especialidad:* ${STATE.especialidad}\n` +
-      `👨‍⚕️ *Médico:* ${STATE.doctor}\n` +
-      `👤 *Paciente:* ${STATE.nombre}\n` +
-      `📅 *Fecha:* ${STATE.fecha}\n` +
-      `⏰ *Hora:* ${STATE.hora}\n` +
-      `💰 *Costo:* ${STATE.precio}\n\n` +
-      '¿Confirmo la cita? Responde *sí* para agendar o *no* para cambiar algo.'
-    );
-    return;
-  }
-
-  /* ── FASE: CONFIRMAR ────────────────────────────── */
-  if (STATE.fase === 'confirmar') {
-    if (contiene(mn, ['si','sí','confirmo','confirmar','dale','ok','yes','agendar','correcto','perfecto','listo','va'])) {
-      STATE.fase = 'cerrado';
+  if (S.fase === 'cita_confirmar') {
+    if (afirmativo(mn)) {
+      S.fase = 'cerrado';
       await agentReply(
         '¡Tu cita ha quedado registrada exitosamente! 🎉\n\n' +
         'Te esperamos en *Av. Central 412, piso 2*.\n' +
-        'Si necesitas cancelar o cambiar, escríbenos con 24h de anticipación.\n\n' +
+        'Si necesitas cambiar algo, escríbenos con 24h de anticipación.\n\n' +
         '¿Hay algo más en lo que pueda ayudarte?',
-        {
-          icono: '📅',
-          titulo: 'Cita agendada',
-          campos: {
-            'especialidad': STATE.especialidad,
-            'médico': STATE.doctor,
-            'paciente': STATE.nombre,
-            'fecha': STATE.fecha,
-            'hora': STATE.hora,
-            'costo': STATE.precio,
-          }
-        }
+        { icono:'📅', titulo:'Cita agendada', campos:{ 'especialidad':S.especialidad, 'médico':S.doctor, 'paciente':S.nombre, 'fecha':S.fecha, 'hora':S.hora, 'costo':S.precio } }
       );
     } else {
-      STATE.fase = 'menu';
+      S.fase = 'libre';
       await agentReply('Sin problema. Cuéntame qué quieres cambiar y lo ajustamos. 😊');
     }
     return;
   }
 
-  /* ── FASE: CERRADO ──────────────────────────────── */
-  if (STATE.fase === 'cerrado') {
-    if (contiene(mn, ['cita','otra','nuevo','nueva','agendar','reservar'])) {
-      // Reiniciar para nueva cita
-      STATE.fase = 'menu';
-      STATE.especialidad = STATE.doctor = STATE.precio = STATE.nombre = STATE.fecha = STATE.hora = null;
-      await agentReply('¡Claro! Cuéntame, ¿qué especialidad necesitas esta vez? 😊');
+  if (S.fase === 'lab_confirmar') {
+    if (afirmativo(mn)) {
+      S.fase = 'cerrado';
+      await agentReply(
+        '¡Tu cita de laboratorio quedó registrada! 🎉\n\n' +
+        'Recuerda venir en ayunas si tu análisis lo requiere. Resultados en 4–6 horas.\n\n' +
+        '¿Algo más en lo que pueda ayudarte?',
+        { icono:'🔬', titulo:'Laboratorio agendado', campos:{ 'servicio':S.servicioLab||'Laboratorio clínico', 'paciente':S.nombre, 'fecha':S.fecha, 'hora':S.hora } }
+      );
     } else {
-      await agentReply('¡Con mucho gusto! Estamos para servirte. Que tengas un excelente día. 🌟');
+      S.fase = 'libre';
+      await agentReply('Sin problema, dime qué ajustamos. 😊');
     }
     return;
   }
 
-  /* ── MENU GENERAL ───────────────────────────────── */
+  if (S.fase === 'cerrado') {
+    S.fase = 'libre'; resetDatos();
+    if (contiene(mn, ['cita','otra','nuevo','nueva','agendar','reservar','laboratorio'])) {
+      await agentReply('¡Claro! Cuéntame, ¿qué necesitas esta vez? 😊');
+    } else if (contiene(mn,['gracias','no','nada','listo','adios','adiós','chao'])) {
+      await agentReply('¡Con mucho gusto! Estamos para servirte. Que tengas un excelente día. 🌟');
+    } else {
+      await agentReply('¡Aquí sigo! ¿En qué más puedo ayudarte? 😊');
+    }
+    return;
+  }
+
+  // Esperando que el usuario elija especialidad (tras mostrar la lista)
+  if (S.fase === 'elegir_especialidad') {
+    const esp = detectarEspecialidad(mn);
+    if (esp) { await fijarEspecialidad(esp); return; }
+    if (negativo(mn)) { S.fase='libre'; await agentReply('Sin problema. ¿Te ayudo con algo más? 😊'); return; }
+    await agentReply('¿Con cuál especialidad deseas la cita? 🩺\nMedicina General · Cardiología · Neurología · Pediatría · Traumatología · Oftalmología');
+    return;
+  }
+
+  /* ══ FASE LIBRE — detección de intención ══ */
 
   // Saludo
   if (contiene(mn, ['hola','buenas','buenos','hey','saludos','buen dia','buenas tardes','buenas noches'])) {
-    await agentReply(
-      '¡Hola! 😊 Bienvenido a *Clínica MediVida*, soy Valeria.\n\n' +
-      '¿En qué te puedo ayudar?\n' +
-      '• 📅 Agendar una cita\n' +
-      '• 💰 Precios y especialidades\n' +
-      '• 🔬 Laboratorio\n' +
-      '• 📍 Ubicación y horarios'
-    );
+    await agentReply('¡Hola de nuevo! 😊 ¿En qué te ayudo?\n• 📅 Cita médica · 🔬 Laboratorio · 💰 Precios · 📍 Ubicación');
     return;
   }
 
   // Servicio NO disponible
   const noDisp = detectarNoDisponible(mn);
   if (noDisp) {
+    S.tema = 'cita'; S.fase = 'elegir_especialidad';
     await agentReply(
-      `Entiendo que buscas atención en *${noDisp.nombre}* — lamentablemente esa especialidad no la manejamos en este momento.\n\n` +
-      'Lo que sí tenemos disponible es:\n' +
-      '🩺 *Medicina General* — ideal como primera consulta\n' +
-      '❤️ *Cardiología* · 🧠 *Neurología* · 👶 *Pediatría*\n' +
-      '🦴 *Traumatología* · 👁️ *Oftalmología*\n\n' +
-      '¿Te ayudaría agendar con *Medicina General* como punto de partida? El médico puede orientarte y referirte si hace falta. 😊'
+      `Entiendo que buscas atención en *${noDisp.nombre}* — lamentablemente esa especialidad no la manejamos por ahora.\n\n` +
+      'Lo que sí tenemos disponible:\n' +
+      '🩺 *Medicina General* · ❤️ *Cardiología* · 🧠 *Neurología*\n' +
+      '👶 *Pediatría* · 🦴 *Traumatología* · 👁️ *Oftalmología*\n\n' +
+      '¿Te agendo con *Medicina General*? El médico puede orientarte y referirte si hace falta. 😊'
     );
     return;
   }
 
-  // Especialidad detectada
+  // Especialidad mencionada directamente
   const esp = detectarEspecialidad(mn);
-  if (esp || contiene(mn, ['cita','consulta','agendar','reservar','quiero ver','quiero un','necesito','doctor','médico','medico','especialista'])) {
-    if (esp) {
-      STATE.especialidad = esp.nombre;
-      STATE.doctor = esp.doctor;
-      STATE.precio = esp.precio;
-      STATE.horarios = esp.horarios;
-      STATE.fase = 'recoger_nombre';
-      await agentReply(
-        `${esp.icono} *${esp.nombre}*\n` +
-        `👨‍⚕️ Médico: *${esp.doctor}*\n` +
-        `📅 Horarios: ${esp.horarios}\n` +
-        `💰 Costo: *${esp.precio}*\n\n` +
-        '¡Con gusto te agendo la cita! Para empezar, ¿me das tu nombre completo?'
-      );
-    } else {
-      STATE.fase = 'menu';
-      await agentReply(
-        '¡Con gusto te agendo! Tenemos estas especialidades:\n\n' +
-        '🩺 *Medicina General* — $15 USD · Dra. Ana López\n' +
-        '❤️ *Cardiología* — $45 USD · Dr. Javier Rodríguez\n' +
-        '🧠 *Neurología* — $50 USD · Dr. Ricardo Ramírez\n' +
-        '👶 *Pediatría* — $30 USD · Dr. Carlos Martínez\n' +
-        '🦴 *Traumatología* — $40 USD · Dr. Héctor Torres\n' +
-        '👁️ *Oftalmología* — $35 USD · Dra. Luisa Pérez\n\n' +
-        '¿Con cuál especialidad deseas la cita?'
-      );
-    }
-    return;
-  }
+  if (esp) { await fijarEspecialidad(esp); return; }
 
   // Laboratorio
-  if (contiene(mn, ['laboratorio','labora','analisis','análisis','examen','sangre','glucosa','hemograma','lipidos','tiroides'])) {
+  if (contiene(mn, ['laboratorio','labora','analisis','análisis','examen','sangre','glucosa','hemograma','lipidos','tiroides','colesterol'])) {
+    S.tema = 'laboratorio'; S.fase = 'lab_oferta';
     await agentReply(
       '🔬 *Servicios de laboratorio*\n\n' +
       '• Hemograma completo — $8 USD\n' +
       '• Glucosa en sangre — $4 USD\n' +
       '• Panel lipídico (colesterol) — $12 USD\n' +
       '• Perfil tiroideo (TSH) — $18 USD\n\n' +
-      '📋 Resultados en 4–6 horas, disponibles online o en clínica.\n' +
-      '⏰ Atención: Lun–Vie 7:30am–5pm\n\n' +
-      '¿Te agendo una cita para el laboratorio?'
+      '📋 Resultados en 4–6 horas · ⏰ Lun–Vie 7:30am–5pm\n\n' +
+      '¿Te agendo una cita para el laboratorio? 😊'
+    );
+    return;
+  }
+
+  // Respuesta a "¿te agendo el laboratorio?"
+  if (S.fase === 'lab_oferta') {
+    if (afirmativo(mn)) { await iniciarLaboratorio(); return; }
+    if (negativo(mn)) { S.fase='libre'; await agentReply('De acuerdo. ¿Te puedo ayudar con algo más? 😊'); return; }
+  }
+
+  // Cita / agendar (genérico, sin especialidad clara)
+  if (contiene(mn, ['cita','consulta','agendar','reservar','quiero ver','quiero un','necesito','doctor','médico','medico','especialista'])) {
+    S.tema = 'cita'; S.fase = 'elegir_especialidad';
+    await agentReply(
+      '¡Con gusto te agendo! Tenemos estas especialidades:\n\n' +
+      '🩺 *Medicina General* — $15 USD · Dra. Ana López\n' +
+      '❤️ *Cardiología* — $45 USD · Dr. Javier Rodríguez\n' +
+      '🧠 *Neurología* — $50 USD · Dr. Ricardo Ramírez\n' +
+      '👶 *Pediatría* — $30 USD · Dr. Carlos Martínez\n' +
+      '🦴 *Traumatología* — $40 USD · Dr. Héctor Torres\n' +
+      '👁️ *Oftalmología* — $35 USD · Dra. Luisa Pérez\n\n' +
+      '¿Con cuál especialidad deseas la cita?'
     );
     return;
   }
 
   // Precios
   if (contiene(mn, ['precio','costo','cuanto','cuánto','cobran','cuesta','tarifa','valor'])) {
+    S.tema = 'cita'; S.fase = 'elegir_especialidad';
     await agentReply(
       '💰 *Precios de consulta*\n\n' +
       '🩺 Medicina General — $15 USD\n' +
@@ -483,51 +491,68 @@ async function procesar(msg) {
       '👶 Pediatría — $30 USD\n' +
       '🦴 Traumatología — $40 USD\n' +
       '👁️ Oftalmología — $35 USD\n\n' +
-      '¿Deseas agendar con alguna especialidad?'
+      '¿Deseas que te agende con alguna especialidad? 😊'
     );
     return;
   }
 
   // Ubicación / horarios
-  if (contiene(mn, ['donde','dónde','ubicacion','ubicación','dirección','direccion','horario','atienden','abren','abren','estan','están'])) {
+  if (contiene(mn, ['donde','dónde','ubicacion','ubicación','dirección','direccion','horario','atienden','abren','estan','están','queda','llegar'])) {
+    S.fase = 'libre';
     await agentReply(
       '📍 *Clínica MediVida*\n' +
       'Av. Central 412, piso 2\n\n' +
-      '⏰ *Horarios de atención*\n' +
-      'Lunes a Viernes: 7:30am – 7:00pm\n' +
-      'Sábados: 8:00am – 2:00pm\n\n' +
+      '⏰ Lun–Vie: 7:30am – 7:00pm · Sáb: 8:00am – 2:00pm\n' +
       '📞 Tel: 555-0100\n\n' +
-      '¿Quieres que te agende una cita?'
+      '¿Quieres que te agende una cita? 😊'
     );
     return;
   }
 
   // ¿Qué son / quiénes son?
-  if (contiene(mn, ['que son','qué son','quienes son','quiénes son','de que tratan','cual es su enfoque','que hacen','qué hacen','sobre ustedes','nos cuentan','cuéntame','cuentame'])) {
+  if (contiene(mn, ['que son','qué son','quienes son','quiénes son','de que tratan','cual es su enfoque','que hacen','qué hacen','sobre ustedes','nos cuentan','cuéntame','cuentame','por que ustedes','por qué ustedes','confiar'])) {
     await agentReply(
-      'Somos *Clínica MediVida*, una clínica especializada en atención médica integral con un enfoque cercano y humano. 🏥\n\n' +
-      'Contamos con especialistas en las principales áreas de salud, laboratorio propio con resultados el mismo día, y un equipo comprometido con el bienestar de cada paciente.\n\n' +
-      'Nuestra filosofía es simple: atención de calidad, accesible y con calidez humana. Cada paciente es único para nosotros. 💙\n\n' +
-      '¿Te gustaría conocer nuestras especialidades o agendar una consulta?'
+      'Somos *Clínica MediVida*, especializada en atención médica integral con un enfoque cercano y humano. 🏥\n\n' +
+      'Contamos con especialistas en las principales áreas, laboratorio propio con resultados el mismo día, y un equipo comprometido con cada paciente.\n\n' +
+      'Nuestra filosofía: atención de calidad, accesible y con calidez. 💙\n\n' +
+      '¿Te gustaría agendar una consulta?'
     );
     return;
   }
 
-  // Gracias / hasta luego
+  // Gracias / despedida
   if (contiene(mn, ['gracias','muchas gracias','hasta luego','adios','adiós','chao','bye','ok gracias'])) {
     await agentReply('¡Un placer atenderte! 😊 Si necesitas algo más, aquí estaré. ¡Que tengas un excelente día! 🌟');
     return;
   }
 
-  // Fallback — pregunta de contexto
-  await agentReply(
-    'Entiendo tu mensaje — ¿me podrías contar un poco más en qué te puedo ayudar? 😊\n\n' +
-    'Por ejemplo puedo ayudarte con:\n' +
-    '• Agendar una *cita médica*\n' +
-    '• Consultar *precios* de especialidades\n' +
-    '• Información sobre *laboratorio*\n' +
-    '• *Ubicación* y horarios'
-  );
+  // Afirmativo suelto — resolver según el tema actual
+  if (afirmativo(mn)) {
+    if (S.tema === 'cita') {
+      S.fase = 'elegir_especialidad';
+      await agentReply('¡Perfecto! ¿Con cuál especialidad? 🩺\nMedicina General · Cardiología · Neurología · Pediatría · Traumatología · Oftalmología');
+    } else if (S.tema === 'laboratorio') {
+      await iniciarLaboratorio();
+    } else {
+      await agentReply('¡Genial! ¿Quieres agendar una *cita médica* o necesitas el *laboratorio*? 😊');
+    }
+    return;
+  }
+
+  // Fallback contextual
+  if (S.tema === 'cita') {
+    await agentReply('¿Con cuál especialidad te gustaría la cita? 🩺\nMedicina General · Cardiología · Neurología · Pediatría · Traumatología · Oftalmología');
+  } else if (S.tema === 'laboratorio') {
+    await agentReply('¿Te agendo el laboratorio? Solo necesito tu nombre, día y hora. 🔬');
+  } else {
+    await agentReply(
+      'Entiendo — ¿me cuentas un poco más en qué te puedo ayudar? 😊\n\n' +
+      '• Agendar una *cita médica*\n' +
+      '• Consultar *precios*\n' +
+      '• Información de *laboratorio*\n' +
+      '• *Ubicación* y horarios'
+    );
+  }
 }
 
 /* ── Enviar mensaje ──────────────────────────────────────────────────── */
