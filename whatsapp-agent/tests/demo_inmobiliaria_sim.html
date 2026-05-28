@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProHogar Inmobiliaria — Demo Simulada</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a1628 0%, #0d2137 35%, #112240 60%, #0a1628 100%);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 40px 20px 80px; overflow-x: hidden;
+  }
+  .page-header { text-align: center; margin-bottom: 10px; }
+  .page-header h1 {
+    font-size: 2.4rem; font-weight: 800; letter-spacing: -1px;
+    background: linear-gradient(90deg, #1976D2, #42a5f5, #90caf9);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 10px;
+  }
+  .page-header p { color: rgba(255,255,255,0.55); font-size: 1rem; }
+  .ai-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(25,118,210,0.15); border: 1px solid rgba(25,118,210,0.35);
+    color: #64b5f6; font-size: 0.75rem; font-weight: 600;
+    padding: 4px 12px; border-radius: 20px; margin-top: 10px; letter-spacing: 0.04em;
+  }
+  .phone-wrap { position: relative; width: 395px; margin-top: 24px; filter: drop-shadow(0 32px 80px rgba(0,0,0,0.7)) drop-shadow(0 8px 24px rgba(0,0,0,0.4)); }
+  .phone-frame { width: 375px; background: #1a1a1a; border-radius: 50px; padding: 14px 10px 18px; margin: 0 auto; position: relative; border: 2px solid #3a3a3a; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.07), 0 0 0 1px rgba(0,0,0,0.8); }
+  .phone-frame::before { content: ''; position: absolute; left: -4px; top: 100px; width: 4px; height: 36px; background: #2a2a2a; border-radius: 3px 0 0 3px; box-shadow: 0 50px 0 #2a2a2a, 0 90px 0 #2a2a2a; }
+  .phone-frame::after { content: ''; position: absolute; right: -4px; top: 140px; width: 4px; height: 64px; background: #2a2a2a; border-radius: 0 3px 3px 0; }
+  .phone-notch { width: 120px; height: 26px; background: #1a1a1a; border-radius: 0 0 18px 18px; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; gap: 8px; position: relative; z-index: 10; }
+  .notch-camera { width: 10px; height: 10px; border-radius: 50%; background: #2d2d2d; border: 1px solid #3a3a3a; }
+  .notch-speaker { width: 52px; height: 5px; border-radius: 3px; background: #2d2d2d; }
+  .phone-screen { background: #ECE5DD; border-radius: 36px; overflow: hidden; height: 720px; display: flex; flex-direction: column; }
+  .wa-header { background: #1976D2; padding: 10px 14px 10px 12px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .wa-header-back { color: rgba(255,255,255,0.85); font-size: 1.3rem; cursor: pointer; margin-right: 2px; }
+  .wa-avatar { width: 38px; height: 38px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+  .wa-header-info { flex: 1; min-width: 0; }
+  .wa-header-name { color: #fff; font-size: 0.95rem; font-weight: 600; line-height: 1.2; }
+  .wa-header-status { color: rgba(255,255,255,0.75); font-size: 0.7rem; margin-top: 1px; }
+  .wa-header-actions { display: flex; gap: 14px; }
+  .wa-header-actions span { color: rgba(255,255,255,0.85); font-size: 1.1rem; }
+  .wa-chat { flex: 1; overflow-y: auto; padding: 12px 10px 8px; display: flex; flex-direction: column; gap: 3px; scroll-behavior: smooth; background-color: #ECE5DD; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cg fill='none' stroke='%23C8B8AA' stroke-width='0.6' opacity='0.45'%3E%3Cpath d='M15 30 C15 22 22 15 30 15 C38 15 45 22 45 30 C45 38 38 45 30 45'/%3E%3Cpath d='M10 10 L50 10 L50 50 L10 50 Z' stroke-dasharray='3,8'/%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3Cpath d='M0 0 L60 60 M60 0 L0 60' stroke-dasharray='2,18'/%3E%3C/g%3E%3C/svg%3E"); }
+  .wa-chat::-webkit-scrollbar { width: 3px; }
+  .wa-chat::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 2px; }
+  .date-sep { text-align: center; margin: 8px 0 6px; }
+  .date-sep span { background: rgba(225,245,254,0.92); color: #54656f; font-size: 0.68rem; font-weight: 500; padding: 4px 10px; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+  .bubble-row { display: flex; margin-bottom: 2px; }
+  .bubble-row.agent { justify-content: flex-start; }
+  .bubble-row.user  { justify-content: flex-end; }
+  .bubble { max-width: 82%; padding: 7px 10px 4px; border-radius: 8px; font-size: 0.82rem; line-height: 1.45; position: relative; word-break: break-word; animation: bubblePop 0.18s ease-out; }
+  @keyframes bubblePop { from{opacity:0;transform:scale(0.93) translateY(4px)} to{opacity:1;transform:scale(1) translateY(0)} }
+  .bubble.agent { background:#fff; border-radius:0 8px 8px 8px; box-shadow:0 1px 2px rgba(0,0,0,0.12); color:#111; }
+  .bubble.agent::before { content:''; position:absolute; top:0; left:-8px; border-width:0 8px 8px 0; border-style:solid; border-color:transparent #fff transparent transparent; }
+  .bubble.user  { background:#DCF8C6; border-radius:8px 0 8px 8px; box-shadow:0 1px 2px rgba(0,0,0,0.12); color:#111; }
+  .bubble.user::after  { content:''; position:absolute; top:0; right:-8px; border-width:0 0 8px 8px; border-style:solid; border-color:transparent transparent transparent #DCF8C6; }
+  .bubble-time { display:flex; justify-content:flex-end; align-items:center; gap:3px; margin-top:2px; }
+  .bubble-time span { font-size:0.64rem; color:rgba(0,0,0,0.38); }
+  .tick { font-size:0.7rem; color:#53bdeb; }
+  .typing-row { display:none; }
+  .typing-row.show { display:flex; }
+  .typing-indicator { display:flex; align-items:flex-end; gap:3px; padding:9px 12px 8px; background:#fff; border-radius:0 10px 10px 10px; max-width:60px; margin-left:4px; box-shadow:0 1px 2px rgba(0,0,0,0.12); animation:bubblePop 0.18s ease-out; }
+  .typing-indicator .dot { width:7px; height:7px; border-radius:50%; background:#90a0aa; animation:typingDot 1.2s infinite ease-in-out; }
+  .typing-indicator .dot:nth-child(1){animation-delay:0s} .typing-indicator .dot:nth-child(2){animation-delay:.2s} .typing-indicator .dot:nth-child(3){animation-delay:.4s}
+  @keyframes typingDot { 0%,60%,100%{transform:translateY(0);opacity:.5} 30%{transform:translateY(-5px);opacity:1} }
+  .booking-card { align-self:flex-start; max-width:86%; background:#fff; border-radius:0 10px 10px 10px; box-shadow:0 1px 3px rgba(0,0,0,0.15); border-left:4px solid #25D366; margin:4px 0 4px 4px; padding:10px 12px; animation:bubblePop 0.18s ease-out; }
+  .bc-head { display:flex; align-items:center; gap:7px; font-size:0.82rem; font-weight:700; color:#1976D2; margin-bottom:7px; }
+  .bc-check { width:18px; height:18px; border-radius:50%; background:#25D366; color:#fff; font-size:0.7rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .bc-row { display:flex; gap:6px; font-size:0.76rem; line-height:1.5; color:#333; padding:1px 0; }
+  .bc-key { color:#888; min-width:92px; text-transform:capitalize; }
+  .bc-val { color:#111; font-weight:600; }
+  .bc-foot { margin-top:7px; padding-top:6px; border-top:1px solid #eee; font-size:0.68rem; color:#25a35a; font-weight:600; }
+  .wa-input-bar { background:#f0f0f0; padding:8px; display:flex; align-items:center; gap:6px; flex-shrink:0; border-top:1px solid rgba(0,0,0,0.07); }
+  .wa-input-emoji { width:36px; height:36px; border-radius:50%; background:none; border:none; font-size:1.2rem; cursor:pointer; color:#54656f; }
+  .wa-input { flex:1; background:#fff; border:none; border-radius:22px; padding:9px 14px; font-size:0.84rem; outline:none; color:#111; font-family:inherit; box-shadow:0 1px 3px rgba(0,0,0,0.08); resize:none; max-height:80px; overflow-y:auto; line-height:1.4; }
+  .wa-input::placeholder { color:#aaa; }
+  .wa-input:disabled { opacity:0.6; }
+  .wa-send { width:40px; height:40px; border-radius:50%; background:#1976D2; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s; }
+  .wa-send:hover { background:#1565c0; }
+  .wa-send:disabled { background:#aaa; cursor:not-allowed; }
+  .wa-send svg { width:18px; height:18px; fill:#fff; }
+  .links-row { display:flex; gap:18px; margin-top:28px; align-items:center; justify-content:center; flex-wrap:wrap; }
+  .back-link { font-size:0.82rem; color:rgba(255,255,255,0.35); text-decoration:none; transition:color .2s; }
+  .back-link:hover { color:rgba(255,255,255,0.65); }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>🏠 ProHogar Inmobiliaria</h1>
+  <p>Agente: Carlos — Demo interactiva</p>
+  <div><span class="ai-badge">✦ Demo simulada — no requiere API key</span></div>
+</div>
+
+<div class="phone-wrap">
+  <div class="phone-frame">
+    <div class="phone-notch"><div class="notch-speaker"></div><div class="notch-camera"></div></div>
+    <div class="phone-screen">
+      <div class="wa-header">
+        <div class="wa-header-back">‹</div>
+        <div class="wa-avatar">🏠</div>
+        <div class="wa-header-info">
+          <div class="wa-header-name">ProHogar Inmobiliaria</div>
+          <div class="wa-header-status" id="headerStatus">Carlos · en línea</div>
+        </div>
+        <div class="wa-header-actions"><span>📹</span><span>📞</span><span>⋮</span></div>
+      </div>
+      <div class="wa-chat" id="waChat">
+        <div class="date-sep"><span>Hoy</span></div>
+        <div class="bubble-row agent typing-row" id="typingRow">
+          <div class="typing-indicator"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        </div>
+      </div>
+      <div class="wa-input-bar">
+        <button class="wa-input-emoji">😊</button>
+        <textarea class="wa-input" id="waInput" placeholder="Escribe un mensaje…" rows="1" disabled></textarea>
+        <button class="wa-send" id="waSend" disabled>
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="links-row">
+  <a class="back-link" href="demo_visual.html">← Ver todas las demos</a>
+</div>
+
+<script>
+'use strict';
+
+const chat      = document.getElementById('waChat');
+const input     = document.getElementById('waInput');
+const sendBtn   = document.getElementById('waSend');
+const typingRow = document.getElementById('typingRow');
+
+function nowTime(){ return new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit',hour12:false}); }
+function parseBold(t){ return t.replace(/\*([^*]+)\*/g,'<strong>$1</strong>'); }
+function fmt(t){ return parseBold(t).replace(/\n/g,'<br>'); }
+
+function appendBubble(role, text) {
+  const row = document.createElement('div'); row.className=`bubble-row ${role}`;
+  const b = document.createElement('div'); b.className=`bubble ${role}`;
+  b.innerHTML = fmt(text)+`<div class="bubble-time"><span>${nowTime()}</span>${role==='user'?'<span class="tick">✓✓</span>':''}</div>`;
+  row.appendChild(b); chat.insertBefore(row,typingRow); chat.scrollTop=chat.scrollHeight;
+}
+
+function appendBookingCard(data) {
+  const card = document.createElement('div'); card.className='booking-card';
+  let rows='';
+  for(const [k,v] of Object.entries(data.campos)) if(v) rows+=`<div class="bc-row"><span class="bc-key">${k}</span><span class="bc-val">${v}</span></div>`;
+  card.innerHTML=`<div class="bc-head"><span class="bc-check">✓</span>${data.icono} ${data.titulo}</div>${rows}<div class="bc-foot">Guardado en el sistema ✓</div>`;
+  chat.insertBefore(card,typingRow); chat.scrollTop=chat.scrollHeight;
+}
+
+function showTyping(v){ typingRow.classList.toggle('show',v); chat.scrollTop=chat.scrollHeight; }
+function setEnabled(v){ input.disabled=!v; sendBtn.disabled=!v; if(v) input.focus(); }
+function typingDelay(t){ return Math.min(2800,Math.max(700,t.length*22)); }
+function agentReply(text, booking) {
+  return new Promise(resolve=>{
+    showTyping(true);
+    setTimeout(()=>{ showTyping(false); appendBubble('agent',text); if(booking) appendBookingCard(booking); resolve(); }, typingDelay(text));
+  });
+}
+
+function n(s){ return s?s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''):''; }
+function c(msg,words){ return words.some(w=>n(msg).includes(w)); }
+
+const STATE = { fase:'inicio', tipo:null, propiedad:null, nombre:null, fecha:null, hora:null };
+
+const PROPIEDADES_VENTA = [
+  { keys:['zona norte','norte'], nombre:'Casa Zona Norte', desc:'3 hab, 2 baños, 180m²', precio:'$145,000', extra:'Piscina, cochera doble' },
+  { keys:['centro','apartamento centro','apto centro'], nombre:'Apartamento Centro', desc:'2 hab, 1 baño, 85m²', precio:'$78,500', extra:'Piso 5, vistas panorámicas' },
+  { keys:['las palmas','palmas','residencial'], nombre:'Casa Las Palmas', desc:'4 hab, 3 baños, 250m²', precio:'$220,000', extra:'Jardín privado' },
+  { keys:['local','comercial','negocio'], nombre:'Local Comercial Av. Principal', desc:'60m²', precio:'$95,000', extra:'Alta circulación peatonal' },
+];
+
+const PROPIEDADES_ALQUILER = [
+  { keys:['miraflores','amoblado','amueblado','amoblada'], nombre:'Apartamento Miraflores (amoblado)', desc:'1 hab, 45m²', precio:'$350/mes', extra:'Servicios incluidos' },
+  { keys:['pinar','casa familiar','familia'], nombre:'Casa El Pinar', desc:'3 hab, 2 baños, 150m²', precio:'$600/mes', extra:'Garaje incluido' },
+  { keys:['oficina','ejecutiva','empresarial'], nombre:'Oficina Centro Empresarial', desc:'40m²', precio:'$450/mes', extra:'Recepción compartida' },
+];
+
+const NO_DISPONIBLES = [
+  { keys:['airbnb','vacacional','vacaciones','temporada','turismo'], texto:'Arriendo vacacional tipo Airbnb' },
+  { keys:['terreno','tierra','lote','parcela'], texto:'Venta de terrenos' },
+  { keys:['industrial','bodega','galpón','galpon'], texto:'Propiedades industriales o galpones' },
+  { keys:['otro pais','otro país','extranjero','internacional'], texto:'Propiedades en el extranjero' },
+];
+
+function detectarNoDisp(msg){ return NO_DISPONIBLES.find(nd=>nd.keys.some(k=>n(msg).includes(k)))||null; }
+function detectarPropVenta(msg){ return PROPIEDADES_VENTA.find(p=>p.keys.some(k=>n(msg).includes(k)))||null; }
+function detectarPropAlquiler(msg){ return PROPIEDADES_ALQUILER.find(p=>p.keys.some(k=>n(msg).includes(k)))||null; }
+
+async function procesar(msg) {
+  const m=msg.trim(), mn=n(m);
+
+  if(STATE.fase==='inicio'){
+    STATE.fase='menu';
+    await agentReply('¡Hola! 👋 Soy *Carlos*, asesor de *ProHogar Inmobiliaria*.\n\nEstamos para ayudarte a encontrar la propiedad ideal o gestionar la tuya.\n\n¿Qué estás buscando hoy?\n• 🏠 *Comprar* una propiedad\n• 🔑 *Alquilar* un espacio\n• 💼 *Vender* tu propiedad\n• 📊 *Valuar* un inmueble');
+    return;
+  }
+
+  if(STATE.fase==='recoger_nombre'){
+    STATE.nombre=m; STATE.fase='recoger_fecha';
+    await agentReply(`Perfecto, *${STATE.nombre}*. ¿Qué día te viene bien para la visita o asesoría? 📅`);
+    return;
+  }
+  if(STATE.fase==='recoger_fecha'){
+    STATE.fecha=m; STATE.fase='recoger_hora';
+    await agentReply(`Anotado — *${STATE.fecha}*. ¿A qué hora te quedaría mejor? ⏰`);
+    return;
+  }
+  if(STATE.fase==='recoger_hora'){
+    STATE.hora=m; STATE.fase='confirmar';
+    await agentReply(
+      '¡Excelente! Te confirmo los datos:\n\n'+
+      `🏠 *Propiedad:* ${STATE.propiedad}\n`+
+      `👤 *Cliente:* ${STATE.nombre}\n`+
+      `📅 *Fecha:* ${STATE.fecha}\n`+
+      `⏰ *Hora:* ${STATE.hora}\n\n`+
+      '¿Confirmo la visita? Responde *sí* para agendar.'
+    );
+    return;
+  }
+  if(STATE.fase==='confirmar'){
+    if(c(mn,['si','sí','confirmo','dale','ok','yes','listo','correcto','perfecto','agenda'])){
+      STATE.fase='cerrado';
+      await agentReply(
+        '¡Visita confirmada! 🎉 Un asesor se pondrá en contacto contigo para los detalles finales.\n\nSi necesitas cambiar algo, escríbenos con anticipación. ¿Podemos ayudarte en algo más?',
+        { icono:'🏠', titulo:'Visita agendada', campos:{ 'propiedad':STATE.propiedad, 'cliente':STATE.nombre, 'fecha':STATE.fecha, 'hora':STATE.hora } }
+      );
+    } else {
+      STATE.fase='menu';
+      await agentReply('Sin problema, cuéntame qué quieres ajustar. 😊');
+    }
+    return;
+  }
+  if(STATE.fase==='cerrado'){
+    STATE.fase='menu'; STATE.propiedad=STATE.nombre=STATE.fecha=STATE.hora=null;
+    await agentReply('¡Con gusto! ¿En qué más puedo ayudarte? 🏠');
+    return;
+  }
+
+  // Saludo
+  if(c(mn,['hola','buenas','buenos','hey','saludos'])){
+    await agentReply('¡Hola! 👋 Soy *Carlos* de *ProHogar Inmobiliaria*. ¿Buscas comprar, alquilar o vender una propiedad?');
+    return;
+  }
+
+  // No disponible
+  const nd=detectarNoDisp(mn);
+  if(nd){
+    await agentReply(`Entiendo que buscas *${nd.texto}* — ese tipo de propiedad no lo manejamos directamente.\n\nLo que sí tenemos es:\n🏠 *Propiedades en venta* desde $78,500\n🔑 *Alquileres* desde $350/mes\n💼 *Asesoría de compra/venta* con acompañamiento legal\n\n¿Te gustaría que te mostremos alguna opción? También podemos coordinar una llamada si prefieres. 😊`);
+    return;
+  }
+
+  // Compra
+  if(c(mn,['comprar','venta','vender','adquirir','precio de venta','cuanto vale','compra'])){
+    const prop=detectarPropVenta(mn);
+    if(prop){
+      STATE.propiedad=prop.nombre; STATE.tipo='venta'; STATE.fase='recoger_nombre';
+      await agentReply(`🏠 *${prop.nombre}*\n📐 ${prop.desc}\n💰 Precio: *${prop.precio}*\n✨ ${prop.extra}\n\n¡Es una excelente opción! ¿Quieres agendar una visita? Para empezar, ¿me das tu nombre completo?`);
+    } else {
+      await agentReply('¡Perfecto! Tenemos propiedades en venta:\n\n🏠 *Casa Zona Norte* — $145,000 · 3 hab, piscina\n🏢 *Apto Centro* — $78,500 · 2 hab, vistas\n🏡 *Casa Las Palmas* — $220,000 · 4 hab, jardín\n🏪 *Local Comercial* — $95,000 · 60m², Av. Principal\n\n¿Cuál te llama más la atención o cuáles son tus prioridades?');
+    }
+    return;
+  }
+
+  // Alquiler
+  if(c(mn,['alquilar','arrendar','rentar','alquiler','arriendo','renta','alquilar'])){
+    const prop=detectarPropAlquiler(mn);
+    if(prop){
+      STATE.propiedad=prop.nombre; STATE.tipo='alquiler'; STATE.fase='recoger_nombre';
+      await agentReply(`🔑 *${prop.nombre}*\n📐 ${prop.desc}\n💰 Renta: *${prop.precio}*\n✨ ${prop.extra}\n\n¿Quieres agendar una visita? Para comenzar, ¿me das tu nombre?`);
+    } else {
+      await agentReply('Tenemos opciones en alquiler:\n\n🛏️ *Apto Miraflores amoblado* — $350/mes · 1 hab · Servicios incluidos\n🏡 *Casa El Pinar* — $600/mes · 3 hab, garaje\n💼 *Oficina Centro Empresarial* — $450/mes · 40m²\n\n¿Cuál se adapta mejor a lo que buscas?');
+    }
+    return;
+  }
+
+  // Vender
+  if(c(mn,['vendo','vender mi','quiero vender','tengo una casa','tengo un apartamento','tengo una propiedad'])){
+    await agentReply('¡Excelente decisión! En ProHogar te acompañamos en todo el proceso de venta. 💼\n\nNuestro servicio incluye:\n• Valuación gratuita de tu inmueble\n• Fotografía y publicación profesional\n• Acompañamiento legal hasta el cierre\n• Red de compradores activos\n\n¿Te llamo para coordinar la valuación? Dame tu nombre y disponibilidad. 📞');
+    STATE.propiedad='Valuación / venta de propiedad'; STATE.tipo='venta'; STATE.fase='recoger_nombre';
+    return;
+  }
+
+  // Financiamiento
+  if(c(mn,['credito','crédito','financiamiento','hipoteca','prestamo','préstamo','banco','cuotas'])){
+    await agentReply('💳 *Financiamiento disponible*\n\nTenemos alianzas con:\n• *Banco Nacional* — hasta 20 años, tasa preferencial\n• *BancoPro* — aprobación en 5 días hábiles\n\nPodemos conectarte directamente con un asesor financiero sin costo.\n\n¿Te interesa evaluar tu capacidad de crédito?');
+    return;
+  }
+
+  // Precios / presupuesto
+  if(c(mn,['precio','cuanto','cuánto','presupuesto','rango','barato','economico','económico'])){
+    await agentReply('Tenemos opciones para diferentes presupuestos:\n\n*En venta:* desde $78,500 hasta $220,000\n*En alquiler:* desde $350/mes hasta $600/mes\n\n¿Me cuentas cuál es tu presupuesto aproximado y qué tipo de propiedad necesitas? Así te muestro las mejores opciones. 🏠');
+    return;
+  }
+
+  // Qué son
+  if(c(mn,['que son','qué son','quienes son','sobre ustedes','como funcionan','cómo funcionan','su empresa'])){
+    await agentReply('Somos *ProHogar Inmobiliaria*, una empresa con más de 10 años conectando personas con sus propiedades ideales. 🏠\n\nNos especializamos en:\n• Compra y venta residencial y comercial\n• Gestión de alquileres\n• Asesoría legal y financiera integral\n\nNuestra propuesta es simple: acompañamos al cliente en cada paso, con transparencia y sin sorpresas.\n\n¿En qué puedo ayudarte hoy?');
+    return;
+  }
+
+  // Gracias
+  if(c(mn,['gracias','muchas gracias','hasta luego','adios','adiós','chao','bye'])){
+    await agentReply('¡Con mucho gusto! 😊 Cuando quieras seguir buscando, aquí estaremos. ¡Hasta pronto!');
+    return;
+  }
+
+  await agentReply('Entendido — ¿me podrías contar un poco más qué necesitas? 😊\n\nPuedo ayudarte con:\n• 🏠 Comprar o alquilar una propiedad\n• 💼 Vender o valuar un inmueble\n• 💳 Opciones de financiamiento');
+}
+
+let busy=false;
+async function sendMessage(){
+  const txt=input.value.trim(); if(!txt||busy) return;
+  busy=true; setEnabled(false); input.value=''; input.style.height='auto';
+  appendBubble('user',txt); await procesar(txt); busy=false; setEnabled(true);
+}
+
+sendBtn.addEventListener('click',sendMessage);
+input.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();} });
+input.addEventListener('input',()=>{ input.style.height='auto'; input.style.height=Math.min(input.scrollHeight,80)+'px'; });
+window.addEventListener('load',()=>{ setTimeout(async()=>{ await procesar('[INICIO]'); setEnabled(true); },600); });
+</script>
+</body>
+</html>
