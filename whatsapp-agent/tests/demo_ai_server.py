@@ -309,11 +309,49 @@ class DemoHandler(SimpleHTTPRequestHandler):
         self.end_headers()
 
     def do_POST(self):
-        if urlparse(self.path).path == '/api/chat':
+        path = urlparse(self.path).path
+        if path == '/api/chat':
             self._handle_chat()
+        elif path == '/api/reservas/clear':
+            self._handle_clear()
         else:
             self.send_response(404)
             self.end_headers()
+
+    def do_GET(self):
+        path = urlparse(self.path).path
+        if path == '/api/reservas':
+            self._handle_reservas()
+        else:
+            super().do_GET()
+
+    def _handle_clear(self):
+        try:
+            if os.path.exists(RESERVAS_FILE):
+                os.remove(RESERVAS_FILE)
+            self.send_response(200)
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(b'{"ok":true}')
+            print('  ✓ Historial de reservas limpiado.')
+        except Exception as exc:
+            self._error(500, str(exc))
+
+    def _handle_reservas(self):
+        try:
+            if os.path.exists(RESERVAS_FILE):
+                with open(RESERVAS_FILE, 'r', encoding='utf-8') as f:
+                    registros = json.load(f)
+            else:
+                registros = []
+            self.send_response(200)
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(json.dumps(registros).encode('utf-8'))
+        except Exception as exc:
+            self._error(500, str(exc))
 
     def _cors_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Reservas — AgentKit IA</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a1628 0%, #0d2137 40%, #0a1628 100%);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #e0e0e0;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── Header ───────────────────────────────────────────────── */
+  .header {
+    max-width: 900px;
+    margin: 0 auto 36px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .header-left h1 {
+    font-size: 1.9rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(90deg, #64b5f6, #4db6ac, #a5d6a7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 5px;
+  }
+  .header-left p {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.02em;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .pill-live {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(37,211,102,0.12);
+    border: 1px solid rgba(37,211,102,0.3);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #66bb6a;
+    letter-spacing: 0.04em;
+  }
+  .pill-live .dot-live {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #25D366;
+    animation: blink 1.6s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+  .btn-clear {
+    background: rgba(255,80,80,0.1);
+    border: 1px solid rgba(255,80,80,0.25);
+    color: #ef9a9a;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: background 0.15s;
+  }
+  .btn-clear:hover { background: rgba(255,80,80,0.2); }
+
+  /* ── Stats row ────────────────────────────────────────────── */
+  .stats-row {
+    max-width: 900px;
+    margin: 0 auto 28px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .stat-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .stat-card .s-label { font-size: 0.68rem; color: rgba(255,255,255,0.38); text-transform: uppercase; letter-spacing: 0.06em; }
+  .stat-card .s-val  { font-size: 1.6rem; font-weight: 800; line-height: 1.1; }
+  .stat-card.all  .s-val { color: #90caf9; }
+  .stat-card.med  .s-val { color: #80cbc4; }
+  .stat-card.imo  .s-val { color: #90caf9; }
+  .stat-card.res  .s-val { color: #ef9a9a; }
+
+  /* ── Filter tabs ──────────────────────────────────────────── */
+  .filters {
+    max-width: 900px;
+    margin: 0 auto 20px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.45);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: all 0.15s;
+  }
+  .filter-btn.active, .filter-btn:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.28); }
+  .filter-btn.active { border-color: rgba(255,255,255,0.4); }
+
+  /* ── Cards grid ───────────────────────────────────────────── */
+  .grid {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
+    gap: 14px;
+  }
+
+  /* ── Booking card ─────────────────────────────────────────── */
+  .card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    animation: fadeUp 0.22s ease-out;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.35); }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-accent {
+    height: 4px;
+    border-radius: 0;
+  }
+  .card.clinica    .card-accent { background: linear-gradient(90deg, #128C7E, #26a69a); }
+  .card.inmobiliaria .card-accent { background: linear-gradient(90deg, #1976D2, #42a5f5); }
+  .card.restaurante  .card-accent { background: linear-gradient(90deg, #C62828, #ef5350); }
+
+  .card-body { padding: 14px 16px; }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .card-head-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-icon {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+  .card-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+  }
+  .card-subtitle {
+    font-size: 0.66rem;
+    color: rgba(255,255,255,0.38);
+    margin-top: 1px;
+  }
+  .card-check {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: rgba(37,211,102,0.15);
+    border: 1px solid rgba(37,211,102,0.4);
+    color: #25D366;
+    font-size: 0.72rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .card-fields { display: flex; flex-direction: column; gap: 5px; }
+  .field-row { display: flex; gap: 8px; align-items: flex-start; font-size: 0.75rem; }
+  .field-key {
+    color: rgba(255,255,255,0.35);
+    min-width: 80px;
+    flex-shrink: 0;
+    text-transform: capitalize;
+    padding-top: 1px;
+  }
+  .field-val { color: rgba(255,255,255,0.88); font-weight: 500; word-break: break-word; }
+
+  .card-footer {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-ts { font-size: 0.63rem; color: rgba(255,255,255,0.25); }
+  .card-demo-pill {
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .card.clinica     .card-demo-pill { background: rgba(18,140,126,0.2); color: #4db6ac; }
+  .card.inmobiliaria .card-demo-pill { background: rgba(25,118,210,0.2); color: #90caf9; }
+  .card.restaurante  .card-demo-pill { background: rgba(198,40,40,0.2);  color: #ef9a9a; }
+
+  /* ── Empty state ──────────────────────────────────────────── */
+  .empty {
+    max-width: 900px;
+    margin: 60px auto;
+    text-align: center;
+    color: rgba(255,255,255,0.2);
+  }
+  .empty .empty-icon { font-size: 3rem; margin-bottom: 14px; }
+  .empty p { font-size: 0.9rem; line-height: 1.7; }
+  .empty small { font-size: 0.75rem; color: rgba(255,255,255,0.12); }
+
+  /* ── Back link ────────────────────────────────────────────── */
+  .back-wrap { max-width: 900px; margin: 36px auto 0; }
+  .back-link { font-size: 0.82rem; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.2s; }
+  .back-link:hover { color: rgba(255,255,255,0.6); }
+
+  /* ── Responsive ───────────────────────────────────────────── */
+  @media (max-width: 560px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .header-left h1 { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────────────────── -->
+<div class="header">
+  <div class="header-left">
+    <h1>📋 Reservas recibidas</h1>
+    <p>AgentKit — Panel de confirmaciones en tiempo real</p>
+  </div>
+  <div class="header-right">
+    <div class="pill-live"><div class="dot-live"></div>LIVE</div>
+    <button class="btn-clear" onclick="clearAll()">Limpiar historial</button>
+  </div>
+</div>
+
+<!-- ── Stats ───────────────────────────────────────────────────── -->
+<div class="stats-row">
+  <div class="stat-card all">
+    <span class="s-label">Total</span>
+    <span class="s-val" id="statTotal">—</span>
+  </div>
+  <div class="stat-card med">
+    <span class="s-label">🏥 Clínica</span>
+    <span class="s-val" id="statClinica">—</span>
+  </div>
+  <div class="stat-card imo">
+    <span class="s-label">🏠 Inmobiliaria</span>
+    <span class="s-val" id="statInmo">—</span>
+  </div>
+  <div class="stat-card res">
+    <span class="s-label">🍽️ Restaurante</span>
+    <span class="s-val" id="statRest">—</span>
+  </div>
+</div>
+
+<!-- ── Filters ─────────────────────────────────────────────────── -->
+<div class="filters">
+  <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">Todos</button>
+  <button class="filter-btn" data-filter="clinica" onclick="setFilter('clinica', this)">🏥 Clínica</button>
+  <button class="filter-btn" data-filter="inmobiliaria" onclick="setFilter('inmobiliaria', this)">🏠 Inmobiliaria</button>
+  <button class="filter-btn" data-filter="restaurante" onclick="setFilter('restaurante', this)">🍽️ Restaurante</button>
+</div>
+
+<!-- ── Grid ────────────────────────────────────────────────────── -->
+<div class="grid" id="grid"></div>
+<div class="empty" id="emptyState" style="display:none">
+  <div class="empty-icon">📭</div>
+  <p>Todavía no hay reservas registradas.<br>Inicia una demo con IA y completa una conversación.</p>
+  <small>El panel se actualiza automáticamente cada 4 segundos.</small>
+</div>
+
+<div class="back-wrap">
+  <a class="back-link" href="demo_visual.html">← Ver todas las demos</a>
+</div>
+
+<script>
+'use strict';
+
+const API = 'http://localhost:8765/api/reservas';
+let allRecords = [];
+let activeFilter = 'all';
+let knownCount = -1;
+
+const DEMO_INFO = {
+  clinica:      { label: 'Clínica MediVida',    icon: '🏥' },
+  inmobiliaria: { label: 'ProHogar Inmobiliaria', icon: '🏠' },
+  restaurante:  { label: 'El Criollo',           icon: '🍽️' },
+};
+const TIPO_INFO = {
+  agendar_cita:      { icon: '📅', label: 'Cita médica' },
+  agendar_visita:    { icon: '🏠', label: 'Visita / asesoría' },
+  registrar_reserva: { icon: '🪑', label: 'Reserva de mesa' },
+  registrar_pedido:  { icon: '📦', label: 'Pedido delivery' },
+};
+
+function formatTs(iso) {
+  const d = new Date(iso);
+  return d.toLocaleString('es', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit', hour12:false });
+}
+
+function renderCard(r) {
+  const demo = r.demo || 'clinica';
+  const ti = TIPO_INFO[r.tipo] || { icon: '✅', label: r.tipo };
+  const di = DEMO_INFO[demo] || { label: demo, icon: '' };
+
+  let fields = '';
+  for (const [k, v] of Object.entries(r.datos || {})) {
+    if (v) fields += `<div class="field-row"><span class="field-key">${k}</span><span class="field-val">${v}</span></div>`;
+  }
+
+  return `
+  <div class="card ${demo}">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-head">
+        <div class="card-head-left">
+          <div class="card-icon">${ti.icon}</div>
+          <div>
+            <div class="card-title">${ti.label}</div>
+            <div class="card-subtitle">${di.icon} ${di.label}</div>
+          </div>
+        </div>
+        <div class="card-check">✓</div>
+      </div>
+      <div class="card-fields">${fields}</div>
+      <div class="card-footer">
+        <span class="card-ts">${r.registrado ? formatTs(r.registrado) : ''}</span>
+        <span class="card-demo-pill">${demo}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function render() {
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('emptyState');
+  const filtered = activeFilter === 'all'
+    ? [...allRecords].reverse()
+    : [...allRecords].filter(r => r.demo === activeFilter).reverse();
+
+  document.getElementById('statTotal').textContent   = allRecords.length;
+  document.getElementById('statClinica').textContent = allRecords.filter(r => r.demo === 'clinica').length;
+  document.getElementById('statInmo').textContent    = allRecords.filter(r => r.demo === 'inmobiliaria').length;
+  document.getElementById('statRest').textContent    = allRecords.filter(r => r.demo === 'restaurante').length;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    grid.innerHTML = filtered.map(renderCard).join('');
+  }
+}
+
+async function poll() {
+  try {
+    const res = await fetch(API);
+    if (!res.ok) throw new Error('no server');
+    const data = await res.json();
+    if (data.length !== knownCount) {
+      knownCount = data.length;
+      allRecords = data;
+      render();
+    }
+  } catch {
+    // server not running yet — silently retry
+  }
+}
+
+async function clearAll() {
+  if (!confirm('¿Seguro que quieres borrar todo el historial de reservas?\nEsto no se puede deshacer.')) return;
+  try {
+    const res = await fetch('http://localhost:8765/api/reservas/clear', { method: 'POST' });
+    if (res.ok) { allRecords = []; knownCount = 0; render(); }
+    else alert('No se pudo limpiar el historial. Asegúrate de que el servidor está activo.');
+  } catch { alert('No se puede conectar al servidor.'); }
+}
+
+// Initial load + polling every 4 s
+poll();
+setInterval(poll, 4000);
+</script>
+</body>
+</html>
