@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-vinotinto: #8b2f3f;
+  --color-dorado: #c4a050;
+  --color-crema: #f5f1e8;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-crema);
+  color: var(--color-vinotinto);
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-gold-shine px-7 py-3.5 font-semibold text-vinotinto-dark shadow-lg shadow-dorado/30 transition-all hover:scale-105 hover:shadow-dorado/50;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-dorado bg-transparent px-7 py-3.5 font-semibold text-crema transition-all hover:bg-dorado/10;
+  }
+
+  .heading-serif {
+    @apply font-serif text-vinotinto;
+  }
+
+  .section-padding {
+    @apply px-6 py-16 md:px-12 lg:px-24 lg:py-24;
+  }
+
+  .container-narrow {
+    @apply mx-auto max-w-5xl;
+  }
+}
+
+.gold-text {
+  background: linear-gradient(135deg, #c4a050 0%, #d9c385 50%, #c4a050 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
