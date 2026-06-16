@@ -323,7 +323,7 @@
   <section class="form-section" id="formulario">
     <h2 class="section-title">Reserva tu lugar</h2>
     <div class="form-container">
-      <form>
+      <form id="leadForm">
         <div class="form-group">
           <label for="nombre">Nombre</label>
           <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" required>
@@ -338,6 +338,22 @@
         </div>
         <button type="submit" class="btn-cta">Quiero aprender este sistema</button>
       </form>
+      <script>
+document.getElementById('leadForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const data = {
+    nombre: document.getElementById('nombre').value,
+    email: document.getElementById('email').value,
+    whatsapp: document.getElementById('whatsapp').value
+  };
+  await fetch('https://script.google.com/macros/s/AKfycbyjxEL656pEc80eQakgxG3n88t2AF7fxvBLl_qXsAaFCseM3a1cPz_AxGw1HHtPw0A/exec', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  });
+  alert('¡Listo! Te contactaremos pronto.');
+  e.target.reset();
+});
+</script>
     </div>
   </section>
 
