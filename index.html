@@ -549,6 +549,7 @@ src="https://www.facebook.com/tr?id=1971473923574225&ev=PageView&noscript=1"
           mode: 'no-cors',
           body: JSON.stringify(data)
         });
+        fbq('track', 'Lead');
         window.location.href = 'gracias.html';
       } catch(err) {
         btn.textContent = 'Quiero aprender este sistema';
