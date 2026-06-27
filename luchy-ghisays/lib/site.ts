@@ -6,9 +6,9 @@ export const site = {
     "Descubre las 10 señales de que estás en automático. Lista de diagnóstico para ejecutivos. PDF gratis, acceso inmediato.",
   // Google Analytics 4
   gaId: "G-JJ6E0H1JW2",
-  // Endpoint del formulario (Google Apps Script).
+  // Endpoint del formulario (Google Apps Script Web App publicado, termina en /exec).
   leadFormEndpoint:
-    "https://script.google.com/macros/d/AKfycbxhs2VHQnmuhU5-GJdNvgriQDdsRRifGvPdFoKnzKLOmWsk_TkqSE8GtPLJ9Ew8Zk-69Q/userweb",
+    "https://script.google.com/macros/s/AKfycbwBxMcPO2AJ3yIAdMv8vaPCFUn9oJ-V3vfkm6AgvSjOQFRiRroqR38-zTyEiwvCu8vw/exec",
 };
 
 // Las 10 señales del lead magnet.
