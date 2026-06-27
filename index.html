@@ -1,479 +1,672 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Luchy Ghisays – Asesora de Confianza</title>
-  <meta name="description" content="Luchy Ghisays – Tu asesora personal de confianza. Contáctame hoy y demos el primer paso juntos." />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Luchy Ghisays — Especialista en Decisión para Ejecutivos</title>
+  <meta name="description" content="Dejás de funcionar en automático y empezás a decidir con claridad. Asesoría estratégica para ejecutivos de alto rendimiento."/>
 
-  <!-- Google Analytics GA4 -->
+  <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-JJ6E0H1JW2"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
+    window.dataLayer=window.dataLayer||[];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-JJ6E0H1JW2');
+    gtag('js',new Date());
+    gtag('config','G-JJ6E0H1JW2');
   </script>
 
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --navy:  #001F3F;
-      --gold:  #D4AF37;
-      --gold-light: #e8cc6a;
-      --white: #ffffff;
-      --gray:  #f5f6fa;
-      --text:  #1a1a2e;
-      --muted: #5a6272;
-      --radius: 12px;
-      --shadow: 0 4px 24px rgba(0,31,63,0.12);
+    /* ─── TOKENS ─── */
+    :root{
+      --navy:   #001F3F;
+      --navy2:  #002d5a;
+      --gold:   #D4AF37;
+      --gold2:  #b8952d;
+      --cream:  #FAF8F3;
+      --white:  #ffffff;
+      --muted:  #6b7280;
+      --border: rgba(212,175,55,.18);
+      --r: 10px;
+      --sh: 0 8px 40px rgba(0,31,63,.10);
     }
 
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      color: var(--text);
-      background: var(--white);
-      line-height: 1.6;
+    /* ─── RESET ─── */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;font-size:16px;}
+    body{
+      font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+      background:var(--cream); color:var(--navy);
+      line-height:1.65; -webkit-font-smoothing:antialiased;
     }
-    img { display: block; max-width: 100%; }
-    a   { color: inherit; text-decoration: none; }
+    a{color:inherit;text-decoration:none;}
+    img{display:block;max-width:100%;}
 
-    .container { width: 100%; max-width: 960px; margin-inline: auto; padding-inline: 20px; }
+    /* ─── LAYOUT ─── */
+    .wrap{width:100%;max-width:1040px;margin-inline:auto;padding-inline:24px;}
+    .wrap--narrow{max-width:720px;}
 
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 14px 28px; border-radius: 50px; font-size: 1rem; font-weight: 700;
-      cursor: pointer; border: none; transition: transform .2s, box-shadow .2s;
+    /* ─── BUTTON ─── */
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      padding:16px 36px;border-radius:50px;font-size:1rem;font-weight:700;
+      cursor:pointer;border:none;letter-spacing:.02em;
+      transition:transform .18s,box-shadow .18s,background .18s;
     }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
-    .btn-gold    { background: var(--gold); color: var(--navy); }
-    .btn-outline { background: transparent; color: var(--gold); border: 2px solid var(--gold); }
-    .btn-outline:hover { background: var(--gold); color: var(--navy); }
+    .btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.2);}
+    .btn--gold{background:var(--gold);color:var(--navy);}
+    .btn--gold:hover{background:var(--gold2);}
+    .btn--ghost{background:transparent;color:var(--gold);border:2px solid var(--gold);}
+    .btn--ghost:hover{background:var(--gold);color:var(--navy);}
+    .btn--lg{padding:18px 48px;font-size:1.1rem;}
 
-    .section-label {
-      font-size: .75rem; letter-spacing: .15em; text-transform: uppercase;
-      color: var(--gold); font-weight: 700; margin-bottom: 8px;
+    /* ─── LABEL / TITLES ─── */
+    .eyebrow{
+      display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.18em;
+      text-transform:uppercase;color:var(--gold);margin-bottom:12px;
     }
-    .section-title {
-      font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800;
-      color: var(--navy); line-height: 1.2; margin-bottom: 16px;
-    }
-    .section-sub { color: var(--muted); font-size: 1.05rem; max-width: 600px; }
+    .h1{font-size:clamp(2.4rem,6vw,4rem);font-weight:900;line-height:1.1;letter-spacing:-.02em;}
+    .h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;line-height:1.15;letter-spacing:-.01em;}
+    .lead{font-size:clamp(1rem,2vw,1.2rem);color:rgba(255,255,255,.72);max-width:540px;}
+    .lead--dark{color:var(--muted);}
 
-    /* NAV */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(0,31,63,.96); backdrop-filter: blur(8px);
-      padding: 16px 0;
+    /* ══════════════════════════════════════
+       NAV
+    ══════════════════════════════════════ */
+    nav{
+      position:sticky;top:0;z-index:90;
+      background:rgba(0,31,63,.97);backdrop-filter:blur(12px);
+      border-bottom:1px solid rgba(212,175,55,.12);
+      padding:18px 0;
     }
-    .nav-inner { display: flex; align-items: center; justify-content: space-between; }
-    .nav-logo { font-size: 1.25rem; font-weight: 800; color: var(--white); letter-spacing: .02em; }
-    .nav-logo span { color: var(--gold); }
-    .nav-cta { font-size: .9rem; padding: 10px 22px; }
-
-    /* HERO */
-    #hero {
-      background: linear-gradient(135deg, var(--navy) 0%, #003366 100%);
-      color: var(--white);
-      padding: 80px 0 64px;
-      text-align: center;
+    .nav-inner{display:flex;align-items:center;justify-content:center;}
+    .nav-logo{
+      font-size:1.35rem;font-weight:900;color:var(--white);letter-spacing:-.01em;
     }
-    .hero-badge {
-      display: inline-block; background: rgba(212,175,55,.15); border: 1px solid var(--gold);
-      color: var(--gold); font-size: .8rem; font-weight: 700; letter-spacing: .1em;
-      text-transform: uppercase; padding: 6px 16px; border-radius: 50px; margin-bottom: 24px;
+    .nav-logo em{color:var(--gold);font-style:normal;}
+
+    /* ══════════════════════════════════════
+       HERO
+    ══════════════════════════════════════ */
+    #hero{
+      background:linear-gradient(150deg,var(--navy) 0%,#003060 55%,#00193a 100%);
+      color:var(--white);padding:100px 0 88px;
+      position:relative;overflow:hidden;
     }
-    #hero h1 { font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 900; line-height: 1.15; margin-bottom: 20px; }
-    #hero h1 span { color: var(--gold); }
-    #hero p { font-size: clamp(1rem, 2.5vw, 1.2rem); color: rgba(255,255,255,.8); max-width: 560px; margin-inline: auto; margin-bottom: 36px; }
-    .hero-buttons { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
-    .hero-divider { width: 60px; height: 3px; background: var(--gold); margin: 48px auto 0; border-radius: 4px; }
-
-    /* STATS */
-    #stats { background: var(--gold); padding: 32px 0; }
-    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; text-align: center; }
-    .stat-num   { font-size: 2rem; font-weight: 900; color: var(--navy); line-height: 1; }
-    .stat-label { font-size: .85rem; color: var(--navy); opacity: .75; margin-top: 4px; }
-
-    /* SERVICES */
-    #servicios { padding: 72px 0; background: var(--gray); }
-    .services-header { text-align: center; margin-bottom: 48px; }
-    .services-header .section-sub { margin-inline: auto; }
-    .services-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
-    .service-card {
-      background: var(--white); border-radius: var(--radius);
-      padding: 32px; box-shadow: var(--shadow);
-      border-top: 4px solid var(--gold);
-      transition: transform .25s;
+    #hero::before{
+      content:'';position:absolute;inset:0;
+      background:radial-gradient(ellipse 70% 60% at 80% 40%,rgba(212,175,55,.07) 0%,transparent 70%);
+      pointer-events:none;
     }
-    .service-card:hover { transform: translateY(-4px); }
-    .service-icon {
-      width: 52px; height: 52px; border-radius: 50%;
-      background: rgba(212,175,55,.12); display: flex; align-items: center;
-      justify-content: center; font-size: 1.6rem; margin-bottom: 16px;
+    .hero-kicker{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(212,175,55,.1);border:1px solid var(--border);
+      color:var(--gold);font-size:.78rem;font-weight:700;letter-spacing:.12em;
+      text-transform:uppercase;padding:7px 16px;border-radius:50px;margin-bottom:28px;
     }
-    .service-card h3 { font-size: 1.15rem; color: var(--navy); margin-bottom: 8px; }
-    .service-card p  { color: var(--muted); font-size: .95rem; }
-
-    /* ABOUT */
-    #sobre-mi { padding: 72px 0; }
-    .about-inner { display: flex; flex-direction: column; gap: 40px; align-items: center; }
-    .about-photo {
-      width: 200px; height: 200px; border-radius: 50%;
-      border: 5px solid var(--gold); box-shadow: var(--shadow); flex-shrink: 0;
-      background: linear-gradient(135deg, var(--navy), #003366);
-      display: flex; align-items: center; justify-content: center; font-size: 5rem;
+    .hero-kicker::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);display:block;}
+    #hero .h1{color:var(--white);margin-bottom:24px;}
+    #hero .h1 em{color:var(--gold);font-style:normal;}
+    #hero .lead{margin-bottom:40px;}
+    .hero-meta{
+      display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:48px;
+      padding-top:40px;border-top:1px solid rgba(255,255,255,.08);
     }
-    .about-content { max-width: 560px; }
-    .about-content .section-sub { margin-bottom: 20px; }
-    .about-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .about-list li { display: flex; align-items: flex-start; gap: 10px; font-size: .95rem; color: var(--muted); }
-    .about-list li::before { content: '✓'; color: var(--gold); font-weight: 900; flex-shrink: 0; margin-top: 1px; }
+    .hero-meta-item{font-size:.85rem;color:rgba(255,255,255,.45);display:flex;align-items:center;gap:6px;}
+    .hero-meta-item span{color:rgba(255,255,255,.7);font-weight:600;}
+    .hero-meta-dot{width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.2);}
 
-    /* TESTIMONIALS */
-    #testimonios { padding: 72px 0; background: var(--gray); }
-    .testimonials-header { text-align: center; margin-bottom: 48px; }
-    .testimonials-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
-    .tcard { background: var(--white); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); }
-    .tcard-stars  { color: var(--gold); font-size: 1.1rem; margin-bottom: 12px; }
-    .tcard-text   { color: var(--muted); font-style: italic; font-size: .95rem; margin-bottom: 16px; }
-    .tcard-author { font-weight: 700; color: var(--navy); font-size: .9rem; }
-
-    /* FORM */
-    #contacto { padding: 72px 0; background: var(--navy); }
-    .contacto-inner { max-width: 600px; margin-inline: auto; }
-    .contacto-inner .section-label { color: var(--gold); }
-    .contacto-inner .section-title { color: var(--white); }
-    .contacto-inner .section-sub   { color: rgba(255,255,255,.65); margin-bottom: 36px; }
-
-    form { display: flex; flex-direction: column; gap: 16px; }
-    .form-row { display: grid; grid-template-columns: 1fr; gap: 16px; }
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    label { font-size: .85rem; font-weight: 600; color: rgba(255,255,255,.8); }
-    input, select, textarea {
-      padding: 14px 16px; border-radius: 8px; border: 1.5px solid rgba(255,255,255,.15);
-      background: rgba(255,255,255,.07); color: var(--white);
-      font-size: 1rem; font-family: inherit; transition: border-color .2s; outline: none;
+    /* ══════════════════════════════════════
+       STATS
+    ══════════════════════════════════════ */
+    #stats{background:var(--gold);padding:36px 0;}
+    .stats-row{
+      display:grid;grid-template-columns:repeat(3,1fr);
+      gap:0;text-align:center;
     }
-    input::placeholder, textarea::placeholder { color: rgba(255,255,255,.35); }
-    input:focus, select:focus, textarea:focus { border-color: var(--gold); background: rgba(255,255,255,.1); }
-    select option { background: var(--navy); color: var(--white); }
-    textarea { resize: vertical; min-height: 110px; }
-    .form-submit { margin-top: 8px; width: 100%; padding: 16px; font-size: 1.05rem; }
-    .form-note   { font-size: .8rem; color: rgba(255,255,255,.4); text-align: center; margin-top: 4px; }
+    .stat-item{padding:8px 16px;}
+    .stat-item+.stat-item{border-left:1px solid rgba(0,31,63,.15);}
+    .stat-num{font-size:2.2rem;font-weight:900;color:var(--navy);line-height:1;letter-spacing:-.02em;}
+    .stat-lbl{font-size:.82rem;color:rgba(0,31,63,.65);margin-top:4px;font-weight:500;}
 
-    /* WHATSAPP FAB */
-    .whatsapp-fab {
-      position: fixed; bottom: 24px; right: 24px; z-index: 200;
-      width: 58px; height: 58px; border-radius: 50%;
-      background: #25D366; color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 20px rgba(37,211,102,.5);
-      font-size: 1.7rem; transition: transform .2s;
+    /* ══════════════════════════════════════
+       TRANSFORMATION
+    ══════════════════════════════════════ */
+    #transformacion{padding:88px 0;background:var(--white);}
+    .tx-header{text-align:center;margin-bottom:64px;}
+    .tx-header .h2{margin-bottom:12px;}
+    .tx-grid{
+      display:grid;grid-template-columns:1fr auto 1fr;
+      gap:0;align-items:stretch;
     }
-    .whatsapp-fab:hover { transform: scale(1.1); }
+    .tx-card{
+      background:var(--cream);border-radius:var(--r);
+      padding:40px 32px;position:relative;
+    }
+    .tx-card--before{border:1px solid #e5e7eb;}
+    .tx-card--after{
+      background:var(--navy);color:var(--white);
+      border:1px solid var(--navy);
+    }
+    .tx-tag{
+      display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.14em;
+      text-transform:uppercase;padding:4px 12px;border-radius:50px;margin-bottom:20px;
+    }
+    .tx-tag--before{background:#f3f4f6;color:var(--muted);}
+    .tx-tag--after{background:rgba(212,175,55,.15);color:var(--gold);}
+    .tx-card h3{font-size:1.25rem;font-weight:800;margin-bottom:20px;}
+    .tx-card--after h3{color:var(--white);}
+    .tx-list{list-style:none;display:flex;flex-direction:column;gap:12px;}
+    .tx-list li{display:flex;align-items:flex-start;gap:10px;font-size:.95rem;}
+    .tx-card--before .tx-list li{color:var(--muted);}
+    .tx-card--after .tx-list li{color:rgba(255,255,255,.8);}
+    .tx-list li::before{flex-shrink:0;margin-top:2px;font-size:.9rem;}
+    .tx-card--before .tx-list li::before{content:'–';color:#d1d5db;}
+    .tx-card--after .tx-list li::before{content:'✓';color:var(--gold);font-weight:900;}
+    .tx-arrow{
+      display:flex;align-items:center;justify-content:center;
+      width:56px;flex-shrink:0;
+    }
+    .tx-arrow-inner{
+      width:44px;height:44px;border-radius:50%;
+      background:var(--gold);display:flex;align-items:center;justify-content:center;
+      font-size:1.1rem;color:var(--navy);font-weight:900;box-shadow:0 4px 16px rgba(212,175,55,.35);
+    }
 
-    /* FOOTER */
-    footer { background: #000d1a; color: rgba(255,255,255,.5); text-align: center; padding: 28px 0; font-size: .85rem; }
-    footer span { color: var(--gold); }
+    /* ══════════════════════════════════════
+       ABOUT
+    ══════════════════════════════════════ */
+    #sobre-luchy{
+      padding:88px 0;
+      background:linear-gradient(160deg,var(--navy) 0%,#002a52 100%);
+      color:var(--white);
+    }
+    .about-inner{
+      display:grid;grid-template-columns:1fr;gap:48px;align-items:center;
+    }
+    .about-photo-wrap{display:flex;justify-content:center;}
+    .about-photo{
+      width:220px;height:220px;border-radius:50%;flex-shrink:0;
+      border:4px solid var(--gold);
+      background:rgba(212,175,55,.08);
+      display:flex;align-items:center;justify-content:center;
+      font-size:5.5rem;box-shadow:0 0 0 12px rgba(212,175,55,.06);
+    }
+    .about-content .eyebrow{display:block;}
+    .about-content .h2{color:var(--white);margin-bottom:16px;}
+    .about-body{color:rgba(255,255,255,.72);font-size:1.05rem;margin-bottom:28px;max-width:520px;}
+    .creds{list-style:none;display:flex;flex-direction:column;gap:10px;}
+    .creds li{
+      display:flex;align-items:flex-start;gap:10px;
+      font-size:.95rem;color:rgba(255,255,255,.75);
+    }
+    .creds li::before{
+      content:'◆';color:var(--gold);font-size:.55rem;flex-shrink:0;margin-top:5px;
+    }
 
-    /* THANKS PAGE */
-    #thanks-page {
-      display: none; position: fixed; inset: 0; z-index: 999;
-      background: var(--navy); color: var(--white);
-      flex-direction: column; align-items: center; justify-content: center;
-      text-align: center; padding: 24px;
+    /* ══════════════════════════════════════
+       TESTIMONIALS
+    ══════════════════════════════════════ */
+    #testimonios{padding:88px 0;background:var(--cream);}
+    .testi-header{text-align:center;margin-bottom:56px;}
+    .testi-header .h2{margin-bottom:10px;}
+    .testi-grid{display:grid;grid-template-columns:1fr;gap:24px;}
+    .tcard{
+      background:var(--white);border-radius:var(--r);
+      padding:32px;box-shadow:var(--sh);
+      border-left:3px solid var(--gold);
+      display:flex;flex-direction:column;gap:16px;
     }
-    #thanks-page.show { display: flex; }
-    .thanks-icon { font-size: 4rem; margin-bottom: 24px; }
-    #thanks-page h2 { font-size: 2rem; color: var(--gold); margin-bottom: 12px; }
-    #thanks-page p  { color: rgba(255,255,255,.75); max-width: 420px; margin-bottom: 32px; }
-    .thanks-actions { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+    .tcard-stars{
+      display:flex;gap:3px;
+    }
+    .tcard-stars span{color:var(--gold);font-size:1rem;}
+    .tcard-text{
+      font-size:.97rem;color:#374151;
+      font-style:italic;line-height:1.7;flex-grow:1;
+    }
+    .tcard-author{
+      font-size:.85rem;font-weight:700;color:var(--navy);
+    }
+    .tcard-role{font-size:.8rem;color:var(--muted);font-weight:400;margin-top:2px;}
 
-    /* SPINNER */
-    #spinner {
-      display: none; position: fixed; inset: 0; z-index: 998;
-      background: rgba(0,31,63,.7); align-items: center; justify-content: center;
+    /* ══════════════════════════════════════
+       FORM
+    ══════════════════════════════════════ */
+    #contacto{
+      padding:88px 0;
+      background:var(--navy);
     }
-    #spinner.show { display: flex; }
-    .spin {
-      width: 48px; height: 48px; border: 5px solid rgba(212,175,55,.3);
-      border-top-color: var(--gold); border-radius: 50%;
-      animation: spin .8s linear infinite;
+    .form-inner{max-width:560px;margin-inline:auto;text-align:center;}
+    .form-inner .eyebrow{color:var(--gold);}
+    .form-inner .h2{color:var(--white);margin-bottom:12px;}
+    .form-sub{color:rgba(255,255,255,.55);font-size:1rem;margin-bottom:40px;line-height:1.6;}
+    .form-row{display:flex;flex-direction:column;gap:14px;}
+    .f-input{
+      width:100%;padding:16px 20px;border-radius:var(--r);
+      border:1.5px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);color:var(--white);
+      font-size:1rem;font-family:inherit;outline:none;
+      transition:border-color .2s,background .2s;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .f-input::placeholder{color:rgba(255,255,255,.3);}
+    .f-input:focus{border-color:var(--gold);background:rgba(255,255,255,.09);}
+    .form-note{
+      font-size:.78rem;color:rgba(255,255,255,.3);margin-top:12px;
+      display:flex;align-items:center;justify-content:center;gap:6px;
+    }
 
-    /* RESPONSIVE */
-    @media (min-width: 600px) {
-      .form-row            { grid-template-columns: 1fr 1fr; }
-      .services-grid       { grid-template-columns: 1fr 1fr; }
-      .testimonials-grid   { grid-template-columns: 1fr 1fr; }
+    /* ══════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════ */
+    footer{
+      background:#000d1a;padding:36px 0;
+      border-top:1px solid rgba(212,175,55,.08);
     }
-    @media (min-width: 860px) {
-      .services-grid { grid-template-columns: repeat(3, 1fr); }
-      .about-inner   { flex-direction: row; gap: 60px; }
-      .about-content { max-width: none; }
+    .footer-inner{
+      display:flex;flex-direction:column;align-items:center;gap:12px;
+      text-align:center;
+    }
+    .footer-brand{font-size:1.05rem;font-weight:800;color:var(--white);}
+    .footer-brand em{color:var(--gold);font-style:normal;}
+    .footer-contact{
+      display:flex;flex-direction:column;align-items:center;gap:6px;
+    }
+    .footer-contact a{
+      font-size:.88rem;color:rgba(255,255,255,.45);
+      transition:color .15s;display:flex;align-items:center;gap:6px;
+    }
+    .footer-contact a:hover{color:var(--gold);}
+    .footer-copy{font-size:.78rem;color:rgba(255,255,255,.2);margin-top:4px;}
+
+    /* ══════════════════════════════════════
+       WHATSAPP FAB
+    ══════════════════════════════════════ */
+    .wa-fab{
+      position:fixed;bottom:24px;right:24px;z-index:80;
+      width:56px;height:56px;border-radius:50%;
+      background:#25D366;color:#fff;
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 4px 20px rgba(37,211,102,.45);
+      transition:transform .2s;
+    }
+    .wa-fab:hover{transform:scale(1.1);}
+
+    /* ══════════════════════════════════════
+       MODAL (GRACIAS)
+    ══════════════════════════════════════ */
+    .modal-overlay{
+      display:none;position:fixed;inset:0;z-index:200;
+      background:rgba(0,15,30,.85);backdrop-filter:blur(6px);
+      align-items:center;justify-content:center;padding:24px;
+    }
+    .modal-overlay.open{display:flex;}
+    .modal-box{
+      background:var(--navy);border:1px solid var(--border);
+      border-radius:16px;padding:48px 40px;max-width:480px;width:100%;
+      text-align:center;position:relative;
+      animation:fadeUp .3s ease both;
+    }
+    @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+    .modal-icon{font-size:3.5rem;margin-bottom:20px;display:block;}
+    .modal-title{font-size:1.7rem;font-weight:900;color:var(--gold);margin-bottom:10px;}
+    .modal-text{color:rgba(255,255,255,.65);font-size:.97rem;line-height:1.65;margin-bottom:32px;}
+    .modal-close{
+      position:absolute;top:16px;right:20px;background:none;border:none;
+      color:rgba(255,255,255,.3);font-size:1.4rem;cursor:pointer;line-height:1;
+      transition:color .15s;
+    }
+    .modal-close:hover{color:var(--white);}
+    .modal-actions{display:flex;flex-direction:column;gap:12px;}
+
+    /* ══════════════════════════════════════
+       SPINNER
+    ══════════════════════════════════════ */
+    #spinner{
+      display:none;position:fixed;inset:0;z-index:190;
+      background:rgba(0,15,30,.6);align-items:center;justify-content:center;
+    }
+    #spinner.on{display:flex;}
+    .spin-ring{
+      width:44px;height:44px;border-radius:50%;
+      border:4px solid rgba(212,175,55,.2);border-top-color:var(--gold);
+      animation:rot .75s linear infinite;
+    }
+    @keyframes rot{to{transform:rotate(360deg);}}
+
+    /* ══════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════ */
+    @media(min-width:640px){
+      .testi-grid{grid-template-columns:1fr 1fr;}
+      .footer-contact{flex-direction:row;gap:24px;}
+    }
+    @media(min-width:820px){
+      .about-inner{grid-template-columns:240px 1fr;}
+      .about-photo-wrap{justify-content:flex-start;}
+      .tx-grid{grid-template-columns:1fr auto 1fr;}
     }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
+<!-- ─── NAV ─── -->
 <nav>
-  <div class="container nav-inner">
-    <div class="nav-logo">Luchy <span>Ghisays</span></div>
-    <a href="#contacto" class="btn btn-gold nav-cta">Contáctame</a>
+  <div class="wrap">
+    <div class="nav-inner">
+      <div class="nav-logo"><em>Luchy</em> Ghisays</div>
+    </div>
   </div>
 </nav>
 
-<!-- HERO -->
+<!-- ─── HERO ─── -->
 <section id="hero">
-  <div class="container">
-    <div class="hero-badge">&#10022; Asesora Personal de Confianza</div>
-    <h1>Tu éxito comienza con<br/><span>la asesoría correcta</span></h1>
-    <p>Acompaño a personas y empresas a tomar decisiones seguras, con estrategia y resultados reales.</p>
-    <div class="hero-buttons">
-      <a href="#contacto" class="btn btn-gold">Agenda tu consulta gratis</a>
-      <a href="https://wa.me/573225684896?text=Hola%20Luchy%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n"
-         target="_blank" rel="noopener" class="btn btn-outline">
-        &#128172; WhatsApp
-      </a>
+  <div class="wrap">
+    <div class="hero-kicker">Especialista en Decisión para Ejecutivos</div>
+    <h1 class="h1">
+      ¿Funcionás pero<br/><em>algo te falta?</em>
+    </h1>
+    <p class="lead" style="margin-top:20px;">
+      Tenés los resultados, el ritmo, la agenda llena.<br/>
+      Pero tomás decisiones en automático y cada vez te cuesta más saber qué querés en serio.
+    </p>
+    <div style="margin-top:36px;">
+      <a href="#contacto" class="btn btn--gold btn--lg">Quiero tomar decisiones con claridad</a>
     </div>
-    <div class="hero-divider"></div>
+    <div class="hero-meta">
+      <div class="hero-meta-item">Más de <span>500 ejecutivos</span> asesorados</div>
+      <div class="hero-meta-dot"></div>
+      <div class="hero-meta-item"><span>10+ años</span> de experiencia</div>
+      <div class="hero-meta-dot"></div>
+      <div class="hero-meta-item"><span>98%</span> de satisfacción</div>
+    </div>
   </div>
 </section>
 
-<!-- STATS -->
+<!-- ─── STATS ─── -->
 <section id="stats">
-  <div class="container">
-    <div class="stats-grid">
-      <div>
-        <div class="stat-num">+500</div>
-        <div class="stat-label">Clientes asesorados</div>
+  <div class="wrap">
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-num">500+</div>
+        <div class="stat-lbl">Ejecutivos asesorados</div>
       </div>
-      <div>
+      <div class="stat-item">
         <div class="stat-num">10+</div>
-        <div class="stat-label">Años de experiencia</div>
+        <div class="stat-lbl">Años de experiencia</div>
       </div>
-      <div>
+      <div class="stat-item">
         <div class="stat-num">98%</div>
-        <div class="stat-label">Satisfacción</div>
+        <div class="stat-lbl">Satisfacción</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SERVICES -->
-<section id="servicios">
-  <div class="container">
-    <div class="services-header">
-      <div class="section-label">Lo que ofrezco</div>
-      <h2 class="section-title">Servicios diseñados<br/>para tu crecimiento</h2>
-      <p class="section-sub">Cada servicio está pensado para darte claridad, seguridad y resultados medibles.</p>
+<!-- ─── TRANSFORMACIÓN ─── -->
+<section id="transformacion">
+  <div class="wrap">
+    <div class="tx-header">
+      <span class="eyebrow">El cambio real</span>
+      <h2 class="h2">De automático a claridad</h2>
     </div>
-    <div class="services-grid">
-      <div class="service-card">
-        <div class="service-icon">&#127919;</div>
-        <h3>Asesoría Personalizada</h3>
-        <p>Sesiones uno a uno para entender tu situación y trazar el camino más eficiente hacia tus metas.</p>
+    <div class="tx-grid">
+
+      <!-- ANTES -->
+      <div class="tx-card tx-card--before">
+        <span class="tx-tag tx-tag--before">Antes</span>
+        <h3>Funcionando en piloto automático</h3>
+        <ul class="tx-list">
+          <li>Tomás decisiones por inercia, no por convicción</li>
+          <li>Sabés lo que tenés que hacer pero no lo hacés</li>
+          <li>La agenda manda; vos respondés</li>
+          <li>El éxito se siente hueco desde adentro</li>
+          <li>No distinguís qué es tuyo y qué es expectativa ajena</li>
+        </ul>
       </div>
-      <div class="service-card">
-        <div class="service-icon">&#128202;</div>
-        <h3>Estrategia &amp; Planificación</h3>
-        <p>Diseñamos juntos un plan de acción claro, con métricas reales y tiempos definidos.</p>
+
+      <!-- FLECHA -->
+      <div class="tx-arrow">
+        <div class="tx-arrow-inner">&#8594;</div>
       </div>
-      <div class="service-card">
-        <div class="service-icon">&#128640;</div>
-        <h3>Acompañamiento Continuo</h3>
-        <p>No te dejo solo: seguimiento constante para ajustar la estrategia y mantener el rumbo.</p>
+
+      <!-- DESPUÉS -->
+      <div class="tx-card tx-card--after">
+        <span class="tx-tag tx-tag--after">Después</span>
+        <h3>Decidiendo con criterio propio</h3>
+        <ul class="tx-list">
+          <li>Sabés qué querés y podés defenderlo</li>
+          <li>Elegís desde un lugar claro, no desde el miedo</li>
+          <li>Tu agenda refleja tus prioridades reales</li>
+          <li>El resultado tiene peso y dirección</li>
+          <li>Operás desde criterio propio, no desde aprobación</li>
+        </ul>
       </div>
+
     </div>
   </div>
 </section>
 
-<!-- ABOUT -->
-<section id="sobre-mi">
-  <div class="container">
+<!-- ─── SOBRE LUCHY ─── -->
+<section id="sobre-luchy">
+  <div class="wrap">
     <div class="about-inner">
-      <div class="about-photo" aria-label="Luchy Ghisays">&#128105;&#8205;&#128188;</div>
+      <div class="about-photo-wrap">
+        <div class="about-photo">&#128105;&#8205;&#128188;</div>
+      </div>
       <div class="about-content">
-        <div class="section-label">Sobre mí</div>
-        <h2 class="section-title">Soy Luchy Ghisays</h2>
-        <p class="section-sub">
-          Asesora con más de 10 años de experiencia ayudando a personas y negocios a alcanzar sus objetivos con claridad y confianza. Mi enfoque es práctico, humano y orientado a resultados reales.
+        <span class="eyebrow">Quién soy</span>
+        <h2 class="h2">Soy Luchy Ghisays</h2>
+        <p class="about-body">
+          No soy coach de bienestar ni motivadora de fin de semana.<br/>
+          Trabajo con ejecutivos de alto rendimiento que tienen todo en orden por fuera y algo desalineado por dentro.
+          Mi especialidad es exactamente esa fricción: ayudarte a ver qué estás evitando decidir, y por qué.
         </p>
-        <ul class="about-list" style="margin-top:20px;">
-          <li>Especialista en planificación estratégica personal y empresarial</li>
-          <li>Más de 500 clientes satisfechos en Colombia y Latinoamérica</li>
-          <li>Metodología probada, adaptada a cada caso</li>
-          <li>Comunicación directa, sin tecnicismos innecesarios</li>
+        <ul class="creds">
+          <li>Más de 10 años trabajando con ejecutivos en Colombia y Latinoamérica</li>
+          <li>Metodología basada en análisis de decisión y criterio estratégico</li>
+          <li>Más de 500 procesos individuales de claridad ejecutiva</li>
+          <li>Referente en Decisión, no en motivación</li>
+          <li>Resultados medibles en 30 días o seguimos hasta lograrlo</li>
         </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- TESTIMONIALS -->
+<!-- ─── TESTIMONIOS ─── -->
 <section id="testimonios">
-  <div class="container">
-    <div class="testimonials-header">
-      <div class="section-label">Testimonios</div>
-      <h2 class="section-title">Lo que dicen mis clientes</h2>
+  <div class="wrap">
+    <div class="testi-header">
+      <span class="eyebrow">Resultados reales</span>
+      <h2 class="h2">Lo que dicen quienes trabajaron conmigo</h2>
     </div>
-    <div class="testimonials-grid">
+    <div class="testi-grid">
+
       <div class="tcard">
-        <div class="tcard-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="tcard-text">"Luchy cambió completamente mi visión. En tres meses logré lo que no pude en dos años solo. Su acompañamiento es de otro nivel."</p>
-        <div class="tcard-author">— Andrés M., Medellín</div>
+        <div class="tcard-stars">
+          <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+        </div>
+        <p class="tcard-text">
+          "Llegué con tres ofertas sobre la mesa y sin saber cuál elegir. En dos sesiones con Luchy entendí que el problema no era la decisión, era que no sabía qué quería en serio. Eso lo cambió todo."
+        </p>
+        <div class="tcard-author">Andrés M.
+          <div class="tcard-role">Director Comercial, Medellín</div>
+        </div>
       </div>
+
       <div class="tcard">
-        <div class="tcard-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="tcard-text">"Claridad, honestidad y resultados. Así defino el trabajo de Luchy. La recomiendo sin dudar a cualquier persona que quiera avanzar."</p>
-        <div class="tcard-author">— Carolina V., Bogotá</div>
+        <div class="tcard-stars">
+          <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+        </div>
+        <p class="tcard-text">
+          "No esperaba que fuera tan directa. Sin rodeos, sin frases de autoayuda. Luchy va al punto y eso es exactamente lo que necesitaba. Tomé la decisión más difícil de mi carrera con total convicción."
+        </p>
+        <div class="tcard-author">Carolina V.
+          <div class="tcard-role">Gerente General, Bogotá</div>
+        </div>
       </div>
+
       <div class="tcard">
-        <div class="tcard-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="tcard-text">"Nunca pensé que una asesoría pudiera hacer tanto. Luchy entiende tu situación como nadie y te da herramientas reales."</p>
-        <div class="tcard-author">— Ricardo P., Barranquilla</div>
+        <div class="tcard-stars">
+          <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+        </div>
+        <p class="tcard-text">
+          "Llevaba meses posponiendo una conversación clave. Luchy me ayudó a ver qué me frenaba, y no era lo que yo creía. Hice la conversación. Cambió la dinámica de mi equipo completo."
+        </p>
+        <div class="tcard-author">Ricardo P.
+          <div class="tcard-role">VP de Operaciones, Barranquilla</div>
+        </div>
       </div>
+
       <div class="tcard">
-        <div class="tcard-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-        <p class="tcard-text">"Gracias a Luchy tomé la decisión que necesitaba con total confianza. Su acompañamiento post-asesoría es invaluable."</p>
-        <div class="tcard-author">— Sofía R., Cartagena</div>
+        <div class="tcard-stars">
+          <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+        </div>
+        <p class="tcard-text">
+          "Trabajé con Luchy en un momento crítico. Lo que me dio no fue motivación, fue claridad. Y desde ahí tomé decisiones que hoy defiendo sin dudar. Eso tiene un valor que no se consigue en ningún lado."
+        </p>
+        <div class="tcard-author">Sofía R.
+          <div class="tcard-role">Fundadora, Cartagena</div>
+        </div>
       </div>
+
     </div>
   </div>
 </section>
 
-<!-- CONTACT FORM -->
+<!-- ─── FORMULARIO ─── -->
 <section id="contacto">
-  <div class="container">
-    <div class="contacto-inner">
-      <div class="section-label">Contáctame</div>
-      <h2 class="section-title">Da el primer paso hoy</h2>
-      <p class="section-sub">Completa el formulario y me comunico contigo en menos de 24 horas para agendar tu consulta gratuita.</p>
+  <div class="wrap">
+    <div class="form-inner">
+      <span class="eyebrow">Primer paso</span>
+      <h2 class="h2">Empezá con tu email</h2>
+      <p class="form-sub">
+        Dejame tu nombre y tu email.<br/>
+        Te escribo yo, sin intermediarios, en menos de 24 horas.
+      </p>
 
       <form id="lead-form" novalidate>
         <div class="form-row">
-          <div class="form-group">
-            <label for="nombre">Nombre completo *</label>
-            <input type="text" id="nombre" name="nombre" placeholder="Ej: María González" required />
-          </div>
-          <div class="form-group">
-            <label for="telefono">WhatsApp / Teléfono *</label>
-            <input type="tel" id="telefono" name="telefono" placeholder="+57 300 000 0000" required />
-          </div>
+          <input
+            class="f-input" type="text" id="nombre" name="nombre"
+            placeholder="Tu nombre" required autocomplete="name"
+          />
+          <input
+            class="f-input" type="email" id="email" name="email"
+            placeholder="Tu email" required autocomplete="email"
+          />
+          <button type="submit" class="btn btn--gold" style="width:100%;padding:17px;">
+            Enviar Mi Email &#8594;
+          </button>
         </div>
-        <div class="form-group">
-          <label for="email">Correo electrónico *</label>
-          <input type="email" id="email" name="email" placeholder="tu@correo.com" required />
-        </div>
-        <div class="form-group">
-          <label for="interes">¿En qué puedo ayudarte? *</label>
-          <select id="interes" name="interes" required>
-            <option value="" disabled selected>Selecciona una opción</option>
-            <option value="Asesoría personal">Asesoría personal</option>
-            <option value="Estrategia empresarial">Estrategia empresarial</option>
-            <option value="Planificación financiera">Planificación financiera</option>
-            <option value="Acompañamiento continuo">Acompañamiento continuo</option>
-            <option value="Otro">Otro</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="mensaje">Cuéntame un poco más (opcional)</label>
-          <textarea id="mensaje" name="mensaje" placeholder="Describe brevemente tu situación o lo que esperas lograr..."></textarea>
-        </div>
-        <button type="submit" class="btn btn-gold form-submit">Enviar solicitud &#8594;</button>
-        <p class="form-note">&#128274; Tu información es privada y nunca será compartida con terceros.</p>
+        <p class="form-note">&#128274;&nbsp;Privacidad total. Cero spam.</p>
       </form>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- ─── FOOTER ─── -->
 <footer>
-  <div class="container">
-    <p>&#169; 2025 <span>Luchy Ghisays</span> · Todos los derechos reservados</p>
-    <p style="margin-top:6px;">
-      <a href="https://wa.me/573225684896" target="_blank" rel="noopener" style="color:var(--gold);">
-        &#128172; +57 322 568 4896
-      </a>
-    </p>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="footer-brand"><em>Luchy</em> Ghisays</div>
+      <div class="footer-contact">
+        <a href="https://wa.me/573225684896" target="_blank" rel="noopener">
+          &#128172;&nbsp;+57 322 568 4896
+        </a>
+        <a href="mailto:contacto@luchyghisays.com">
+          &#9993;&nbsp;contacto@luchyghisays.com
+        </a>
+      </div>
+      <div class="footer-copy">&#169; 2025 Luchy Ghisays &middot; Todos los derechos reservados</div>
+    </div>
   </div>
 </footer>
 
-<!-- WHATSAPP FAB -->
-<a class="whatsapp-fab"
-   href="https://wa.me/573225684896?text=Hola%20Luchy%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n"
-   target="_blank" rel="noopener" aria-label="Chatear por WhatsApp">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="30" height="30" fill="currentColor">
+<!-- ─── WHATSAPP FAB ─── -->
+<a class="wa-fab"
+   href="https://wa.me/573225684896?text=Hola%20Luchy%2C%20quiero%20saber%20m%C3%A1s%20sobre%20tu%20asesor%C3%ADa"
+   target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="28" height="28" fill="currentColor">
     <path d="M16 .5C7.44.5.5 7.44.5 16c0 2.83.74 5.5 2.04 7.82L.5 31.5l7.88-2.07A15.45 15.45 0 0016 31.5c8.56 0 15.5-6.94 15.5-15.5S24.56.5 16 .5zm0 28.4a12.85 12.85 0 01-6.55-1.8l-.47-.28-4.68 1.23 1.24-4.57-.3-.5A12.85 12.85 0 013.1 16C3.1 9.1 8.1 3.1 16 3.1c7.87 0 12.9 6 12.9 12.9 0 7.9-5.03 12.9-12.9 12.9zm7.1-9.67c-.39-.2-2.3-1.13-2.66-1.26-.36-.13-.62-.2-.88.2-.26.39-1 1.26-1.23 1.52-.22.26-.45.3-.84.1-.39-.2-1.65-.61-3.14-1.94-1.16-1.04-1.94-2.32-2.17-2.71-.23-.39-.02-.6.17-.79.18-.18.39-.45.58-.68.2-.23.26-.39.39-.65.13-.26.07-.49-.03-.68-.1-.2-.88-2.12-1.2-2.9-.32-.77-.64-.66-.88-.67h-.75c-.26 0-.68.1-1.04.49-.36.39-1.36 1.33-1.36 3.24s1.4 3.76 1.59 4.02c.2.26 2.74 4.18 6.64 5.86.93.4 1.65.64 2.22.82.93.3 1.78.26 2.45.16.75-.11 2.3-.94 2.62-1.85.33-.91.33-1.69.23-1.85-.1-.16-.36-.26-.75-.46z"/>
   </svg>
 </a>
 
-<!-- SPINNER -->
-<div id="spinner"><div class="spin"></div></div>
+<!-- ─── SPINNER ─── -->
+<div id="spinner"><div class="spin-ring"></div></div>
 
-<!-- THANKS PAGE -->
-<div id="thanks-page">
-  <div class="thanks-icon">&#127881;</div>
-  <h2>¡Mensaje recibido!</h2>
-  <p>Gracias por contactarme. Me pondré en contacto contigo en las próximas <strong style="color:var(--gold);">24 horas</strong> para agendar tu consulta gratuita.</p>
-  <div class="thanks-actions">
-    <a href="https://wa.me/573225684896?text=Hola%20Luchy%2C%20acabo%20de%20llenar%20el%20formulario%20y%20quiero%20agendar%20mi%20consulta"
-       target="_blank" rel="noopener" class="btn btn-gold">
-      &#128172; Escríbeme por WhatsApp
-    </a>
-    <button onclick="closeThanks()" class="btn btn-outline">Volver al inicio</button>
+<!-- ─── MODAL ─── -->
+<div class="modal-overlay" id="modal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()" aria-label="Cerrar">&times;</button>
+    <span class="modal-icon">&#9989;</span>
+    <h2 class="modal-title">Recibido.</h2>
+    <p class="modal-text">
+      Tu email ya está en mi bandeja.<br/>
+      Te escribo en menos de <strong style="color:var(--gold);">24 horas</strong> para coordinar una primera conversación.<br/><br/>
+      Si preferís algo más inmediato, escribime directo por WhatsApp.
+    </p>
+    <div class="modal-actions">
+      <a href="https://wa.me/573225684896?text=Hola%20Luchy%2C%20recién%20dejé%20mi%20email%20y%20quiero%20coordinar%20una%20conversación"
+         target="_blank" rel="noopener" class="btn btn--gold">
+        &#128172;&nbsp;Escribirle por WhatsApp
+      </a>
+      <button onclick="closeModal()" class="btn btn--ghost">Volver al sitio</button>
+    </div>
   </div>
 </div>
 
+<!-- ─── SCRIPTS ─── -->
 <script>
-  const FORM_ENDPOINT = 'https://script.google.com/macros/d/AKfycbxhs2VHQnmuhU5-GJdNvgriQDdsRRifGvPdFoKnzKLOmWsk_TkqSE8GtPLJ9Ew8Zk-69Q/userweb';
+  var ENDPOINT = 'https://script.google.com/macros/d/AKfycbxhs2VHQnmuhU5-GJdNvgriQDdsRRifGvPdFoKnzKLOmWsk_TkqSE8GtPLJ9Ew8Zk-69Q/userweb';
+  var form     = document.getElementById('lead-form');
+  var spinner  = document.getElementById('spinner');
+  var modal    = document.getElementById('modal');
 
-  const form    = document.getElementById('lead-form');
-  const spinner = document.getElementById('spinner');
-  const thanks  = document.getElementById('thanks-page');
-
-  function showThanks() {
-    spinner.classList.remove('show');
-    thanks.classList.add('show');
-    gtag('event', 'generate_lead', { event_category: 'form', event_label: 'contacto' });
+  function openModal(){
+    spinner.classList.remove('on');
+    modal.classList.add('open');
+    gtag('event','generate_lead',{event_category:'form',event_label:'landing_luchy'});
   }
-
-  function closeThanks() {
-    thanks.classList.remove('show');
+  function closeModal(){
+    modal.classList.remove('open');
     form.reset();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  form.addEventListener('submit', async function(e) {
+  // Close modal on overlay click
+  modal.addEventListener('click', function(e){
+    if(e.target === modal) closeModal();
+  });
+
+  form.addEventListener('submit', async function(e){
     e.preventDefault();
 
-    var required = form.querySelectorAll('[required]');
-    var valid = true;
-    required.forEach(function(el) {
+    var nombre = document.getElementById('nombre');
+    var email  = document.getElementById('email');
+    var valid  = true;
+
+    [nombre, email].forEach(function(el){
       el.style.borderColor = '';
-      if (!el.value.trim()) { el.style.borderColor = '#e74c3c'; valid = false; }
+      if(!el.value.trim()){ el.style.borderColor = '#ef4444'; valid = false; }
     });
-    if (!valid) return;
+    if(!valid) return;
 
-    spinner.classList.add('show');
+    spinner.classList.add('on');
 
-    var data = new FormData(form);
+    var data = new FormData();
+    data.append('nombre', nombre.value.trim());
+    data.append('email',  email.value.trim());
     data.append('timestamp', new Date().toISOString());
     data.append('source', window.location.href);
 
-    try {
-      await fetch(FORM_ENDPOINT, { method: 'POST', body: data, mode: 'no-cors' });
-    } catch(err) {}
-    showThanks();
+    try{
+      await fetch(ENDPOINT, {method:'POST', body:data, mode:'no-cors'});
+    }catch(_){}
+    openModal();
   });
 
-  form.querySelectorAll('input, select, textarea').forEach(function(el) {
-    el.addEventListener('input', function() { el.style.borderColor = ''; });
+  [document.getElementById('nombre'), document.getElementById('email')].forEach(function(el){
+    el.addEventListener('input', function(){ el.style.borderColor = ''; });
   });
 </script>
 
