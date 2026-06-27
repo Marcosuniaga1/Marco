@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --vinotinto: #8b2f3f;
+  --dorado: #c4a050;
+  --crema: #f5f1e8;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--crema);
+  color: #333;
+  line-height: 1.6;
+}
+
+@layer components {
+  /* Botón CTA dorado (pill) */
+  .btn-cta {
+    @apply inline-block cursor-pointer rounded-full bg-dorado px-9 py-4 text-lg font-bold text-vinotinto shadow-cta transition-all duration-200 hover:-translate-y-0.5 hover:shadow-cta-hover;
+  }
+
+  /* Botón WhatsApp */
+  .btn-whatsapp {
+    @apply inline-flex items-center gap-2.5 rounded-full bg-[#25D366] px-9 py-4 text-lg font-bold text-white shadow-whatsapp transition-transform duration-200 hover:-translate-y-0.5;
+  }
+
+  .section-title {
+    @apply mb-10 text-center text-[1.6rem] font-extrabold text-vinotinto md:text-[2.2rem];
+  }
+}
