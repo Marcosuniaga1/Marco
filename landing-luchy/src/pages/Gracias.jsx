@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const WA_NUMBER = 'numero' // Reemplazar con el número de Luchy sin + ni espacios
+const WA_NUMBER = '573225684896'
 const WA_MESSAGE = 'Hola%20Luchy%2C%20descargué%20el%20PDF%20y%20quiero%20conectar'
 
 function gtag(...args) {

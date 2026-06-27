@@ -3,12 +3,31 @@ import { useNavigate } from 'react-router-dom'
 import FormInput from './FormInput'
 import Button from './Button'
 
-const APPS_SCRIPT_URL = '' // Reemplazar con la URL de tu Google Apps Script
+const APPS_SCRIPT_URL =
+  'https://script.google.com/macros/d/AKfycbxhs2VHQnmuhU5-GJdNvgriQDdsRRifGvPdFoKnzKLOmWsk_TkqSE8GtPLJ9Ew8Zk-69Q/userweb'
 
 function gtag(...args) {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag(...args)
   }
+}
+
+async function sendToSheets(nombre, email) {
+  /*
+   * Google Apps Script no soporta CORS preflight en doPost con JSON.
+   * Usamos FormData (simple request, no preflight) con mode no-cors.
+   * El script debe leer e.parameter.nombre, e.parameter.email, e.parameter.timestamp
+   */
+  const body = new FormData()
+  body.append('nombre', nombre)
+  body.append('email', email)
+  body.append('timestamp', new Date().toISOString())
+
+  await fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    body,
+  })
 }
 
 export default function LeadForm() {
@@ -44,23 +63,16 @@ export default function LeadForm() {
 
     setLoading(true)
 
-    gtag('event', 'generate_lead', { email: form.email })
+    gtag('event', 'generate_lead', {
+      event_category: 'lead_magnet',
+      event_label: 'pdf_10_senales',
+      value: form.email,
+    })
 
-    if (APPS_SCRIPT_URL) {
-      try {
-        await fetch(APPS_SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            nombre: form.nombre,
-            email: form.email,
-            timestamp: new Date().toISOString(),
-          }),
-        })
-      } catch (_) {
-        // Continuar aunque falle el registro
-      }
+    try {
+      await sendToSheets(form.nombre, form.email)
+    } catch (_) {
+      // Continuar aunque falle el registro — el usuario igual llega a /gracias
     }
 
     setLoading(false)
@@ -91,7 +103,12 @@ export default function LeadForm() {
           error={errors.email}
         />
 
-        <Button type="submit" variant="primary" disabled={loading} className="mt-2 text-base font-bold py-4">
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={loading}
+          className="mt-2 text-base font-bold py-4"
+        >
           {loading ? 'Enviando...' : 'Descargar PDF Gratis'}
         </Button>
 
