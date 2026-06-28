@@ -7,7 +7,7 @@ export const site = {
   // Google Analytics 4
   gaId: "G-JJ6E0H1JW2",
   // Imagen de la sección lead magnet ("Las 10 señales…").
-  magnetImage: "/magnet-a.png",
+  magnetImage: "/magnet-a.jpg",
   // Endpoint del formulario (Google Apps Script Web App publicado, termina en /exec).
   leadFormEndpoint:
     "https://script.google.com/macros/s/AKfycbwBxMcPO2AJ3yIAdMv8vaPCFUn9oJ-V3vfkm6AgvSjOQFRiRroqR38-zTyEiwvCu8vw/exec",
