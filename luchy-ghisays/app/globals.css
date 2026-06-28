@@ -207,43 +207,54 @@ header .logo {
   background: #fff;
 }
 .problema h2 {
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
-.problema ul {
-  list-style: none;
+.pcards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
 }
-.problema li {
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--navy);
-  padding: 16px 0 16px 26px;
-  position: relative;
-  border-top: 1px solid #e7e9ec;
+.pcard {
+  background: #fff;
+  border: 1px solid #ececec;
+  border-top: 3px solid var(--gold);
+  border-radius: 12px;
+  padding: 26px 24px;
+  box-shadow: 0 8px 24px rgba(0, 12, 28, 0.06);
 }
-.problema li:first-child {
-  border-top: none;
-}
-.problema li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 23px;
-  width: 10px;
-  height: 10px;
-  background: var(--gold);
+.pcard .picon {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
+  background: rgba(212, 175, 55, 0.12);
+  color: var(--gold-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
 }
-.problema li b {
-  font-weight: 700;
+.pcard .picon svg {
+  width: 24px;
+  height: 24px;
 }
-.problema li span {
+.pcard h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.01em;
+}
+.pcard p {
+  margin-top: 8px;
+  font-size: 15px;
+  line-height: 1.55;
   color: var(--muted);
 }
 .problema .transition {
-  margin-top: 26px;
+  margin-top: 30px;
   font-weight: 700;
   font-size: 18px;
   color: var(--navy);
+  text-align: center;
 }
 .problema .transition em {
   font-style: normal;
@@ -714,6 +725,12 @@ footer .disclaimer {
   }
   .problema h2 {
     font-size: 32px;
+    text-align: center;
+  }
+  .pcards {
+    max-width: 980px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
   }
 
   .magnet {

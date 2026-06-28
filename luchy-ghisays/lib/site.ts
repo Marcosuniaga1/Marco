@@ -46,11 +46,11 @@ export const steps: string[] = [
   "Sabes exactamente qué cambiar",
 ];
 
-// Señales del bloque "problema".
-export const problems: { bold: string; rest: string }[] = [
-  { bold: "Logra cosas.", rest: "Pero su vida personal está en pausa." },
-  { bold: "Intenta motivarse.", rest: "Pero vuelve a lo de siempre." },
-  { bold: "Sabe qué quiere cambiar.", rest: "Pero lo posterga año tras año." },
+// Señales del bloque "problema" (tarjetas con ícono).
+export const problems: { icon: "target" | "loop" | "clock"; title: string; text: string }[] = [
+  { icon: "target", title: "Logra cosas", text: "Pero su vida personal está en pausa." },
+  { icon: "loop", title: "Intenta motivarse", text: "Pero vuelve a lo de siempre." },
+  { icon: "clock", title: "Sabe qué quiere cambiar", text: "Pero lo posterga año tras año." },
 ];
 
 // Preguntas frecuentes.
