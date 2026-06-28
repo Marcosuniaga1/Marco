@@ -6,8 +6,12 @@ export const site = {
     "Descubre las 10 señales de que estás en automático. Lista de diagnóstico para ejecutivos. PDF gratis, acceso inmediato.",
   // Google Analytics 4
   gaId: "G-JJ6E0H1JW2",
-  // Imagen de la sección lead magnet ("Las 10 señales…").
+  // Imagen y pie de la sección lead magnet ("Las 10 señales…").
   magnetImage: "/magnet-a.jpg",
+  magnetCaption: {
+    title: "¿Cuántas reconoces en ti?",
+    text: "Si marcas tres o más, no es casualidad.",
+  },
   // Endpoint del formulario (Google Apps Script Web App publicado, termina en /exec).
   leadFormEndpoint:
     "https://script.google.com/macros/s/AKfycbwBxMcPO2AJ3yIAdMv8vaPCFUn9oJ-V3vfkm6AgvSjOQFRiRroqR38-zTyEiwvCu8vw/exec",
