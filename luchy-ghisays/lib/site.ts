@@ -11,6 +11,20 @@ export const site = {
     "https://script.google.com/macros/s/AKfycbwBxMcPO2AJ3yIAdMv8vaPCFUn9oJ-V3vfkm6AgvSjOQFRiRroqR38-zTyEiwvCu8vw/exec",
 };
 
+// Sección "Sobre Luchy Ghisays" (borrador editable).
+export const aboutLuchy = {
+  eyebrow: "Sobre Luchy Ghisays",
+  heading: "Detrás de este diagnóstico",
+  // Foto en public/luchy.jpg — reemplázala por la definitiva con el mismo nombre.
+  photo: "/luchy.jpg",
+  photoAlt: "Luchy Ghisays",
+  paragraphs: [
+    "Luchy Ghisays acompaña a ejecutivos y líderes que, vistos desde afuera, lo tienen todo bajo control — pero por dentro sienten que funcionan en automático. Su trabajo no consiste en hacer más, sino en ver con claridad: reconocer los patrones que te mantienen atrapado y recuperar la conexión con lo que de verdad quieres.",
+    "Une la mirada estratégica del mundo ejecutivo con un enfoque profundamente humano. Su método es simple y directo: primero entiendes dónde estás, luego decides hacia dónde vas. Sin fórmulas mágicas y sin postergar otro año más.",
+  ],
+  closing: "Hoy guía a líderes a salir del piloto automático y volver a dirigir su vida —y su carrera— con propósito.",
+};
+
 // Las 10 señales del lead magnet.
 export const signals: string[] = [
   "Repites decisiones que no te satisfacen",
