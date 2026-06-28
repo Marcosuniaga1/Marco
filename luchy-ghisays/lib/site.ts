@@ -45,11 +45,23 @@ export const signals: string[] = [
   "Esperas que algo externo te dé la respuesta",
 ];
 
-// Pasos posteriores.
-export const steps: string[] = [
-  "Entiendes el patrón",
-  "Ves por primera vez qué está bloqueado",
-  "Sabes exactamente qué cambiar",
+// Pasos posteriores (ruta visual con ícono + frase de apoyo).
+export const steps: { icon: "eye" | "unlock" | "compass"; title: string; text: string }[] = [
+  {
+    icon: "eye",
+    title: "Entiendes el patrón",
+    text: "Ves la raíz, no solo los síntomas.",
+  },
+  {
+    icon: "unlock",
+    title: "Ves por primera vez qué está bloqueado",
+    text: "Eso que llevabas años sin poder nombrar.",
+  },
+  {
+    icon: "compass",
+    title: "Sabes exactamente qué cambiar",
+    text: "Y das el primer paso con claridad.",
+  },
 ];
 
 // Señales del bloque "problema" (tarjetas con ícono).
