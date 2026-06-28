@@ -458,32 +458,73 @@ header .logo {
   background: #fff;
 }
 .steps h2 {
-  margin-bottom: 26px;
+  margin-bottom: 30px;
+}
+.steprow {
+  display: flex;
+  flex-direction: column;
 }
 .step {
   display: flex;
-  gap: 16px;
+  gap: 18px;
   align-items: flex-start;
-  padding: 14px 0;
+  padding-bottom: 30px;
+  position: relative;
 }
-.step .n {
-  flex: 0 0 auto;
-  font-weight: 800;
-  font-size: 14px;
-  color: var(--gold);
-  border: 2px solid var(--gold);
-  width: 34px;
-  height: 34px;
+.step:last-child {
+  padding-bottom: 0;
+}
+/* línea vertical que conecta los pasos (móvil) */
+.step:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 27px;
+  top: 60px;
+  bottom: 6px;
+  width: 2px;
+  background: rgba(212, 175, 55, 0.4);
+  z-index: 0;
+}
+.step .circle {
+  flex: 0 0 56px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--gold);
+  color: var(--gold-dark);
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  z-index: 1;
 }
-.step p {
+.step .circle svg {
+  width: 24px;
+  height: 24px;
+}
+.step .content {
+  padding-top: 4px;
+}
+.step .paso {
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+}
+.step h3 {
+  margin-top: 4px;
   font-size: 17px;
-  font-weight: 600;
+  font-weight: 800;
   color: var(--navy);
-  padding-top: 5px;
+  line-height: 1.25;
+}
+.step .stext {
+  margin-top: 5px;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.5;
 }
 
 /* TESTIMONIOS */
@@ -815,27 +856,48 @@ footer .disclaimer {
     font-size: 32px;
   }
   .steprow {
-    display: flex;
+    flex-direction: row;
     gap: 28px;
-    max-width: 900px;
+    max-width: 920px;
     margin: 0 auto;
+    position: relative;
+  }
+  /* línea horizontal que conecta los pasos (escritorio) */
+  .steprow::before {
+    content: "";
+    position: absolute;
+    top: 28px;
+    left: 16%;
+    right: 16%;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(212, 175, 55, 0.5) 10%,
+      rgba(212, 175, 55, 0.5) 90%,
+      transparent
+    );
+    z-index: 0;
   }
   .steprow .step {
     flex: 1;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 14px;
-    padding: 0;
+    gap: 0;
+    padding-bottom: 0;
   }
-  .steprow .step .n {
-    width: 46px;
-    height: 46px;
-    font-size: 16px;
+  .steprow .step::before {
+    display: none;
   }
-  .steprow .step p {
-    padding-top: 0;
+  .steprow .step .content {
+    padding-top: 16px;
+  }
+  .steprow .step h3 {
     font-size: 18px;
+  }
+  .steprow .step .stext {
+    max-width: 230px;
   }
 
   .testi {
