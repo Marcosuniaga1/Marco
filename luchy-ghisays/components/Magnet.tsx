@@ -5,11 +5,17 @@ export default function Magnet() {
     <section className="magnet">
       <div className="magnet-inner">
         <div className="magnet-media">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={site.magnetImage}
-            alt="Ejecutivo abrumado por una maraña de pensamientos en automático"
-          />
+          <div className="magnet-photo">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={site.magnetImage}
+              alt="Ejecutivo abrumado por una maraña de pensamientos en automático"
+            />
+          </div>
+          <div className="magnet-caption">
+            <p className="cap-title">{site.magnetCaption.title}</p>
+            <p className="cap-text">{site.magnetCaption.text}</p>
+          </div>
         </div>
         <div className="magnet-content">
           <div className="eyebrow">PDF de diagnóstico</div>
