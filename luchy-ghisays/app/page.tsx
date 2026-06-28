@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import SobreLuchy from "@/components/SobreLuchy";
 import Problema from "@/components/Problema";
 import Magnet from "@/components/Magnet";
 import FormSection from "@/components/FormSection";
@@ -13,6 +14,7 @@ export default function Home() {
     <div className="shell">
       <Header />
       <Hero />
+      <SobreLuchy />
       <Problema />
       <Magnet />
       <FormSection />
