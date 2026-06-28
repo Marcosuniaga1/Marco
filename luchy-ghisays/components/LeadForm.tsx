@@ -32,12 +32,12 @@ export default function LeadForm({ variant }: { variant: Variant }) {
     setSubmitting(true);
 
     try {
-      // x-www-form-urlencoded: Apps Script lo lee de forma fiable en e.parameter
-      // (sin preflight CORS, compatible con mode: no-cors).
-      await fetch(site.leadFormEndpoint, {
+      // Datos como query params en la URL: Apps Script los lee siempre desde
+      // e.parameter (es exactamente el método que ya validamos por URL).
+      const params = new URLSearchParams({ nombre, email });
+      await fetch(`${site.leadFormEndpoint}?${params.toString()}`, {
         method: "POST",
         mode: "no-cors",
-        body: new URLSearchParams({ nombre, email }),
       });
     } catch {
       // no-cors siempre da respuesta opaca; continuamos igual
