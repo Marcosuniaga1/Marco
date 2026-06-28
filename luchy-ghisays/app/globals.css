@@ -267,6 +267,17 @@ header .logo {
   background: var(--navy);
   color: #fff;
 }
+.magnet-media {
+  margin-bottom: 30px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.4), 0 18px 44px rgba(0, 8, 20, 0.45);
+}
+.magnet-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
 .magnet .eyebrow {
   font-weight: 700;
   font-size: 11px;
@@ -736,10 +747,22 @@ footer .disclaimer {
   .magnet {
     padding: 84px 64px;
   }
-  .magnet > * {
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
+  .magnet-inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 56px;
+    max-width: 1040px;
+    margin: 0 auto;
+  }
+  .magnet-media {
+    flex: 0 0 360px;
+    margin-bottom: 0;
+    position: sticky;
+    top: 40px;
+  }
+  .magnet-content {
+    flex: 1;
+    min-width: 0;
   }
   .magnet h2 {
     font-size: 34px;
@@ -747,7 +770,7 @@ footer .disclaimer {
   .signals {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    column-gap: 48px;
+    column-gap: 40px;
   }
   .signals .signal:nth-child(2) {
     border-top: none;
