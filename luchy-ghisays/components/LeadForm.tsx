@@ -44,6 +44,7 @@ export default function LeadForm({ variant }: { variant: Variant }) {
     }
 
     window.gtag?.("event", "generate_lead", { email });
+    window.fbq?.("track", "Lead");
     try {
       sessionStorage.setItem("lead_nombre", nombre);
     } catch {

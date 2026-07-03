@@ -15,6 +15,7 @@ export default function Gracias() {
     } catch {
       // sessionStorage puede no estar disponible
     }
+    window.fbq?.("track", "CompleteRegistration");
   }, []);
 
   return (
