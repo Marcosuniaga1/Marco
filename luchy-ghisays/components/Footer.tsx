@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { site } from "@/lib/site";
 
 export default function Footer() {
@@ -5,9 +6,9 @@ export default function Footer() {
     <footer>
       <div className="logo">{site.brand}</div>
       <div className="links">
-        <a href="#">Política de privacidad</a>
+        <Link href="/privacidad">Política de privacidad</Link>
         <span style={{ color: "#33485d" }}>|</span>
-        <a href="#">Términos</a>
+        <Link href="/terminos">Términos</Link>
       </div>
       <div className="disclaimer">
         Este sitio no es parte de Facebook ni de Meta Platforms, Inc., ni está
