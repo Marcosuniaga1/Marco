@@ -646,6 +646,7 @@
     modal.classList.add('open');
     gtag('event','generate_lead',{event_category:'form',event_label:'landing_luchy'});
     fbq('track','Lead');
+    fbq('track','CompleteRegistration');
   }
   function closeModal(){
     modal.classList.remove('open');
