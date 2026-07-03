@@ -6,6 +6,24 @@
   <title>Luchy Ghisays — Especialista en Decisión para Ejecutivos</title>
   <meta name="description" content="Dejás de funcionar en automático y empezás a decidir con claridad. Asesoría estratégica para ejecutivos de alto rendimiento."/>
 
+  <!-- Meta Pixel -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window,document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init','283637846626618');
+  fbq('track','PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=283637846626618&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel -->
+
   <!-- GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-JJ6E0H1JW2"></script>
   <script>
@@ -627,6 +645,7 @@
     spinner.classList.remove('on');
     modal.classList.add('open');
     gtag('event','generate_lead',{event_category:'form',event_label:'landing_luchy'});
+    fbq('track','Lead');
   }
   function closeModal(){
     modal.classList.remove('open');
