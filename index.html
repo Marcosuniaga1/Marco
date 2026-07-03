@@ -6,6 +6,21 @@
   <title>Luchy Ghisays — Especialista en Decisión para Ejecutivos</title>
   <meta name="description" content="Dejás de funcionar en automático y empezás a decidir con claridad. Asesoría estratégica para ejecutivos de alto rendimiento."/>
 
+  <!-- Favicon SVG inline -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23001F3F'/><text x='16' y='23' font-size='18' text-anchor='middle' fill='%23D4AF37' font-family='serif' font-weight='900'>L</text></svg>"/>
+
+  <!-- Open Graph / Social sharing -->
+  <meta property="og:type"        content="website"/>
+  <meta property="og:title"       content="Luchy Ghisays — Especialista en Decisión para Ejecutivos"/>
+  <meta property="og:description" content="Dejás de funcionar en automático y empezás a decidir con claridad. Asesoría estratégica para ejecutivos de alto rendimiento."/>
+  <meta property="og:image"       content="/logo.PNG"/>
+  <meta property="og:url"         content="https://luchyghisays.com"/>
+  <meta property="og:site_name"   content="Luchy Ghisays"/>
+  <meta name="twitter:card"       content="summary_large_image"/>
+  <meta name="twitter:title"      content="Luchy Ghisays — Especialista en Decisión para Ejecutivos"/>
+  <meta name="twitter:description"content="Dejás de funcionar en automático y empezás a decidir con claridad."/>
+  <meta name="twitter:image"      content="/logo.PNG"/>
+
   <!-- Meta Pixel -->
   <script>
   !function(f,b,e,v,n,t,s)
@@ -354,6 +369,11 @@
     /* ══════════════════════════════════════
        RESPONSIVE
     ══════════════════════════════════════ */
+    /* mobile: antes/después apilado */
+    .tx-grid{display:flex;flex-direction:column;gap:16px;}
+    .tx-arrow{display:flex;align-items:center;justify-content:center;padding:4px 0;}
+    .tx-arrow-inner{transform:rotate(90deg);}
+
     @media(min-width:640px){
       .testi-grid{grid-template-columns:1fr 1fr;}
       .footer-contact{flex-direction:row;gap:24px;}
@@ -361,7 +381,9 @@
     @media(min-width:820px){
       .about-inner{grid-template-columns:240px 1fr;}
       .about-photo-wrap{justify-content:flex-start;}
-      .tx-grid{grid-template-columns:1fr auto 1fr;}
+      .tx-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:0;}
+      .tx-arrow{width:56px;}
+      .tx-arrow-inner{transform:rotate(0deg);}
     }
   </style>
 </head>
@@ -592,9 +614,8 @@
         <a href="https://wa.me/573225684896" target="_blank" rel="noopener">
           &#128172;&nbsp;+57 322 568 4896
         </a>
-        <a href="mailto:contacto@luchyghisays.com">
-          &#9993;&nbsp;contacto@luchyghisays.com
-        </a>
+        <a href="/privacidad.html">Política de privacidad</a>
+        <a href="/terminos.html">Términos de uso</a>
       </div>
       <div class="footer-copy">&#169; 2025 Luchy Ghisays &middot; Todos los derechos reservados</div>
     </div>
@@ -625,8 +646,7 @@
       Si preferís algo más inmediato, escribime directo por WhatsApp.
     </p>
     <div class="modal-actions">
-      <a href="https://wa.me/573225684896?text=Hola%20Luchy%2C%20recién%20dejé%20mi%20email%20y%20quiero%20coordinar%20una%20conversación"
-         target="_blank" rel="noopener" class="btn btn--gold">
+      <a id="wa-modal-link" href="https://wa.me/573225684896" target="_blank" rel="noopener" class="btn btn--gold">
         &#128172;&nbsp;Escribirle por WhatsApp
       </a>
       <button onclick="closeModal()" class="btn btn--ghost">Volver al sitio</button>
@@ -647,6 +667,11 @@
     gtag('event','generate_lead',{event_category:'form',event_label:'landing_luchy'});
     fbq('track','Lead');
     fbq('track','CompleteRegistration');
+    // WhatsApp personalizado con nombre del lead
+    var nombre = document.getElementById('nombre').value.trim();
+    var email  = document.getElementById('email').value.trim();
+    var msg = 'Hola Luchy, soy ' + nombre + '. Recién dejé mi email (' + email + ') y quiero coordinar una conversación.';
+    document.getElementById('wa-modal-link').href = 'https://wa.me/573225684896?text=' + encodeURIComponent(msg);
   }
   function closeModal(){
     modal.classList.remove('open');
