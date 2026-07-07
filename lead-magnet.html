@@ -325,6 +325,29 @@
     .prompt-box, .prompt-desc { margin-left: 36px; }
     .prompt-number { font-size: 1.6rem; }
   }
+
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    html, body {
+      background: white !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      display: block !important;
+      width: 100% !important;
+    }
+    .page {
+      max-width: 100% !important;
+      width: 100% !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+    }
+    .header { background-color: #72001E !important; }
+    .footer { background-color: #4a0014 !important; }
+    .prompt-box { background-color: #FDF9F3 !important; }
+    .prompt-item { page-break-inside: avoid; break-inside: avoid; }
+    .footer { page-break-inside: avoid; break-inside: avoid; }
+    .footer-cta { display: none; }
+  }
 </style>
 
 <div class="page">
