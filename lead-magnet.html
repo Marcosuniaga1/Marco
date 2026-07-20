@@ -1,0 +1,463 @@
+<title>5 Prompts de IA – Mariale Velazco</title>
+<style>
+  :root {
+    --vino: #72001E;
+    --vino-dark: #4a0014;
+    --dorado: #C4A050;
+    --dorado-light: #e8cc88;
+    --crema: #F5F1E8;
+    --crema-dark: #EDE7D9;
+    --text: #1E0A0E;
+    --text-mid: #6B3340;
+    --text-soft: #9C6672;
+    --white: #FFFFFF;
+    --prompt-bg: #FDF9F3;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --crema: #1C0A0F;
+      --crema-dark: #2A1218;
+      --text: #F0E6E9;
+      --text-mid: #D4A0AB;
+      --text-soft: #9C7078;
+      --white: #261018;
+      --prompt-bg: #2A1218;
+    }
+  }
+
+  :root[data-theme="light"] {
+    --crema: #F5F1E8;
+    --crema-dark: #EDE7D9;
+    --text: #1E0A0E;
+    --text-mid: #6B3340;
+    --text-soft: #9C6672;
+    --white: #FFFFFF;
+    --prompt-bg: #FDF9F3;
+  }
+
+  :root[data-theme="dark"] {
+    --crema: #1C0A0F;
+    --crema-dark: #2A1218;
+    --text: #F0E6E9;
+    --text-mid: #D4A0AB;
+    --text-soft: #9C7078;
+    --white: #261018;
+    --prompt-bg: #2A1218;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: var(--crema-dark);
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px;
+  }
+
+  .page {
+    background-color: var(--crema);
+    width: 100%;
+    max-width: 640px;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 4px 40px rgba(114, 0, 30, 0.18);
+  }
+
+  /* HEADER */
+  .header {
+    background-color: var(--vino);
+    padding: 36px 40px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px;
+    right: -30px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: rgba(196, 160, 80, 0.08);
+    pointer-events: none;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: 60px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(196, 160, 80, 0.06);
+    pointer-events: none;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .brand-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--dorado);
+    flex-shrink: 0;
+  }
+
+  .brand-name {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 0.8rem;
+    color: var(--dorado);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: normal;
+  }
+
+  .header-eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(245, 241, 232, 0.5);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+
+  .header h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    color: var(--crema);
+    line-height: 1.25;
+    text-wrap: balance;
+    font-weight: bold;
+    margin-bottom: 14px;
+    max-width: 420px;
+  }
+
+  .header h1 em {
+    color: var(--dorado);
+    font-style: normal;
+  }
+
+  .header-sub {
+    font-size: 0.875rem;
+    color: rgba(245, 241, 232, 0.7);
+    line-height: 1.5;
+    max-width: 400px;
+  }
+
+  .header-rule {
+    width: 40px;
+    height: 2px;
+    background-color: var(--dorado);
+    margin: 20px 0 0;
+    opacity: 0.7;
+  }
+
+  /* INTRO */
+  .intro {
+    padding: 28px 40px 8px;
+    border-bottom: 1px solid var(--crema-dark);
+  }
+
+  .intro p {
+    font-size: 0.9rem;
+    color: var(--text-mid);
+    line-height: 1.65;
+  }
+
+  .intro strong {
+    color: var(--vino);
+  }
+
+  /* PROMPTS */
+  .prompts {
+    padding: 8px 40px 32px;
+  }
+
+  .prompt-item {
+    padding: 24px 0;
+    border-bottom: 1px solid var(--crema-dark);
+  }
+
+  .prompt-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .prompt-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+
+  .prompt-number {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 2rem;
+    color: var(--dorado);
+    line-height: 1;
+    flex-shrink: 0;
+    font-weight: bold;
+    margin-top: -2px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .prompt-meta {
+    flex: 1;
+  }
+
+  .prompt-tag {
+    display: inline-block;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  .prompt-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .prompt-desc {
+    font-size: 0.82rem;
+    color: var(--text-mid);
+    margin-bottom: 14px;
+    line-height: 1.5;
+    padding-left: 48px;
+  }
+
+  .prompt-box {
+    background-color: var(--prompt-bg);
+    border-left: 3px solid var(--dorado);
+    border-radius: 0 6px 6px 0;
+    padding: 16px 18px;
+    margin-left: 48px;
+    position: relative;
+  }
+
+  .prompt-box p {
+    font-size: 0.83rem;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  .prompt-box .placeholder {
+    display: inline;
+    background-color: rgba(196, 160, 80, 0.18);
+    color: var(--vino);
+    border-radius: 3px;
+    padding: 0 3px;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  .copy-label {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 0.65rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-soft);
+  }
+
+  /* FOOTER */
+  .footer {
+    background-color: var(--vino-dark);
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .footer-left {
+    font-family: Georgia, serif;
+    color: rgba(245, 241, 232, 0.6);
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+
+  .footer-left strong {
+    display: block;
+    color: var(--dorado);
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+
+  .footer-cta {
+    background-color: var(--dorado);
+    color: var(--vino-dark);
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 480px) {
+    .header, .intro, .prompts { padding-left: 24px; padding-right: 24px; }
+    .footer { padding: 20px 24px; }
+    .prompt-box, .prompt-desc { margin-left: 36px; }
+    .prompt-number { font-size: 1.6rem; }
+  }
+
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    html, body {
+      background: white !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      display: block !important;
+      width: 100% !important;
+    }
+    .page {
+      max-width: 100% !important;
+      width: 100% !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+    }
+    .header { background-color: #72001E !important; }
+    .footer { background-color: #4a0014 !important; }
+    .prompt-box { background-color: #FDF9F3 !important; }
+    .prompt-item { page-break-inside: avoid; break-inside: avoid; }
+    .footer { page-break-inside: avoid; break-inside: avoid; }
+    .footer-cta { display: none; }
+  }
+</style>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="brand">
+      <div class="brand-dot"></div>
+      <div class="brand-name">Mariale Velazco</div>
+    </div>
+    <div class="header-eyebrow">Recurso gratuito</div>
+    <h1>5 prompts que uso cada semana para crear contenido que <em>vende</em></h1>
+    <p class="header-sub">Cópialos, pégalos en ChatGPT y ten tu publicación lista en minutos. Sin saber nada de IA.</p>
+    <div class="header-rule"></div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="intro">
+    <p>No necesitas entender cómo funciona la IA. Solo necesitas <strong>el prompt correcto</strong>. Un prompt es simplemente lo que le escribes a ChatGPT para que trabaje por ti. Aquí tienes los 5 que yo uso cada semana en mi negocio.</p>
+  </div>
+
+  <!-- PROMPTS -->
+  <div class="prompts">
+
+    <div class="prompt-item">
+      <div class="prompt-header">
+        <div class="prompt-number">1</div>
+        <div class="prompt-meta">
+          <div class="prompt-tag">Instagram · Facebook</div>
+          <div class="prompt-title">Publicación que conecta con el problema</div>
+        </div>
+      </div>
+      <p class="prompt-desc">Para cuando quieres que tu cliente sienta que la entiendes antes de ofrecerle algo.</p>
+      <div class="prompt-box">
+        <p>Escríbeme una publicación para Instagram dirigida a <span class="placeholder">[tipo de mujer/cliente]</span> que siente <span class="placeholder">[problema o miedo específico]</span>. Debe empezar con una pregunta que la haga sentir identificada, luego validar su situación y terminar con una frase que la invite a escribirme. Tono: cálido, directo, sin tecnicismos.</p>
+        <span class="copy-label">↑ Copia este texto y pégalo en ChatGPT</span>
+      </div>
+    </div>
+
+    <div class="prompt-item">
+      <div class="prompt-header">
+        <div class="prompt-number">2</div>
+        <div class="prompt-meta">
+          <div class="prompt-tag">Stories · Reels</div>
+          <div class="prompt-title">Hook que detiene el scroll</div>
+        </div>
+      </div>
+      <p class="prompt-desc">Las primeras 3 palabras deciden si te ven o te ignoran. Usa este prompt para que el inicio sea irresistible.</p>
+      <div class="prompt-box">
+        <p>Dame 5 opciones de gancho (primeras 2 líneas) para un video o story sobre <span class="placeholder">[tema de tu publicación]</span>. El gancho debe generar curiosidad o sorpresa, y hablarle directamente a <span class="placeholder">[tu cliente ideal]</span>. Que sean cortos, sin adornos, y que inviten a seguir viendo.</p>
+        <span class="copy-label">↑ Copia este texto y pégalo en ChatGPT</span>
+      </div>
+    </div>
+
+    <div class="prompt-item">
+      <div class="prompt-header">
+        <div class="prompt-number">3</div>
+        <div class="prompt-meta">
+          <div class="prompt-tag">WhatsApp · DM</div>
+          <div class="prompt-title">Mensaje de seguimiento sin sonar desesperada</div>
+        </div>
+      </div>
+      <p class="prompt-desc">Para ese cliente que preguntó y desapareció. Este prompt te da el mensaje exacto para retomarlo con naturalidad.</p>
+      <div class="prompt-box">
+        <p>Escríbeme un mensaje corto de seguimiento para enviar por WhatsApp a una persona que preguntó por <span class="placeholder">[tu producto o servicio]</span> hace <span class="placeholder">[días/semanas]</span> y no respondió más. Debe sonar natural, sin presión, y terminar con una pregunta abierta. Máximo 4 líneas.</p>
+        <span class="copy-label">↑ Copia este texto y pégalo en ChatGPT</span>
+      </div>
+    </div>
+
+    <div class="prompt-item">
+      <div class="prompt-header">
+        <div class="prompt-number">4</div>
+        <div class="prompt-meta">
+          <div class="prompt-tag">Cualquier red social</div>
+          <div class="prompt-title">Testimonio que convierte</div>
+        </div>
+      </div>
+      <p class="prompt-desc">Transforma lo que te dijo una clienta satisfecha en una publicación que genera confianza y ventas.</p>
+      <div class="prompt-box">
+        <p>Tengo este comentario de una clienta: "<span class="placeholder">[pega aquí lo que dijo tu clienta]</span>". Conviértelo en una publicación para redes sociales que resalte la transformación que vivió, sin exagerar. Que se lea auténtico, en primera persona de ella, y termine con una frase que invite a otras mujeres a dar el mismo paso.</p>
+        <span class="copy-label">↑ Copia este texto y pégalo en ChatGPT</span>
+      </div>
+    </div>
+
+    <div class="prompt-item">
+      <div class="prompt-header">
+        <div class="prompt-number">5</div>
+        <div class="prompt-meta">
+          <div class="prompt-tag">Planificación semanal</div>
+          <div class="prompt-title">Plan de contenido para toda la semana</div>
+        </div>
+      </div>
+      <p class="prompt-desc">Un solo prompt y tienes los 5 días de contenido resueltos. Sin quedarte en blanco.</p>
+      <div class="prompt-box">
+        <p>Soy <span class="placeholder">[describe brevemente a qué te dedicas]</span> y mi cliente ideal es <span class="placeholder">[describe a tu clienta]</span>. Crea un plan de contenido para 5 días (lunes a viernes) para Instagram y/o Facebook. Cada día debe tener: formato sugerido (post, reel, story), tema, y una idea de gancho. Tono: cercano, femenino, empoderador. Sin vender directamente todos los días.</p>
+        <span class="copy-label">↑ Copia este texto y pégalo en ChatGPT</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-left">
+      <strong>Mariale Velazco</strong>
+      Estrategia de ventas digitales con IA para mujeres emprendedoras
+    </div>
+    <a href="https://wa.me/584125044476?text=Hola%20Mariale,%20quiero%20aprender%20m%C3%A1s%20sobre%20el%20sistema%20de%20IA" class="footer-cta">
+      💬 Escríbeme
+    </a>
+  </div>
+
+</div>

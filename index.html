@@ -1,12 +1,40 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5FWWY1WLE5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-5FWWY1WLE5');
+</script>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1971473923574225');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1971473923574225&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mariale Velazco - Aprende IA para tu negocio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --vinotinto: #8B2F3F;
+    --vinotinto: #72001E;
     --dorado: #C4A050;
     --crema: #F5F1E8;
   }
@@ -29,15 +57,51 @@
     display: block;
   }
 
+  /* ===== HEADER LOGO TEXTO ===== */
+  .brand-header {
+    text-align: center;
+    padding: 24px 20px 4px;
+    background-color: var(--vinotinto);
+  }
+
+  .brand-header .brand-name {
+    font-family: 'Poppins', 'Georgia', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--crema);
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+
+  .brand-header .brand-name span {
+    color: var(--dorado);
+  }
+
+  .brand-header .brand-surname {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 0.9rem;
+    color: var(--crema);
+    letter-spacing: 3px;
+    margin-top: 2px;
+  }
+
+  .brand-header .brand-tagline {
+    font-size: 0.75rem;
+    color: #e0c8cd;
+    margin-top: 2px;
+    letter-spacing: 0.3px;
+  }
+
   /* ===== HERO ===== */
   .hero {
     background-color: var(--vinotinto);
     color: var(--crema);
-    padding: 60px 20px;
+    padding: 30px 20px 60px;
     text-align: center;
   }
 
   .hero h1 {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
     font-size: 1.8rem;
     line-height: 1.3;
     margin-bottom: 20px;
@@ -94,6 +158,7 @@
   }
 
   .section-title {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
     text-align: center;
     font-size: 1.6rem;
     color: var(--vinotinto);
@@ -101,18 +166,50 @@
     font-weight: 800;
   }
 
+  /* ===== SOBRE MARIALE ===== */
+  .about-section {
+    background-color: #fff;
+  }
+
+  .about-container {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    text-align: center;
+  }
+
+  .about-container img {
+    width: 220px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(114, 0, 30, 0.2);
+  }
+
+  .about-container .about-text p {
+    color: #555;
+    font-size: 1rem;
+    max-width: 600px;
+    margin: 0 auto 14px;
+  }
+
+  .about-container .about-text strong {
+    color: var(--vinotinto);
+  }
+
   /* ===== FORM ===== */
   .form-section {
-    background-color: #fff;
+    background-color: var(--crema);
   }
 
   .form-container {
     max-width: 480px;
     margin: 0 auto;
-    background-color: var(--crema);
+    background-color: #fff;
     border-radius: 16px;
     padding: 30px 25px;
-    box-shadow: 0 8px 25px rgba(139, 47, 63, 0.1);
+    box-shadow: 0 8px 25px rgba(114, 0, 30, 0.1);
   }
 
   .form-group {
@@ -150,7 +247,7 @@
 
   /* ===== TESTIMONIALS ===== */
   .testimonials-section {
-    background-color: var(--crema);
+    background-color: #fff;
   }
 
   .testimonials-grid {
@@ -162,53 +259,37 @@
   }
 
   .testimonial-card {
-    background-color: #fff;
+    background-color: var(--crema);
     border-radius: 16px;
-    padding: 28px 24px;
-    box-shadow: 0 6px 18px rgba(139, 47, 63, 0.08);
-    border-left: 5px solid var(--dorado);
+    padding: 20px 20px 24px;
+    box-shadow: 0 6px 18px rgba(114, 0, 30, 0.08);
+    text-align: center;
   }
 
-  .testimonial-card .stars {
-    color: var(--dorado);
-    font-size: 1.1rem;
-    margin-bottom: 12px;
+  .testimonial-video {
+    max-width: 280px;
+    margin: 0 auto 16px;
+    aspect-ratio: 9 / 16;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
   }
 
-  .testimonial-card p.quote {
-    font-style: italic;
-    color: #555;
-    margin-bottom: 16px;
-  }
-
-  .testimonial-card .author {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .testimonial-card .avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background-color: var(--vinotinto);
-    color: var(--crema);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 1.1rem;
-    flex-shrink: 0;
+  .testimonial-video iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
   }
 
   .testimonial-card .author-info strong {
     display: block;
     color: var(--vinotinto);
+    font-size: 1.05rem;
   }
 
   .testimonial-card .author-info span {
     font-size: 0.85rem;
-    color: #999;
+    color: #888;
   }
 
   /* ===== FINAL CTA ===== */
@@ -219,6 +300,7 @@
   }
 
   .final-cta h2 {
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
     font-size: 1.6rem;
     margin-bottom: 16px;
   }
@@ -250,7 +332,7 @@
 
   /* ===== FOOTER ===== */
   footer {
-    background-color: #6e2330;
+    background-color: #4a0014;
     color: var(--crema);
     text-align: center;
     padding: 30px 20px;
@@ -285,6 +367,17 @@
       font-size: 2.2rem;
     }
 
+    .about-container {
+      flex-direction: row;
+      text-align: left;
+      gap: 50px;
+    }
+
+    .about-container img {
+      width: 280px;
+      flex-shrink: 0;
+    }
+
     .testimonials-grid {
       grid-template-columns: repeat(3, 1fr);
     }
@@ -296,6 +389,13 @@
 </style>
 </head>
 <body>
+
+  <!-- ===== BRAND HEADER (TEXTO EN VEZ DE LOGO) ===== -->
+  <div class="brand-header">
+    <div class="brand-name">Mari<span>Ale</span></div>
+    <div class="brand-surname">VELAZCO</div>
+    <div class="brand-tagline">Estrategia de ventas digitales con IA para mujeres</div>
+  </div>
 
   <!-- ===== HERO ===== -->
   <section class="hero">
@@ -319,6 +419,19 @@
     <a href="#formulario" class="btn-cta">Quiero aprender este sistema</a>
   </section>
 
+  <!-- ===== SOBRE MARIALE ===== -->
+  <section class="about-section">
+    <h2 class="section-title">Sobre Mariale</h2>
+    <div class="about-container">
+      <img src="mariale-foto.jpg" alt="Mariale Velazco">
+      <div class="about-text">
+        <p>Mariale Velazco acompaña a mujeres emprendedoras a crear contenido que vende, usando inteligencia artificial de forma simple y sin tecnicismos.</p>
+        <p><strong>Ya ha ayudado a decenas de emprendedoras</strong> a romper el miedo a la tecnología y publicar con confianza, sin cursos costosos ni complicaciones.</p>
+        <p>Si Carmen, Omaira, Yankerlis y Kiryam lo lograron, tú también puedes.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== FORMULARIO ===== -->
   <section class="form-section" id="formulario">
     <h2 class="section-title">Reserva tu lugar</h2>
@@ -338,23 +451,6 @@
         </div>
         <button type="submit" class="btn-cta">Quiero aprender este sistema</button>
       </form>
-<script>
-document.getElementById('leadForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const data = {
-    nombre: document.getElementById('nombre').value,
-    email: document.getElementById('email').value,
-    whatsapp: document.getElementById('whatsapp').value
-  };
-  await fetch('https://script.google.com/macros/s/AKfycbyjxEL656pEc80eQakgxG3n88t2AF7fxvBLl_qXsAaFCseM3a1cPz_AxGw1HHtPw0A/exec', {
-    method: 'POST',
-    body: JSON.stringify(data)
-  });
-  alert('¡Listo! Te contactaremos pronto.');
-  e.target.reset();
-});
-</script>
-      </form>
     </div>
   </section>
 
@@ -364,38 +460,50 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
     <div class="testimonials-grid">
 
       <div class="testimonial-card">
-        <div class="stars">★★★★★</div>
-        <p class="quote">"Antes le tenía pánico a la IA. Ahora la uso todos los días para crear mis publicaciones y mis ventas subieron muchísimo."</p>
-        <div class="author">
-          <div class="avatar">J</div>
-          <div class="author-info">
-            <strong>Jessica</strong>
-            <span>Emprendedora digital</span>
-          </div>
+        <div class="testimonial-video">
+          <iframe
+            src="https://www.youtube.com/embed/hDFfbbJU1Lc"
+            title="Testimonio Omaira Ramírez"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+        <div class="author-info">
+          <strong>Omaira Ramírez</strong>
+          <span>CEO de Multiinversiones Mabelpa</span>
         </div>
       </div>
 
       <div class="testimonial-card">
-        <div class="stars">★★★★★</div>
-        <p class="quote">"En 20 minutos entendí más que en meses intentando sola. El sistema es súper simple y por fin publico con confianza."</p>
-        <div class="author">
-          <div class="avatar">S</div>
-          <div class="author-info">
-            <strong>Sofia</strong>
-            <span>Dueña de negocio local</span>
-          </div>
+        <div class="testimonial-video">
+          <iframe
+            src="https://www.youtube.com/embed/zvO-hQ-R-Og"
+            title="Testimonio Yankerlis Contreras"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+        <div class="author-info">
+          <strong>Yankerlis Contreras</strong>
+          <span>Modelo y CEO Universidad de la Belleza</span>
         </div>
       </div>
 
       <div class="testimonial-card">
-        <div class="stars">★★★★★</div>
-        <p class="quote">"Mariale lo explica de una forma tan fácil que ya no tengo miedo de equivocarme. Hoy la IA es mi aliada, no mi enemiga."</p>
-        <div class="author">
-          <div class="avatar">A</div>
-          <div class="author-info">
-            <strong>Ana</strong>
-            <span>Creadora de contenido</span>
-          </div>
+        <div class="testimonial-video">
+          <iframe
+            src="https://www.youtube.com/embed/ArkV9G8YJTQ"
+            title="Testimonio Kiryam Colmenares"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+        <div class="author-info">
+          <strong>Kiryam Colmenares</strong>
+          <span>Empresaria en confección de uniformes</span>
         </div>
       </div>
 
@@ -405,21 +513,44 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
   <!-- ===== CTA FINAL ===== -->
   <section class="final-cta">
     <h2>¿Lista para publicar sin miedo?</h2>
-    <p>Escríbeme directo por WhatsApp y te cuento cómo funciona el sistema paso a paso.</p>
-    <a href="https://wa.me/584125044476?text=Hola%20Mariale,%20quiero%20aprender%20el%20sistema%20de%20IA" class="btn-whatsapp" target="_blank" rel="noopener">
-      💬 Escríbeme por WhatsApp
-    </a>
+    <p>Regístrate ahora y recibe el sistema que están usando las emprendedoras que sí venden.</p>
+    <a href="#formulario" class="btn-cta">Quiero aprender este sistema</a>
   </section>
 
   <!-- ===== FOOTER ===== -->
   <footer>
     <p>&copy; 2026 Mariale Velazco. Todos los derechos reservados.</p>
-    <div class="footer-links">
-      <a href="#">Instagram</a>
-      <a href="#">TikTok</a>
-      <a href="#">Contacto</a>
-    </div>
+    <p style="margin-top: 16px; font-size: 0.75rem; color: #c9a3ab; max-width: 500px; margin-left: auto; margin-right: auto;">
+      Este sitio no es parte del sitio web de Facebook o de Meta, Inc. Además, este sitio no está respaldado por Facebook ni por Meta de ninguna manera. FACEBOOK es una marca comercial de META, Inc.
+    </p>
   </footer>
+
+  <script>
+    document.getElementById('leadForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = this.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
+      const data = {
+        nombre: document.getElementById('nombre').value,
+        email: document.getElementById('email').value,
+        whatsapp: document.getElementById('whatsapp').value
+      };
+      try {
+        await fetch('https://script.google.com/macros/s/AKfycbyjxEL656pEc80eQakgxG3n88t2AF7fxvBLl_qXsAaFCseM3a1cPz_AxGw1HHtPw0A/exec', {
+          method: 'POST',
+          mode: 'no-cors',
+          body: JSON.stringify(data)
+        });
+        fbq('track', 'Lead');
+        window.location.href = 'gracias.html';
+      } catch(err) {
+        btn.textContent = 'Quiero aprender este sistema';
+        btn.disabled = false;
+        alert('Hubo un problema. Intenta de nuevo.');
+      }
+    });
+  </script>
 
 </body>
 </html>
