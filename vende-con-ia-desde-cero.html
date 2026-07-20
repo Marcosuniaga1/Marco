@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vende con IA desde Cero - Mariale Velazco</title>
+<meta name="description" content="Aprende a usar la Inteligencia Artificial para crear contenido que vende. Programa de 5 lecciones por solo $7 (oferta de lanzamiento).">
+<style>
+  :root {
+    --vinotinto: #8B2F3F;
+    --dorado: #C4A050;
+    --crema: #F5F1E8;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--crema);
+    color: #333;
+    line-height: 1.6;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
+
+  /* ===== HERO ===== */
+  .hero {
+    background-color: var(--vinotinto);
+    color: var(--crema);
+    padding: 60px 20px 30px;
+    text-align: center;
+  }
+
+  .hero .eyebrow {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--dorado);
+    margin-bottom: 16px;
+  }
+
+  .hero h1 {
+    font-size: 1.8rem;
+    line-height: 1.3;
+    margin-bottom: 20px;
+    font-weight: 800;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero p.subheadline {
+    font-size: 1rem;
+    max-width: 560px;
+    margin: 0 auto 30px;
+    color: #f0e6e9;
+  }
+
+  .price-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    padding: 12px 28px;
+    border-radius: 50px;
+    margin-bottom: 8px;
+  }
+
+  .price-badge .old-price {
+    font-size: 1.1rem;
+    color: #f0e6e9;
+    text-decoration: line-through;
+  }
+
+  .price-badge .new-price {
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: var(--dorado);
+  }
+
+  .offer-text {
+    font-size: 0.85rem;
+    color: var(--dorado);
+  }
+
+  /* ===== VIDEO ===== */
+  .video-section {
+    background-color: var(--vinotinto);
+    padding: 10px 20px 60px;
+    text-align: center;
+  }
+
+  .video-wrapper {
+    position: relative;
+    max-width: 700px;
+    margin: 0 auto 30px;
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+
+  .video-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  /* ===== BUTTONS ===== */
+  .btn-cta {
+    display: inline-block;
+    background-color: var(--dorado);
+    color: var(--vinotinto);
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 16px 36px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 6px 20px rgba(196, 160, 80, 0.4);
+  }
+
+  .btn-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(196, 160, 80, 0.6);
+  }
+
+  /* ===== SECTION GENERAL ===== */
+  section {
+    padding: 60px 20px;
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 1.6rem;
+    color: var(--vinotinto);
+    margin-bottom: 40px;
+    font-weight: 800;
+  }
+
+  /* ===== QUÉ INCLUYE ===== */
+  .includes-section {
+    background-color: var(--crema);
+  }
+
+  .lesson-list {
+    max-width: 640px;
+    margin: 0 auto;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .lesson-item {
+    display: flex;
+    gap: 16px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 6px 18px rgba(139, 47, 63, 0.08);
+  }
+
+  .lesson-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--vinotinto);
+    color: var(--crema);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .lesson-item h3 {
+    color: var(--vinotinto);
+    font-weight: 700;
+    margin-bottom: 4px;
+    font-size: 1rem;
+  }
+
+  .lesson-item p {
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  /* ===== TESTIMONIALS ===== */
+  .testimonials-section {
+    background-color: #fff;
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .testimonial-card {
+    background-color: var(--crema);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 6px 18px rgba(139, 47, 63, 0.08);
+    border-left: 5px solid var(--dorado);
+  }
+
+  .testimonial-card p.quote {
+    font-style: italic;
+    color: #555;
+    margin-bottom: 16px;
+  }
+
+  .testimonial-card .author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .testimonial-card .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--vinotinto);
+    color: var(--crema);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .testimonial-card .author-info strong {
+    display: block;
+    color: var(--vinotinto);
+    font-size: 0.9rem;
+  }
+
+  .testimonial-card .author-info span {
+    font-size: 0.8rem;
+    color: #999;
+  }
+
+  /* ===== FAQ ===== */
+  .faq-section {
+    background-color: var(--crema);
+  }
+
+  .faq-list {
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .faq-item {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(139, 47, 63, 0.08);
+    overflow: hidden;
+  }
+
+  .faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--vinotinto);
+    text-align: left;
+  }
+
+  .faq-question .icon {
+    font-size: 1.3rem;
+    color: var(--dorado);
+    flex-shrink: 0;
+    margin-left: 12px;
+    transition: transform 0.2s ease;
+  }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .faq-answer-inner {
+    padding: 0 20px 18px;
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .faq-item.open .faq-answer {
+    max-height: 200px;
+  }
+
+  .faq-item.open .icon {
+    transform: rotate(45deg);
+  }
+
+  /* ===== URGENCY / FINAL CTA ===== */
+  .final-cta {
+    background-color: var(--vinotinto);
+    text-align: center;
+    color: var(--crema);
+  }
+
+  .final-cta h2 {
+    font-size: 1.6rem;
+    margin-bottom: 16px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.3;
+  }
+
+  .final-cta p {
+    max-width: 480px;
+    margin: 0 auto 30px;
+    color: #f0e6e9;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background-color: #6e2330;
+    color: var(--crema);
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 0.9rem;
+  }
+
+  footer .footer-links {
+    margin-top: 12px;
+  }
+
+  footer .footer-links a {
+    color: var(--dorado);
+    text-decoration: none;
+    margin: 0 8px;
+  }
+
+  footer .footer-links a:hover {
+    text-decoration: underline;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (min-width: 768px) {
+    .hero h1 {
+      font-size: 2.6rem;
+    }
+
+    .hero p.subheadline {
+      font-size: 1.15rem;
+    }
+
+    .section-title {
+      font-size: 2.2rem;
+    }
+
+    .final-cta h2 {
+      font-size: 2.2rem;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <p class="eyebrow">Programa online de Mariale Velazco</p>
+    <h1>Vende con IA desde Cero</h1>
+    <p class="subheadline">
+      Aprende a usar la Inteligencia Artificial para crear contenido que vende, aunque nunca hayas publicado nada.
+    </p>
+
+    <div class="price-badge">
+      <span class="old-price">$47</span>
+      <span class="new-price">$7</span>
+    </div>
+    <p class="offer-text">Oferta de lanzamiento &middot; válida por 72 horas</p>
+  </section>
+
+  <!-- ===== VIDEO ===== -->
+  <section class="video-section">
+    <div class="video-wrapper">
+      <!-- Cambia TU_VIDEO_ID_AQUI por el ID de tu video de YouTube -->
+      <iframe
+        src="https://www.youtube.com/embed/TU_VIDEO_ID_AQUI"
+        title="Vende con IA desde Cero - Video"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+
+    <a href="https://wa.me/584125044476?text=Hola%20Mariale%2C%20quiero%20inscribirme%20en%20Vende%20con%20IA%20desde%20Cero%20por%20%247.%20%C2%BFMe%20pasas%20los%20datos%20de%20pago%20(Pago%20M%C3%B3vil%2C%20Zelle%20o%20Binance)%3F" target="_blank" rel="noopener" class="btn-cta">
+      Quiero inscribirme por $7
+    </a>
+  </section>
+
+  <!-- ===== QUÉ INCLUYE ===== -->
+  <section class="includes-section">
+    <h2 class="section-title">¿Qué incluye el programa?</h2>
+    <div class="lesson-list">
+
+      <div class="lesson-item">
+        <span class="lesson-number">1</span>
+        <div>
+          <h3>Mentalidad de ventas con IA</h3>
+          <p>Elimina el miedo y entiende por qué la IA es tu mejor aliada para vender.</p>
+        </div>
+      </div>
+
+      <div class="lesson-item">
+        <span class="lesson-number">2</span>
+        <div>
+          <h3>Tu herramienta secreta</h3>
+          <p>Configura la herramienta de IA que hará el trabajo pesado por ti.</p>
+        </div>
+      </div>
+
+      <div class="lesson-item">
+        <span class="lesson-number">3</span>
+        <div>
+          <h3>Estrategia de contenido que vende</h3>
+          <p>Aprende qué publicar, cuándo y cómo para atraer clientes reales.</p>
+        </div>
+      </div>
+
+      <div class="lesson-item">
+        <span class="lesson-number">4</span>
+        <div>
+          <h3>Gemini como tu clienta ideal</h3>
+          <p>Usa la IA para entender exactamente qué quiere tu audiencia.</p>
+        </div>
+      </div>
+
+      <div class="lesson-item">
+        <span class="lesson-number">5</span>
+        <div>
+          <h3>Tu primer contenido de ventas en 20 minutos</h3>
+          <p>Crea tu primera pieza de contenido lista para publicar antes de terminar.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIOS ===== -->
+  <section class="testimonials-section">
+    <h2 class="section-title">Lo que dicen quienes ya empezaron</h2>
+    <div class="testimonials-grid">
+
+      <div class="testimonial-card">
+        <p class="quote">"Yo no sabía nada de IA y en 20 minutos ya tenía mi primer post listo para publicar. Increíble lo simple que es cuando te lo explican bien."</p>
+        <div class="author">
+          <div class="avatar">MR</div>
+          <div class="author-info">
+            <strong>María R.</strong>
+            <span>Emprendedora</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <p class="quote">"Pensé que la IA era solo para expertos en tecnología. Mariale me demostró lo contrario. Ahora publico contenido todos los días sin estrés."</p>
+        <div class="author">
+          <div class="avatar">CL</div>
+          <div class="author-info">
+            <strong>Carolina L.</strong>
+            <span>Coach de bienestar</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="faq-section">
+    <h2 class="section-title">Preguntas frecuentes</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+          <span>No tengo tiempo, ¿me sirve igual?</span>
+          <span class="icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            El programa está diseñado para personas ocupadas. Son 5 lecciones cortas que puedes ver a tu ritmo. La lección final te lleva de la mano para crear tu primer contenido de ventas en solo 20 minutos.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+          <span>No sé nada de tecnología, ¿podré seguirlo?</span>
+          <span class="icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Todo está explicado paso a paso, desde cero. No necesitas experiencia técnica ni conocimientos previos de IA. Si sabes usar WhatsApp, puedes seguir este programa.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+          <span>Ya compré cursos antes y no funcionaron…</span>
+          <span class="icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            Este no es un curso teórico de 40 horas. Son lecciones prácticas y directas donde terminas con un resultado real: tu primer contenido de ventas listo. Además, por $7 el riesgo es prácticamente cero.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== CTA FINAL + URGENCIA ===== -->
+  <section class="final-cta">
+    <h2>Esta oferta de $7 se termina en 72 horas</h2>
+    <p>Después de eso, el precio vuelve a $47. No dejes pasar esta oportunidad de empezar a vender con Inteligencia Artificial.</p>
+    <a href="https://wa.me/584125044476?text=Hola%20Mariale%2C%20quiero%20inscribirme%20en%20Vende%20con%20IA%20desde%20Cero%20por%20%247.%20%C2%BFMe%20pasas%20los%20datos%20de%20pago%20(Pago%20M%C3%B3vil%2C%20Zelle%20o%20Binance)%3F" target="_blank" rel="noopener" class="btn-cta">
+      Quiero inscribirme por $7
+    </a>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <p>&copy; 2026 Mariale Velazco. Todos los derechos reservados.</p>
+    <div class="footer-links">
+      <a href="privacidad.html">Privacidad</a>
+      <a href="terminos.html">Términos</a>
+      <a href="aviso-legal.html">Aviso legal</a>
+    </div>
+  </footer>
+
+</body>
+</html>
