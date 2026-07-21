@@ -5,8 +5,7 @@ export const site = {
   description:
     "Formación real en marketing digital, redes sociales, embudos de venta y emprendimiento. Un pago único de acceso, sin promesas mágicas.",
 
-  // TODO: reemplaza por tu número real en formato internacional sin signos (ej. 584121234567)
-  whatsappNumber: "REEMPLAZA_TU_NUMERO",
+  whatsappNumber: "584129991787",
   whatsappMessage: "Hola Marco, vi el video y quiero saber más de Visión 360",
 
   // TODO: reemplaza por el ID del video de YouTube con tu carta de venta (VSL).
