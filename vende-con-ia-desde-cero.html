@@ -233,8 +233,8 @@
   }
 
   .testimonial-card .avatar {
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     background-color: var(--vinotinto);
     color: var(--crema);
@@ -244,6 +244,13 @@
     font-weight: 700;
     font-size: 0.9rem;
     flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .testimonial-card .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .testimonial-card .author-info strong {
@@ -475,12 +482,12 @@
     <div class="testimonials-grid">
 
       <div class="testimonial-card">
-        <p class="quote">"Yo no sabía nada de IA y en 20 minutos ya tenía mi primer post listo para publicar. Increíble lo simple que es cuando te lo explican bien."</p>
+        <p class="quote">"Yo nunca pensé que trabajar con inteligencia artificial o crear contenido fuera tan fácil."</p>
         <div class="author">
-          <div class="avatar">MR</div>
+          <div class="avatar"><img src="Angi.jpeg" alt="Angi Sosa"></div>
           <div class="author-info">
-            <strong>María R.</strong>
-            <span>Emprendedora</span>
+            <strong>Angi Sosa</strong>
+            <span>Abogada</span>
           </div>
         </div>
       </div>
