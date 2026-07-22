@@ -40,9 +40,9 @@ export default function Gracias() {
           ¿Por qué unirte al grupo?
         </p>
         <ul style={{ margin: 0, paddingLeft: 20, lineHeight: 1.8 }}>
-          <li>Descargás el PDF directamente ahí</li>
-          <li>Accedés al mensaje de bienvenida de Luchy</li>
-          <li>Sos parte de una comunidad de líderes que decidieron salir del automático</li>
+          <li>Descargarás el PDF directamente ahí</li>
+          <li>Encontrarás contenido de alto valor para líderes que quieren decidir con más claridad y menos ruido</li>
+          <li>Eres parte de una comunidad de líderes que decidieron salir del automático</li>
         </ul>
       </div>
 
@@ -63,11 +63,6 @@ export default function Gracias() {
         El grupo es gratuito. Podés salir cuando quieras.
       </p>
 
-      <p style={{ marginTop: 20 }}>
-        <Link href="/" style={{ color: "var(--gold)", textDecoration: "none" }}>
-          ← Volver al inicio
-        </Link>
-      </p>
     </main>
   );
 }
