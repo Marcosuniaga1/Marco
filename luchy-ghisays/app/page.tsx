@@ -14,11 +14,11 @@ export default function Home() {
     <div className="shell">
       <Header />
       <Hero />
-      <SobreLuchy />
       <Problema />
       <Magnet />
       <FormSection />
       <Steps />
+      <SobreLuchy />
       <Testimonials />
       <Faq />
       <Footer />
