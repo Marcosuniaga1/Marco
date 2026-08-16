@@ -7,10 +7,10 @@ export default function Hero() {
         <div className="ring">
           <span>↻</span>
         </div>
-        <h1>¿Funcionas pero algo te falta?</h1>
+        <h1>Tu liderazgo funciona.<br />Pero algo no encaja.</h1>
         <p>
-          La mayoría de los ejecutivos en automático no lo saben. Descubre dónde
-          estás atrapado.
+          La mayoría de los ejecutivos de alto rendimiento operan en piloto
+          automático sin saberlo. Descubre las 10 señales que lo confirman.
         </p>
       </div>
       <LeadForm variant="hero" />
