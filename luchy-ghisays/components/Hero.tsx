@@ -2,9 +2,6 @@ export default function Hero() {
   return (
     <section className="hero">
       <div className="hero-copy">
-        <div className="ring">
-          <span>↻</span>
-        </div>
         <h1>Tu liderazgo funciona.<br />Pero algo no encaja.</h1>
       </div>
       <div className="hero-video">
