@@ -108,9 +108,9 @@ header .logo {
   display: inline-block;
   margin-top: 28px;
   text-decoration: none;
-  width: auto;
-  padding-left: 32px;
-  padding-right: 32px;
+  width: auto !important;
+  padding-left: 40px;
+  padding-right: 40px;
 }
 .heroForm {
   margin-top: 28px;
