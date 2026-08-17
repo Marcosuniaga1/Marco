@@ -10,7 +10,7 @@ export default function Hero() {
           La mayoría de los ejecutivos de alto rendimiento operan en piloto
           automático sin saberlo. Descubre las 10 señales que lo confirman.
         </p>
-        <a href="#form" className="btn hero-cta">Ver las 10 señales →</a>
+        <a href="#form" className="hero-cta">Ver las 10 señales →</a>
       </div>
     </section>
   );
