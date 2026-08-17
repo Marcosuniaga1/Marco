@@ -108,9 +108,17 @@ header .logo {
   display: inline-block;
   margin-top: 28px;
   text-decoration: none;
-  width: auto !important;
-  padding-left: 40px;
-  padding-right: 40px;
+  background: var(--gold);
+  color: var(--navy);
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  padding: 18px 40px;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+.hero-cta:hover {
+  background: var(--gold-dark);
 }
 .heroForm {
   margin-top: 28px;
