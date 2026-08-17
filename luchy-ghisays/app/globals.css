@@ -65,13 +65,15 @@ header .logo {
     var(--navy);
   color: #fff;
   padding: 48px 28px 56px;
-  text-align: left;
+  text-align: center;
 }
 .hero .ring {
   width: 96px;
   height: 96px;
   border-radius: 50%;
   border: 2px solid var(--gold);
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -99,11 +101,16 @@ header .logo {
   color: #c3d0dc;
   margin-top: 18px;
   max-width: 340px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .hero-cta {
   display: inline-block;
   margin-top: 28px;
   text-decoration: none;
+  width: auto;
+  padding-left: 32px;
+  padding-right: 32px;
 }
 .heroForm {
   margin-top: 28px;
