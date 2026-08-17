@@ -177,9 +177,8 @@ header .logo {
 }
 
 /* VIDEO */
-.videosec {
-  background: var(--navy);
-  padding: 0 28px 52px;
+.hero-video {
+  padding: 28px 28px 0;
 }
 .video-wrap {
   position: relative;
@@ -799,6 +798,14 @@ footer .disclaimer {
     max-width: 540px;
     margin-left: auto;
     margin-right: auto;
+  }
+
+  .hero-video {
+    padding: 36px 64px 0;
+  }
+  .video-wrap {
+    max-width: 800px;
+    margin: 0 auto;
   }
 
   .sobre {
