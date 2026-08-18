@@ -745,6 +745,43 @@ footer .disclaimer {
   color: #6f7f8c;
 }
 
+/* STICKY BAR */
+.sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 12px 20px;
+  background: var(--navy);
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
+  display: flex;
+  justify-content: center;
+}
+.sticky-cta {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  background: var(--gold);
+  color: var(--navy);
+  text-align: center;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  padding: 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.sticky-cta:hover {
+  background: var(--gold-dark);
+}
+@media (min-width: 900px) {
+  .sticky-bar {
+    display: none;
+  }
+}
+
 /* GRACIAS */
 .gracias {
   padding: 72px 28px;

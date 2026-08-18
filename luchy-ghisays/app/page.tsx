@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import StickyBar from "@/components/StickyBar";
 import SobreLuchy from "@/components/SobreLuchy";
 import Problema from "@/components/Problema";
 import Magnet from "@/components/Magnet";
@@ -22,6 +23,7 @@ export default function Home() {
       <Testimonials />
       <Faq />
       <Footer />
+      <StickyBar />
     </div>
   );
 }
