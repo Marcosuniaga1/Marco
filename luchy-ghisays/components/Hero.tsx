@@ -1,4 +1,9 @@
+"use client";
+import { useState } from "react";
+
 export default function Hero() {
+  const [playing, setPlaying] = useState(false);
+
   return (
     <section className="hero">
       <div className="hero-copy">
@@ -6,12 +11,27 @@ export default function Hero() {
       </div>
       <div className="hero-video">
         <div className="video-wrap">
-          <iframe
-            src="https://www.youtube.com/embed/mJ2m-DWh504?rel=0&modestbranding=1"
-            title="Las 10 señales de que estás en automático"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
+          {playing ? (
+            <iframe
+              src="https://www.youtube.com/embed/mJ2m-DWh504?rel=0&modestbranding=1&autoplay=1"
+              title="Las 10 señales de que estás en automático"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          ) : (
+            <button
+              className="yt-facade"
+              onClick={() => setPlaying(true)}
+              aria-label="Reproducir video"
+            >
+              <img
+                src={`https://i.ytimg.com/vi/mJ2m-DWh504/hqdefault.jpg`}
+                alt="Ver video"
+                loading="lazy"
+              />
+              <span className="yt-play">▶</span>
+            </button>
+          )}
         </div>
       </div>
       <div className="hero-copy">
