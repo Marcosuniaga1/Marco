@@ -7,7 +7,7 @@ export default function Hero() {
       <div className="hero-video">
         <div className="video-wrap">
           <iframe
-            src="https://www.youtube.com/embed/mLfD3xYs3WY?rel=0&modestbranding=1"
+            src="https://www.youtube.com/embed/mJ2m-DWh504?rel=0&modestbranding=1"
             title="Las 10 señales de que estás en automático"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
