@@ -19,6 +19,10 @@ export default function StickyBar() {
         className="sticky-cta"
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => {
+          window.fbq?.("track", "Lead");
+          window.gtag?.("event", "generate_lead");
+        }}
       >
         Agenda una conversación →
       </a>
