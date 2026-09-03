@@ -73,10 +73,16 @@ export const problems: { icon: "target" | "loop" | "clock"; title: string; text:
 
 // Preguntas frecuentes.
 export const faqs: { q: string; a: string }[] = [
-  { q: "¿Cuál es el costo?", a: "Es gratuito. Completamente." },
   {
-    q: "¿Qué hago con el PDF?",
-    a: "Lo lees, identificas dónde estás, y desde ahí decides qué hacer.",
+    q: "¿Qué pasa cuando escribo al WhatsApp?",
+    a: "Luchy o su equipo responden en menos de 24 horas para conocer tu situación y ver si hay fit para trabajar juntos. Sin presión, sin discurso de ventas.",
   },
-  { q: "¿Recibiré spam?", a: "No. Solo contenido que importa." },
+  {
+    q: "¿Para quién es esto?",
+    a: "Para ejecutivos, gerentes y dueños de negocio que funcionan bien en lo profesional pero sienten que algo no encaja. Personas que quieren claridad, no recetas genéricas.",
+  },
+  {
+    q: "¿Cuánto cuesta trabajar con Luchy?",
+    a: "Lo primero es una conversación exploratoria sin costo. Si hay fit, Luchy te explica las opciones. No hay precios fijos publicados porque cada proceso es distinto.",
+  },
 ];

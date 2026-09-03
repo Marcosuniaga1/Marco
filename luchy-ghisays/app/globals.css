@@ -104,6 +104,33 @@ header .logo {
   margin-left: auto;
   margin-right: auto;
 }
+.wa-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 32px;
+  padding: 16px 32px;
+  background: #25D366;
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.wa-cta svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+.wa-cta:hover {
+  background: #1ebe5d;
+}
+.wa-sub {
+  margin-top: 10px;
+  font-size: 0.82rem;
+  color: #9fb0bf;
+}
 .hero-cta {
   display: inline-block;
   margin-top: 28px;
@@ -177,9 +204,8 @@ header .logo {
 }
 
 /* VIDEO */
-.videosec {
-  background: var(--navy);
-  padding: 0 28px 52px;
+.hero-video {
+  padding: 28px 28px 0;
 }
 .video-wrap {
   position: relative;
@@ -196,6 +222,39 @@ header .logo {
   width: 100%;
   height: 100%;
   border: none;
+}
+.yt-facade {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.yt-facade img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
+}
+.yt-play {
+  position: relative;
+  z-index: 1;
+  width: 68px;
+  height: 68px;
+  background: #ff0000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
 }
 
 /* SOBRE LUCHY */
@@ -516,7 +575,6 @@ header .logo {
 .step:last-child {
   padding-bottom: 0;
 }
-/* línea vertical que conecta los pasos (móvil) */
 .step:not(:last-child)::before {
   content: "";
   position: absolute;
@@ -713,6 +771,43 @@ footer .disclaimer {
   color: #6f7f8c;
 }
 
+/* STICKY BAR */
+.sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 12px 20px;
+  background: var(--navy);
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
+  display: flex;
+  justify-content: center;
+}
+.sticky-cta {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  background: var(--gold);
+  color: var(--navy);
+  text-align: center;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  padding: 16px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.sticky-cta:hover {
+  background: var(--gold-dark);
+}
+@media (min-width: 900px) {
+  .sticky-bar {
+    display: none;
+  }
+}
+
 /* GRACIAS */
 .gracias {
   padding: 72px 28px;
@@ -801,8 +896,8 @@ footer .disclaimer {
     margin-right: auto;
   }
 
-  .videosec {
-    padding: 0 64px 72px;
+  .hero-video {
+    padding: 36px 64px 0;
   }
   .video-wrap {
     max-width: 800px;
@@ -908,7 +1003,6 @@ footer .disclaimer {
     margin: 0 auto;
     position: relative;
   }
-  /* línea horizontal que conecta los pasos (escritorio) */
   .steprow::before {
     content: "";
     position: absolute;
