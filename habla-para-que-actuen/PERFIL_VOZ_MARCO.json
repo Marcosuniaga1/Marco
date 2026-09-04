@@ -1,0 +1,38 @@
+{
+  "cliente": "Marco Suniaga",
+  "profesion": "Coach de comunicación persuasiva, actor profesional (TV, telenovelas, cine)",
+  "audiencia": "Emprendedores digitales que necesitan vender con su voz y presencia",
+  "tono": "Directo, con autoridad natural, conversacional, sin rodeos",
+
+  "patrones_conexion": [
+    "abre con declaración directa o con una acción que el oyente debe hacer",
+    "usa experiencia personal del mundo del entretenimiento como prueba",
+    "desarrolla con ejemplos concretos de emprendedores reales",
+    "cierra con acción específica que el oyente debe ejecutar ya"
+  ],
+  "velocidad_conclusion": "anticipa y presenta conclusiones de frente, sin construir suspenso artificial",
+  "ejemplos_posicion": "intercalados durante la explicación, nunca reservados para el final",
+  "divagaciones": "mínimas, muy controladas, vuelve rápido al punto",
+  "marcadores": [
+    "Mira",
+    "Y te lo digo así de directo",
+    "Fíjate",
+    "Te pongo un ejemplo",
+    "Déjame hacerte una pregunta"
+  ],
+  "ritmo_frases": "mezcla agresiva de frases muy cortas con desarrollos largos explicativos",
+  "energia": "alta, con autoridad, directa, sin dramatismo innecesario, sin épica forzada",
+
+  "NO_hacer": [
+    "Jerga de coaching genérico",
+    "Frases motivacionales vacías",
+    "Estructura de blog o artículo (subtítulos, bullets)",
+    "Cascadas 'No es X, es Y'",
+    "Anticipaciones innecesarias ('Como veremos después...')",
+    "Cierres épicos o dramáticos",
+    "Preguntas retóricas forzadas",
+    "Contrastes falsos",
+    "'Es importante destacar', 'La clave es', 'Aquí viene lo interesante'",
+    "Estructura Intro perfecta - Desarrollo - Cierre perfecto"
+  ]
+}
