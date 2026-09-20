@@ -48,21 +48,9 @@ export function GsapAnimations() {
       )
       .fromTo(
         "[data-gs='card-c']",
-        { opacity: 0, y: 60 },
-        { opacity: 1, y: 0, duration: 0.7 },
+        { opacity: 0, y: 60, transform: "scale(0.95)" },
+        { opacity: 1, y: 0, transform: "scale(1)", duration: 0.8 },
         "-=0.3"
-      )
-      .fromTo(
-        "[data-gs='card-l']",
-        { opacity: 0, x: -40, y: 40 },
-        { opacity: 0.8, x: 0, y: 0, duration: 0.6 },
-        "-=0.4"
-      )
-      .fromTo(
-        "[data-gs='card-r']",
-        { opacity: 0, x: 40, y: 40 },
-        { opacity: 0.8, x: 0, y: 0, duration: 0.6 },
-        "-=0.5"
       );
 
     // Scroll-triggered reveals

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   Mic,
   Clapperboard,
@@ -8,7 +9,6 @@ import {
   Ticket,
   Mail,
   Phone,
-  Globe,
 } from "lucide-react";
 import { FloatingButtons } from "@/components/FloatingButtons";
 import { GsapAnimations } from "@/components/GsapAnimations";
@@ -107,8 +107,14 @@ export default function Home() {
         {/* HEADER */}
         <header className="sticky top-0 z-50 py-4 bg-[rgba(5,6,15,0.8)] backdrop-blur-xl border-b border-[rgba(186,215,247,0.06)]">
           <div className="max-w-[1200px] mx-auto px-4 flex items-center justify-between">
-            <a href="#" className="font-sans font-medium text-base text-frost no-underline">
-              Pedro Leal
+            <a href="#" className="block shrink-0 no-underline">
+              <Image
+                src="/images/logo-leal.jpg"
+                alt="Leal — Spectacles et Productions"
+                width={80}
+                height={36}
+                className="h-9 w-auto rounded-sm"
+              />
             </a>
             <nav aria-label="Navegación principal" className="hidden md:block">
               <ul className="flex gap-2 list-none p-0 m-0">
@@ -129,7 +135,7 @@ export default function Home() {
 
         <main>
           {/* HERO */}
-          <section className="pt-20 pb-0 text-center overflow-hidden min-h-[100vh] flex flex-col justify-center">
+          <section className="pt-20 pb-20 text-center overflow-hidden">
             <div className="max-w-[1200px] mx-auto px-4">
               <div className="flex items-center justify-center gap-4 mb-6 gs-hidden" data-gs="eyebrow">
                 <span className="eyebrow-line" />
@@ -177,80 +183,16 @@ export default function Home() {
                 </a>
               </div>
 
-              {/* Floating cards fan */}
-              <div className="relative w-full max-w-[800px] h-[380px] mx-auto max-md:h-[340px]" style={{ perspective: "1200px" }}>
-                {/* Left card */}
-                <div
-                  className="absolute w-[280px] rounded-2xl p-6 glass-modal left-0 top-10 z-[1] opacity-80 gs-hidden max-md:hidden"
-                  style={{ transform: "rotateY(6deg) rotateZ(-2deg) scale(0.88)" }}
-                  data-gs="card-l"
-                >
-                  <div className="font-sans text-sm font-medium text-frost mb-4">Show privado</div>
-                  <input className="input-field mb-3" placeholder="Tu evento" readOnly tabIndex={-1} aria-hidden="true" />
-                  <input className="input-field mb-3" placeholder="Fecha y lugar" readOnly tabIndex={-1} aria-hidden="true" />
-                  <div className="w-full py-2.5 rounded-md bg-violet text-white font-sans text-sm font-medium text-center">Solicitar cotización</div>
-                </div>
-
-                {/* Center card */}
-                <div
-                  className="absolute w-[280px] rounded-2xl p-6 glass-modal left-1/2 top-0 -translate-x-1/2 z-[3] gs-hidden max-md:w-[280px]"
-                  data-gs="card-c"
-                >
-                  <div className="font-sans text-sm font-medium text-frost mb-4">Próximo show</div>
-                  <div className="text-center mb-3">
-                    <div className="text-2xl mb-1">🇻🇪</div>
-                    <div className="font-display font-medium text-ice text-base">Venezuela Se Levanta</div>
-                    <div className="text-xs text-fog mt-1">Stand Up Comedy Tour 2026</div>
-                  </div>
-                  <div className="w-full py-2.5 rounded-md bg-violet text-white font-sans text-sm font-medium text-center mb-3">Comprar boletos</div>
-                  <div className="flex items-center gap-3 my-3">
-                    <span className="flex-1 h-px bg-glass-edge" />
-                    <span className="font-mono text-[11px] tracking-[0.10em] text-fog uppercase">próximas fechas</span>
-                    <span className="flex-1 h-px bg-glass-edge" />
-                  </div>
-                  <div className="space-y-2">
-                    {tourDates.slice(0, 3).map((d) => (
-                      <div key={d.country} className="flex items-center justify-between text-xs">
-                        <span className="text-mist">{d.flag} {d.city}</span>
-                        <span className="text-fog">{d.date}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Right card */}
-                <div
-                  className="absolute w-[280px] rounded-2xl p-6 glass-modal right-0 top-10 z-[1] opacity-80 gs-hidden max-md:hidden"
-                  style={{ transform: "rotateY(-6deg) rotateZ(2deg) scale(0.88)" }}
-                  data-gs="card-r"
-                >
-                  <div className="font-sans text-sm font-medium text-frost mb-4">Contacto rápido</div>
-                  <a
-                    href="https://wa.me/17869443555?text=Quiero%20ir%20a%20tu%20pr%C3%B3ximo%20show"
-                    className="social-pill mb-2 no-underline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Phone className="w-4 h-4" />
-                    WhatsApp
-                  </a>
-                  <a
-                    href="https://www.instagram.com/lealshowandproductions/"
-                    className="social-pill mb-2 no-underline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Globe className="w-4 h-4" />
-                    Instagram
-                  </a>
-                  <a
-                    href="mailto:contacto@pedritoleal.com"
-                    className="social-pill no-underline"
-                  >
-                    <Mail className="w-4 h-4" />
-                    Email
-                  </a>
-                </div>
+              {/* Tour art */}
+              <div className="relative w-full max-w-[520px] mx-auto gs-hidden" data-gs="card-c">
+                <Image
+                  src="/images/tour-art.jpg"
+                  alt="Pedro Leal presenta Venezuela Se Levanta — Stand Up Comedy Tour 2026 por Colombia, Guatemala, Chile, Canadá, República Dominicana, Argentina, Uruguay, México, USA y Venezuela"
+                  width={564}
+                  height={700}
+                  priority
+                  className="w-full h-auto rounded-2xl shadow-tour-art"
+                />
               </div>
             </div>
           </section>
