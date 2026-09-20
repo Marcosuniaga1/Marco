@@ -4,11 +4,66 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mariale Velazco - Aprende IA para tu negocio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --vinotinto: #8B2F3F;
-    --dorado: #C4A050;
-    --crema: #F5F1E8;
+    /* Colors — mi-web tokens */
+    --color-midnight-canvas: #05060f;
+    --color-steel-plate: #2f343e;
+    --color-fog-veil: #9da7ba;
+    --color-moon-mist: #c7d3ea;
+    --color-frost-glow: #d1e4fa;
+    --color-ice-highlight: #d8ecf8;
+    --color-pure-white: #ffffff;
+    --color-void-violet: #663af3;
+    --color-blueprint-blue: #b6d9fc;
+    --color-gridline-blue: #3f4959;
+    --color-glass-edge: #bad7f71f;
+    --color-luminous-fill: #c7d3ea1f;
+
+    /* Surfaces */
+    --surface-frosted-glass: #bad6f708;
+    --surface-deep-glass: #05060ff7;
+
+    /* Typography — substitutes per mi-web */
+    --font-body: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    --font-eyebrow: 'JetBrains Mono', ui-monospace, monospace;
+
+    /* Spacing */
+    --spacing-4: 4px;
+    --spacing-8: 8px;
+    --spacing-12: 12px;
+    --spacing-16: 16px;
+    --spacing-20: 20px;
+    --spacing-24: 24px;
+    --spacing-32: 32px;
+    --spacing-36: 36px;
+    --spacing-40: 40px;
+    --spacing-48: 48px;
+    --spacing-56: 56px;
+    --spacing-100: 100px;
+    --spacing-120: 120px;
+
+    /* Layout */
+    --page-max-width: 1200px;
+    --section-gap: 120px;
+    --card-padding: 24px;
+
+    /* Radius — mi-web named */
+    --radius-cards: 16px;
+    --radius-badges: 6px;
+    --radius-inputs: 6px;
+    --radius-buttons: 999px;
+    --radius-icon-containers: 9999px;
+
+    /* Shadows */
+    --shadow-subtle: rgba(186, 215, 247, 0.12) 0px 0px 0px 1px inset;
+    --shadow-card: rgba(199, 211, 234, 0.12) 0px 1px 1px 0px inset, rgba(199, 211, 234, 0.05) 0px 24px 48px 0px inset, rgba(6, 6, 14, 0.7) 0px 24px 32px 0px;
+    --shadow-modal: rgba(216, 236, 248, 0.2) 0px 1px 1px 0px inset, rgba(168, 216, 245, 0.06) 0px 24px 48px 0px inset, rgba(0, 0, 0, 0.3) 0px 16px 32px 0px;
+    --shadow-glow: 0 0 6px rgba(186, 207, 247, 0.32), 0 0 12px rgba(238, 186, 247, 0.24);
   }
 
   * {
@@ -18,408 +73,881 @@
   }
 
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--crema);
-    color: #333;
-    line-height: 1.6;
+    font-family: var(--font-body);
+    background-color: var(--color-midnight-canvas);
+    color: var(--color-frost-glow);
+    line-height: 1.5;
+    letter-spacing: -0.16px;
+    font-size: 16px;
+    overflow-x: hidden;
   }
 
-  img {
-    max-width: 100%;
-    display: block;
+  img { max-width: 100%; display: block; }
+
+  /* ===== BLUEPRINT GRID BACKGROUND ===== */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(186, 215, 247, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(186, 215, 247, 0.06) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,0,0,0.6) 0%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,0,0,0.6) 0%, transparent 100%);
+  }
+
+  .spotlight {
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1200px;
+    height: 800px;
+    background: conic-gradient(at 50% 20%, transparent 45%, rgba(124,145,182,0.3) 49%, rgba(124,145,182,0.5) 50%, rgba(124,145,182,0.3) 51%, transparent 55%);
+    opacity: 0.4;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ===== LAYOUT ===== */
+  .content-wrap {
+    position: relative;
+    z-index: 1;
+  }
+
+  .container {
+    max-width: var(--page-max-width);
+    margin: 0 auto;
+    padding-left: var(--spacing-16);
+    padding-right: var(--spacing-16);
+  }
+
+  section {
+    padding-top: var(--spacing-120);
+    padding-bottom: var(--spacing-120);
+  }
+
+  /* ===== EYEBROW LABEL ===== */
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-16);
+    margin-bottom: var(--spacing-24);
+  }
+
+  .eyebrow-line {
+    flex: 1;
+    max-width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(186,215,247,0.12), transparent);
+  }
+
+  .eyebrow-text {
+    font-family: var(--font-eyebrow);
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.10em;
+    color: var(--color-moon-mist);
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+
+  /* ===== SECTION HEADING STACK ===== */
+  .section-heading {
+    text-align: center;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 44px;
+    line-height: 1.16;
+    background: linear-gradient(0deg, #98c0ef 0%, #d8ecf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: var(--spacing-16);
+  }
+
+  .section-body {
+    text-align: center;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--color-moon-mist);
+    max-width: 640px;
+    margin: 0 auto var(--spacing-48);
+  }
+
+  /* ===== HEADER ===== */
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: var(--spacing-16) 0;
+    background: rgba(5, 6, 15, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(186, 215, 247, 0.06);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--color-frost-glow);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: var(--spacing-8);
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-frost-glow);
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: var(--radius-buttons);
+    background: transparent;
+    box-shadow: var(--shadow-subtle);
+    transition: background 0.2s ease;
+  }
+
+  .nav-links a:hover {
+    background: rgba(186, 214, 247, 0.06);
+  }
+
+  .nav-links a:focus-visible {
+    outline: 2px solid var(--color-frost-glow);
+    outline-offset: 2px;
   }
 
   /* ===== HERO ===== */
   .hero {
-    background-color: var(--vinotinto);
-    color: var(--crema);
-    padding: 60px 20px;
+    padding-top: 160px;
+    padding-bottom: var(--spacing-120);
     text-align: center;
   }
 
-  .hero h1 {
-    font-size: 1.8rem;
-    line-height: 1.3;
-    margin-bottom: 20px;
-    font-weight: 800;
+  .hero .section-heading {
+    font-size: 48px;
+    line-height: 1.17;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
-  .hero p.subheadline {
-    font-size: 1rem;
-    max-width: 600px;
-    margin: 0 auto 30px;
-    color: #f0e6e9;
+  .hero .section-body {
+    font-size: 18px;
+    line-height: 1.33;
+    color: var(--color-moon-mist);
   }
 
-  .video-wrapper {
+  /* Video card */
+  .video-card {
     position: relative;
     max-width: 700px;
-    margin: 0 auto 30px;
-    aspect-ratio: 16 / 9;
-    border-radius: 12px;
+    margin: 0 auto var(--spacing-40);
+    border-radius: var(--radius-cards);
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    box-shadow: var(--shadow-modal);
+    background: var(--surface-deep-glass);
   }
 
-  .video-wrapper iframe {
+  .video-card iframe {
     width: 100%;
-    height: 100%;
+    aspect-ratio: 16 / 9;
     border: 0;
+    display: block;
   }
 
   /* ===== BUTTONS ===== */
-  .btn-cta {
+  .btn-ghost {
     display: inline-block;
-    background-color: var(--dorado);
-    color: var(--vinotinto);
-    font-weight: 700;
-    font-size: 1.1rem;
-    padding: 16px 36px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-pure-white);
+    padding: 8px 16px;
     border: none;
-    border-radius: 50px;
+    border-radius: var(--radius-buttons);
+    background: rgba(186, 214, 247, 0.06);
+    box-shadow: var(--shadow-subtle);
     cursor: pointer;
     text-decoration: none;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: 0 6px 20px rgba(196, 160, 80, 0.4);
+    transition: background 0.2s ease;
   }
 
-  .btn-cta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(196, 160, 80, 0.6);
+  .btn-ghost:hover { background: rgba(186, 214, 247, 0.12); }
+
+  .btn-ghost:focus-visible {
+    outline: 2px solid var(--color-frost-glow);
+    outline-offset: 2px;
   }
 
-  /* ===== SECTION GENERAL ===== */
-  section {
-    padding: 60px 20px;
+  .btn-violet {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-pure-white);
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--radius-inputs);
+    background: var(--color-void-violet);
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
   }
 
-  .section-title {
+  .btn-violet:hover { opacity: 0.9; }
+
+  .btn-violet:focus-visible {
+    outline: 2px solid var(--color-frost-glow);
+    outline-offset: 2px;
+  }
+
+  .btn-hero {
+    font-size: 16px;
+    padding: 14px 32px;
+    box-shadow: var(--shadow-subtle), var(--shadow-glow);
+  }
+
+  /* ===== GLASS CARD ===== */
+  .glass-card {
+    border-radius: var(--radius-cards);
+    background: rgba(186, 214, 247, 0.03);
+    padding: var(--card-padding);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* ===== FEATURES / BENEFITS ===== */
+  .features {
+    background: transparent;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-24);
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .feature-card {
     text-align: center;
-    font-size: 1.6rem;
-    color: var(--vinotinto);
-    margin-bottom: 40px;
-    font-weight: 800;
+    padding: var(--spacing-32);
+  }
+
+  .feature-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-icon-containers);
+    background: rgba(186, 214, 247, 0.06);
+    box-shadow: var(--shadow-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-16);
+  }
+
+  .feature-icon svg {
+    width: 24px;
+    height: 24px;
+    stroke: var(--color-frost-glow);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .feature-card h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.17;
+    letter-spacing: -0.24px;
+    color: var(--color-ice-highlight);
+    margin-bottom: var(--spacing-8);
+  }
+
+  .feature-card p {
+    font-size: 14px;
+    line-height: 1.43;
+    color: var(--color-fog-veil);
   }
 
   /* ===== FORM ===== */
   .form-section {
-    background-color: #fff;
+    background: transparent;
   }
 
-  .form-container {
+  .form-card {
     max-width: 480px;
     margin: 0 auto;
-    background-color: var(--crema);
-    border-radius: 16px;
-    padding: 30px 25px;
-    box-shadow: 0 8px 25px rgba(139, 47, 63, 0.1);
+    padding: var(--spacing-32);
+    background: var(--surface-deep-glass);
+    border-radius: var(--radius-cards);
+    box-shadow: var(--shadow-modal);
   }
 
   .form-group {
-    margin-bottom: 18px;
+    margin-bottom: var(--spacing-16);
   }
 
   .form-group label {
     display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: var(--vinotinto);
-    font-size: 0.95rem;
+    margin-bottom: var(--spacing-4);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.43;
+    color: var(--color-frost-glow);
   }
 
   .form-group input {
     width: 100%;
-    padding: 12px 14px;
-    border: 2px solid #e0d6c8;
-    border-radius: 8px;
-    font-size: 1rem;
-    background-color: #fff;
-    transition: border-color 0.2s ease;
+    padding: 10px 14px;
+    border-radius: var(--radius-inputs);
+    border: none;
+    background: rgba(199, 211, 234, 0.06);
+    box-shadow: var(--shadow-subtle);
+    color: var(--color-pure-white);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.5;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .form-group input::placeholder {
+    color: rgba(199, 211, 234, 0.6);
   }
 
   .form-group input:focus {
     outline: none;
-    border-color: var(--dorado);
+    box-shadow: rgba(186, 214, 247, 0.24) 0px 0px 0px 1px inset;
   }
 
-  .form-container .btn-cta {
+  .form-group input:focus-visible {
+    outline: 2px solid var(--color-frost-glow);
+    outline-offset: 2px;
+  }
+
+  .form-card .btn-violet {
     width: 100%;
     text-align: center;
-    margin-top: 10px;
+    margin-top: var(--spacing-8);
+    padding: 12px 24px;
+  }
+
+  .form-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-12);
+    margin: var(--spacing-16) 0;
+  }
+
+  .form-divider span {
+    font-family: var(--font-eyebrow);
+    font-size: 12px;
+    letter-spacing: 0.10em;
+    color: var(--color-fog-veil);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .form-divider::before,
+  .form-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(186, 215, 247, 0.12);
   }
 
   /* ===== TESTIMONIALS ===== */
-  .testimonials-section {
-    background-color: var(--crema);
+  .testimonials {
+    background: transparent;
   }
 
   .testimonials-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: var(--spacing-24);
     max-width: 1000px;
     margin: 0 auto;
   }
 
   .testimonial-card {
-    background-color: #fff;
-    border-radius: 16px;
-    padding: 28px 24px;
-    box-shadow: 0 6px 18px rgba(139, 47, 63, 0.08);
-    border-left: 5px solid var(--dorado);
+    padding: var(--spacing-32) var(--card-padding);
+    text-align: left;
   }
 
-  .testimonial-card .stars {
-    color: var(--dorado);
-    font-size: 1.1rem;
-    margin-bottom: 12px;
+  .testimonial-stars {
+    color: var(--color-ice-highlight);
+    font-size: 14px;
+    letter-spacing: 2px;
+    margin-bottom: var(--spacing-12);
   }
 
-  .testimonial-card p.quote {
+  .testimonial-quote {
+    font-size: 16px;
+    line-height: 1.5;
     font-style: italic;
-    color: #555;
-    margin-bottom: 16px;
+    color: var(--color-moon-mist);
+    margin-bottom: var(--spacing-20);
   }
 
-  .testimonial-card .author {
+  .testimonial-author {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: var(--spacing-12);
   }
 
-  .testimonial-card .avatar {
+  .testimonial-avatar {
     width: 44px;
     height: 44px;
-    border-radius: 50%;
-    background-color: var(--vinotinto);
-    color: var(--crema);
+    border-radius: var(--radius-icon-containers);
+    background: rgba(186, 214, 247, 0.06);
+    box-shadow: var(--shadow-subtle);
+    color: var(--color-frost-glow);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
-    font-size: 1.1rem;
+    font-weight: 500;
+    font-size: 16px;
     flex-shrink: 0;
   }
 
-  .testimonial-card .author-info strong {
+  .testimonial-name {
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--color-frost-glow);
     display: block;
-    color: var(--vinotinto);
   }
 
-  .testimonial-card .author-info span {
-    font-size: 0.85rem;
-    color: #999;
+  .testimonial-role {
+    font-size: 12px;
+    line-height: 1.33;
+    color: var(--color-fog-veil);
   }
 
   /* ===== FINAL CTA ===== */
   .final-cta {
-    background-color: var(--vinotinto);
     text-align: center;
-    color: var(--crema);
   }
 
-  .final-cta h2 {
-    font-size: 1.6rem;
-    margin-bottom: 16px;
-  }
-
-  .final-cta p {
-    max-width: 500px;
-    margin: 0 auto 30px;
-    color: #f0e6e9;
+  .final-cta-card {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: var(--spacing-48) var(--spacing-32);
+    text-align: center;
   }
 
   .btn-whatsapp {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    background-color: #25D366;
-    color: #fff;
-    font-weight: 700;
-    font-size: 1.1rem;
-    padding: 16px 36px;
-    border-radius: 50px;
+    gap: var(--spacing-8);
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-pure-white);
+    padding: 14px 32px;
+    border-radius: var(--radius-buttons);
+    /* WhatsApp brand green — fuera de la paleta mi-web, conservado como color de marca de terceros */
+    background: #25D366;
     text-decoration: none;
-    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
-    transition: transform 0.2s ease;
+    transition: opacity 0.2s ease;
+    box-shadow: var(--shadow-subtle);
   }
 
-  .btn-whatsapp:hover {
-    transform: translateY(-2px);
+  .btn-whatsapp:hover { opacity: 0.9; }
+
+  .btn-whatsapp:focus-visible {
+    outline: 2px solid var(--color-frost-glow);
+    outline-offset: 2px;
+  }
+
+  .btn-whatsapp svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
   }
 
   /* ===== FOOTER ===== */
-  footer {
-    background-color: #6e2330;
-    color: var(--crema);
+  .site-footer {
+    padding: var(--spacing-32) 0;
     text-align: center;
-    padding: 30px 20px;
-    font-size: 0.9rem;
+    border-top: 1px solid rgba(186, 215, 247, 0.06);
   }
 
-  footer .footer-links {
-    margin-top: 12px;
+  .site-footer p {
+    font-size: 14px;
+    line-height: 1.43;
+    color: var(--color-fog-veil);
   }
 
-  footer .footer-links a {
-    color: var(--dorado);
+  .footer-links {
+    margin-top: var(--spacing-12);
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-16);
+  }
+
+  .footer-links a {
+    font-size: 14px;
+    color: var(--color-frost-glow);
     text-decoration: none;
-    margin: 0 8px;
+    transition: color 0.2s ease;
   }
 
-  footer .footer-links a:hover {
-    text-decoration: underline;
+  .footer-links a:hover { color: var(--color-ice-highlight); }
+
+  .footer-links a:focus-visible {
+    outline: 2px solid var(--color-frost-glow);
+    outline-offset: 2px;
   }
 
   /* ===== RESPONSIVE ===== */
   @media (min-width: 768px) {
-    .hero h1 {
-      font-size: 2.6rem;
+    .hero .section-heading {
+      font-size: 48px;
     }
 
-    .hero p.subheadline {
-      font-size: 1.15rem;
-    }
-
-    .section-title {
-      font-size: 2.2rem;
+    .features-grid {
+      grid-template-columns: repeat(3, 1fr);
     }
 
     .testimonials-grid {
       grid-template-columns: repeat(3, 1fr);
     }
+  }
 
-    .final-cta h2 {
-      font-size: 2.2rem;
+  @media (max-width: 767px) {
+    section {
+      padding-top: var(--spacing-56);
+      padding-bottom: var(--spacing-56);
+    }
+
+    .hero {
+      padding-top: 120px;
+      padding-bottom: var(--spacing-56);
+    }
+
+    .hero .section-heading {
+      font-size: 28px;
+      line-height: 1.14;
+    }
+
+    .hero .section-body {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .section-heading {
+      font-size: 28px;
+      line-height: 1.14;
+    }
+
+    .nav-links { display: none; }
+  }
+
+  /* ===== SCROLL REVEAL (no-JS fallback: visible by default) ===== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.35s ease-out, transform 0.35s ease-out;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
     }
   }
 </style>
 </head>
 <body>
 
-  <!-- ===== HERO ===== -->
-  <section class="hero">
-    <h1>Carmen no sabía nada de IA. Hoy publica sin miedo.</h1>
-    <p class="subheadline">
-      Publicas pero nadie te compra. IA parece complicada. Tienes miedo de no saber.
-      Carmen estaba donde estás tú. Aprendió un sistema simple en 20 minutos.
-      Hoy publica con seguridad. ¿Quieres aprender?
-    </p>
+  <!-- Blueprint grid + spotlight -->
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="spotlight" aria-hidden="true"></div>
 
-    <div class="video-wrapper">
-      <iframe
-        src="https://www.youtube.com/embed/X2d7kd9a2mo"
-        title="Video testimonio"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen>
-      </iframe>
-    </div>
+  <div class="content-wrap">
 
-    <a href="#formulario" class="btn-cta">Quiero aprender este sistema</a>
-  </section>
+    <!-- ===== HEADER ===== -->
+    <header class="site-header">
+      <div class="container header-inner">
+        <a href="#" class="logo">Mariale Velazco</a>
+        <nav aria-label="Navegación principal">
+          <ul class="nav-links">
+            <li><a href="#beneficios">Beneficios</a></li>
+            <li><a href="#testimonios">Testimonios</a></li>
+            <li><a href="#formulario">Reservar</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
 
-  <!-- ===== FORMULARIO ===== -->
-  <section class="form-section" id="formulario">
-    <h2 class="section-title">Reserva tu lugar</h2>
-    <div class="form-container">
-      <form id="leadForm">
-        <div class="form-group">
-          <label for="nombre">Nombre</label>
-          <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" required>
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+      <div class="container">
+        <div class="eyebrow reveal">
+          <span class="eyebrow-line"></span>
+          <span class="eyebrow-text">Aprende IA para tu negocio</span>
+          <span class="eyebrow-line"></span>
         </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" placeholder="tucorreo@ejemplo.com" required>
+
+        <h1 class="section-heading reveal">Carmen no sabía nada de IA. Hoy publica sin miedo.</h1>
+
+        <p class="section-body reveal">
+          Publicas pero nadie te compra. IA parece complicada. Tienes miedo de no saber.
+          Carmen estaba donde estás tú. Aprendió un sistema simple en 20 minutos.
+          Hoy publica con seguridad.
+        </p>
+
+        <div class="video-card reveal">
+          <iframe
+            src="https://www.youtube.com/embed/X2d7kd9a2mo"
+            title="Video testimonio de Carmen"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
         </div>
-        <div class="form-group">
-          <label for="whatsapp">WhatsApp</label>
-          <input type="tel" id="whatsapp" name="whatsapp" placeholder="584125044476" required>
+
+        <a href="#formulario" class="btn-ghost btn-hero reveal">Quiero aprender este sistema</a>
+      </div>
+    </section>
+
+    <!-- ===== BENEFICIOS ===== -->
+    <section class="features" id="beneficios">
+      <div class="container">
+        <div class="eyebrow reveal">
+          <span class="eyebrow-line"></span>
+          <span class="eyebrow-text">¿Qué vas a lograr?</span>
+          <span class="eyebrow-line"></span>
         </div>
-        <button type="submit" class="btn-cta">Quiero aprender este sistema</button>
-      </form>
-<script>
-document.getElementById('leadForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const data = {
-    nombre: document.getElementById('nombre').value,
-    email: document.getElementById('email').value,
-    whatsapp: document.getElementById('whatsapp').value
-  };
-  await fetch('https://script.google.com/macros/s/AKfycbyjxEL656pEc80eQakgxG3n88t2AF7fxvBLl_qXsAaFCseM3a1cPz_AxGw1HHtPw0A/exec', {
-    method: 'POST',
-    body: JSON.stringify(data)
+
+        <h2 class="section-heading reveal">Un sistema simple que funciona</h2>
+        <p class="section-body reveal">
+          En 20 minutos aprenderás a usar IA para crear contenido que conecta con tu audiencia y vende.
+        </p>
+
+        <div class="features-grid">
+          <div class="glass-card feature-card reveal">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+              </svg>
+            </div>
+            <h3>Rápido</h3>
+            <p>Aprende el sistema completo en solo 20 minutos. Sin rodeos, sin tecnicismos.</p>
+          </div>
+
+          <div class="glass-card feature-card reveal">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+              </svg>
+            </div>
+            <h3>Publica con confianza</h3>
+            <p>Crea publicaciones que conectan, sin miedo a equivocarte ni a sonar robótica.</p>
+          </div>
+
+          <div class="glass-card feature-card reveal">
+            <div class="feature-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <h3>Resultados reales</h3>
+            <p>Emprendedoras como tú ya venden más gracias a este método.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FORMULARIO ===== -->
+    <section class="form-section" id="formulario">
+      <div class="container">
+        <div class="eyebrow reveal">
+          <span class="eyebrow-line"></span>
+          <span class="eyebrow-text">Plazas limitadas</span>
+          <span class="eyebrow-line"></span>
+        </div>
+
+        <h2 class="section-heading reveal">Reserva tu lugar</h2>
+        <p class="section-body reveal">
+          Déjanos tus datos y te contactaremos para que empieces a publicar con IA.
+        </p>
+
+        <div class="form-card reveal">
+          <form id="leadForm" novalidate>
+            <div class="form-group">
+              <label for="nombre">Nombre</label>
+              <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" required autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="tucorreo@ejemplo.com" required autocomplete="email">
+            </div>
+            <div class="form-group">
+              <label for="whatsapp">WhatsApp</label>
+              <input type="tel" id="whatsapp" name="whatsapp" placeholder="584125044476" required autocomplete="tel">
+            </div>
+            <button type="submit" class="btn-violet">Quiero aprender este sistema</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TESTIMONIOS ===== -->
+    <section class="testimonials" id="testimonios">
+      <div class="container">
+        <div class="eyebrow reveal">
+          <span class="eyebrow-line"></span>
+          <span class="eyebrow-text">Historias reales</span>
+          <span class="eyebrow-line"></span>
+        </div>
+
+        <h2 class="section-heading reveal">Lo que dicen quienes ya aprendieron</h2>
+
+        <div class="testimonials-grid">
+          <div class="glass-card testimonial-card reveal">
+            <div class="testimonial-stars" aria-label="5 de 5 estrellas">★★★★★</div>
+            <p class="testimonial-quote">"Antes le tenía pánico a la IA. Ahora la uso todos los días para crear mis publicaciones y mis ventas subieron muchísimo."</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar" aria-hidden="true">J</div>
+              <div>
+                <span class="testimonial-name">Jessica</span>
+                <span class="testimonial-role">Emprendedora digital</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card testimonial-card reveal">
+            <div class="testimonial-stars" aria-label="5 de 5 estrellas">★★★★★</div>
+            <p class="testimonial-quote">"En 20 minutos entendí más que en meses intentando sola. El sistema es súper simple y por fin publico con confianza."</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar" aria-hidden="true">S</div>
+              <div>
+                <span class="testimonial-name">Sofia</span>
+                <span class="testimonial-role">Dueña de negocio local</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card testimonial-card reveal">
+            <div class="testimonial-stars" aria-label="5 de 5 estrellas">★★★★★</div>
+            <p class="testimonial-quote">"Mariale lo explica de una forma tan fácil que ya no tengo miedo de equivocarme. Hoy la IA es mi aliada, no mi enemiga."</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar" aria-hidden="true">A</div>
+              <div>
+                <span class="testimonial-name">Ana</span>
+                <span class="testimonial-role">Creadora de contenido</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CTA FINAL ===== -->
+    <section class="final-cta">
+      <div class="container">
+        <div class="glass-card final-cta-card reveal">
+          <div class="eyebrow" style="margin-bottom: var(--spacing-16)">
+            <span class="eyebrow-line"></span>
+            <span class="eyebrow-text">Da el paso</span>
+            <span class="eyebrow-line"></span>
+          </div>
+
+          <h2 class="section-heading">¿Lista para publicar sin miedo?</h2>
+          <p class="section-body">Escríbeme directo por WhatsApp y te cuento cómo funciona el sistema paso a paso.</p>
+
+          <a href="https://wa.me/584125044476?text=Hola%20Mariale,%20quiero%20aprender%20el%20sistema%20de%20IA" class="btn-whatsapp" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.613.613l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.387 0-4.591-.82-6.336-2.197l-.442-.363-3.29 1.103 1.103-3.29-.363-.442A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            Escríbeme por WhatsApp
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="site-footer">
+      <div class="container">
+        <p>&copy; 2026 Mariale Velazco. Todos los derechos reservados.</p>
+        <div class="footer-links">
+          <a href="#">Instagram</a>
+          <a href="#">TikTok</a>
+          <a href="#">Contacto</a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+  // Form submission
+  document.getElementById('leadForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var btn = this.querySelector('button[type="submit"]');
+    var originalText = btn.textContent;
+    btn.textContent = 'Enviando…';
+    btn.disabled = true;
+    try {
+      var data = {
+        nombre: document.getElementById('nombre').value,
+        email: document.getElementById('email').value,
+        whatsapp: document.getElementById('whatsapp').value
+      };
+      await fetch('https://script.google.com/macros/s/AKfycbyjxEL656pEc80eQakgxG3n88t2AF7fxvBLl_qXsAaFCseM3a1cPz_AxGw1HHtPw0A/exec', {
+        method: 'POST',
+        body: JSON.stringify(data)
+      });
+      btn.textContent = '¡Listo!';
+      e.target.reset();
+      setTimeout(function() { btn.textContent = originalText; btn.disabled = false; }, 2000);
+    } catch (err) {
+      btn.textContent = 'Error, intenta de nuevo';
+      btn.disabled = false;
+      setTimeout(function() { btn.textContent = originalText; }, 2000);
+    }
   });
-  alert('¡Listo! Te contactaremos pronto.');
-  e.target.reset();
-});
-</script>
-      </form>
-    </div>
-  </section>
 
-  <!-- ===== TESTIMONIOS ===== -->
-  <section class="testimonials-section">
-    <h2 class="section-title">Lo que dicen quienes ya aprendieron</h2>
-    <div class="testimonials-grid">
-
-      <div class="testimonial-card">
-        <div class="stars">★★★★★</div>
-        <p class="quote">"Antes le tenía pánico a la IA. Ahora la uso todos los días para crear mis publicaciones y mis ventas subieron muchísimo."</p>
-        <div class="author">
-          <div class="avatar">J</div>
-          <div class="author-info">
-            <strong>Jessica</strong>
-            <span>Emprendedora digital</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="testimonial-card">
-        <div class="stars">★★★★★</div>
-        <p class="quote">"En 20 minutos entendí más que en meses intentando sola. El sistema es súper simple y por fin publico con confianza."</p>
-        <div class="author">
-          <div class="avatar">S</div>
-          <div class="author-info">
-            <strong>Sofia</strong>
-            <span>Dueña de negocio local</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="testimonial-card">
-        <div class="stars">★★★★★</div>
-        <p class="quote">"Mariale lo explica de una forma tan fácil que ya no tengo miedo de equivocarme. Hoy la IA es mi aliada, no mi enemiga."</p>
-        <div class="author">
-          <div class="avatar">A</div>
-          <div class="author-info">
-            <strong>Ana</strong>
-            <span>Creadora de contenido</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ===== CTA FINAL ===== -->
-  <section class="final-cta">
-    <h2>¿Lista para publicar sin miedo?</h2>
-    <p>Escríbeme directo por WhatsApp y te cuento cómo funciona el sistema paso a paso.</p>
-    <a href="https://wa.me/584125044476?text=Hola%20Mariale,%20quiero%20aprender%20el%20sistema%20de%20IA" class="btn-whatsapp" target="_blank" rel="noopener">
-      💬 Escríbeme por WhatsApp
-    </a>
-  </section>
-
-  <!-- ===== FOOTER ===== -->
-  <footer>
-    <p>&copy; 2026 Mariale Velazco. Todos los derechos reservados.</p>
-    <div class="footer-links">
-      <a href="#">Instagram</a>
-      <a href="#">TikTok</a>
-      <a href="#">Contacto</a>
-    </div>
-  </footer>
+  // Scroll reveal (respects reduced motion)
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+  } else {
+    document.querySelectorAll('.reveal').forEach(function(el) { el.classList.add('visible'); });
+  }
+  </script>
 
 </body>
 </html>
