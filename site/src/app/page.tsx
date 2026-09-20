@@ -24,12 +24,12 @@ const roles = [
 const tourDates = [
   { city: "Bogotá", country: "Colombia", date: "Oct 4, 2026", flag: "🇨🇴" },
   { city: "Ciudad de Guatemala", country: "Guatemala", date: "Oct 11, 2026", flag: "🇬🇹" },
-  { city: "Santiago", country: "Chile", date: "Oct 18, 2026", flag: "🇨🇱" },
-  { city: "Toronto", country: "Canadá", date: "Oct 25, 2026", flag: "🇨🇦" },
-  { city: "Santo Domingo", country: "Rep. Dominicana", date: "Nov 1, 2026", flag: "🇩🇴" },
-  { city: "Buenos Aires", country: "Argentina", date: "Nov 8, 2026", flag: "🇦🇷" },
-  { city: "Montevideo", country: "Uruguay", date: "Nov 15, 2026", flag: "🇺🇾" },
-  { city: "Ciudad de México", country: "México", date: "Nov 22, 2026", flag: "🇲🇽" },
+  { city: "Ciudad de México", country: "México", date: "Oct 18, 2026", flag: "🇲🇽" },
+  { city: "Montreal", country: "Canadá", date: "Oct 25, 2026", flag: "🇨🇦" },
+  { city: "Santiago", country: "Chile", date: "Nov 1, 2026", flag: "🇨🇱" },
+  { city: "Santo Domingo", country: "Rep. Dominicana", date: "Nov 8, 2026", flag: "🇩🇴" },
+  { city: "Buenos Aires", country: "Argentina", date: "Nov 15, 2026", flag: "🇦🇷" },
+  { city: "Montevideo", country: "Uruguay", date: "Nov 22, 2026", flag: "🇺🇾" },
   { city: "Miami", country: "Estados Unidos", date: "Dic 6, 2026", flag: "🇺🇸" },
   { city: "Caracas", country: "Venezuela", date: "Dic 20, 2026", flag: "🇻🇪" },
 ];
@@ -334,12 +334,6 @@ export default function Home() {
               <a href="https://wa.me/17869443555" target="_blank" rel="noopener noreferrer" className="text-sm text-frost no-underline hover:text-ice transition-colors">WhatsApp</a>
               <a href="mailto:contacto@pedritoleal.com" className="text-sm text-frost no-underline hover:text-ice transition-colors">Email</a>
             </div>
-            <p className="text-xs text-[rgba(157,167,186,0.5)] mt-4">
-              Built with Claude Web Builder by{" "}
-              <a href="https://tododeia.com" target="_blank" rel="noopener noreferrer" className="text-[rgba(157,167,186,0.5)] no-underline hover:text-fog">
-                Tododeia
-              </a>
-            </p>
           </div>
         </footer>
       </div>
