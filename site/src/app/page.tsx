@@ -183,16 +183,35 @@ export default function Home() {
                 </a>
               </div>
 
-              {/* Tour art */}
-              <div className="relative w-full max-w-[520px] mx-auto gs-hidden" data-gs="card-c">
-                <Image
-                  src="/images/tour-art.jpg"
-                  alt="Pedro Leal presenta Venezuela Se Levanta — Stand Up Comedy Tour 2026 por Colombia, Guatemala, Chile, Canadá, República Dominicana, Argentina, Uruguay, México, USA y Venezuela"
-                  width={564}
-                  height={700}
-                  priority
-                  className="w-full h-auto rounded-2xl shadow-tour-art"
-                />
+              {/* Tour art — dual cards */}
+              <div className="flex items-end justify-center gap-6 max-w-[860px] mx-auto max-md:flex-col max-md:items-center max-md:gap-8">
+                <div className="relative w-full max-w-[400px] gs-hidden" data-gs="card-c">
+                  <Image
+                    src="/images/tour-art.jpg"
+                    alt="Pedro Leal presenta Venezuela Se Levanta — Stand Up Comedy Tour 2026 por Colombia, Guatemala, Chile, Canadá, República Dominicana, Argentina, Uruguay, México, USA y Venezuela"
+                    width={564}
+                    height={700}
+                    priority
+                    className="w-full h-auto rounded-2xl shadow-tour-art"
+                  />
+                </div>
+
+                <div className="relative w-full max-w-[400px] gs-hidden" data-gs="card-next">
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
+                    <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase bg-violet text-white shadow-sm whitespace-nowrap">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      Próximo show
+                    </span>
+                  </div>
+                  <Image
+                    src="/images/guatemala-show.webp"
+                    alt="Pedro Leal en Guatemala — Venezuela Se Levanta en La Resortera con Reúben Morales y Darwin y Spanfles"
+                    width={564}
+                    height={700}
+                    priority
+                    className="w-full h-auto rounded-2xl shadow-tour-art"
+                  />
+                </div>
               </div>
             </div>
           </section>
