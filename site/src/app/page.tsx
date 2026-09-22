@@ -3,15 +3,17 @@ import {
   Mic,
   Clapperboard,
   Theater,
-  Laugh,
   Sparkles,
   Calendar,
   Ticket,
   Mail,
   Phone,
+  Crown,
+  Music,
 } from "lucide-react";
 import { FloatingButtons } from "@/components/FloatingButtons";
 import { GsapAnimations } from "@/components/GsapAnimations";
+import { ExpandableCard } from "@/components/ExpandableCard";
 
 const roles = [
   "Actor",
@@ -32,33 +34,6 @@ const tourDates = [
   { city: "Montevideo", country: "Uruguay", date: "Nov 22, 2026", flag: "🇺🇾" },
   { city: "Miami", country: "Estados Unidos", date: "Dic 6, 2026", flag: "🇺🇸" },
   { city: "Caracas", country: "Venezuela", date: "Dic 20, 2026", flag: "🇻🇪" },
-];
-
-const services = [
-  {
-    icon: Theater,
-    title: "Stand Up Comedy",
-    description:
-      "Shows en vivo que mezclan humor venezolano, vivencias de migrante y observaciones que hacen reír a toda la sala.",
-  },
-  {
-    icon: Mic,
-    title: "Shows Musicales",
-    description:
-      "Espectáculos donde la música y el entretenimiento se combinan para crear experiencias que no se olvidan.",
-  },
-  {
-    icon: Clapperboard,
-    title: "Producción de Eventos",
-    description:
-      "Desde la idea hasta el telón, producción completa de shows, giras y eventos corporativos.",
-  },
-  {
-    icon: Sparkles,
-    title: "Animación y Conducción",
-    description:
-      "Maestro de ceremonias para bodas, galas, premiaciones y cualquier evento que necesite energía en el escenario.",
-  },
 ];
 
 function Eyebrow({ text }: { text: string }) {
@@ -118,7 +93,7 @@ export default function Home() {
             </a>
             <nav aria-label="Navegación principal" className="hidden md:block">
               <ul className="flex gap-2 list-none p-0 m-0">
-                {["Gira", "Servicios", "Sobre mí", "Contacto"].map((item) => (
+                {["Gira", "Sobre mí", "Servicios", "Contacto"].map((item) => (
                   <li key={item}>
                     <a
                       href={`#${item.toLowerCase().replace(/\s/g, "-").normalize("NFD").replace(/[̀-ͯ]/g, "")}`}
@@ -258,10 +233,20 @@ export default function Home() {
             <div className="max-w-[1200px] mx-auto px-4">
               <Eyebrow text="TOUR 2026/2027" />
               <SectionHeading>Venezuela Se Levanta</SectionHeading>
-              <SectionSub>
-                Stand up comedy por todo el continente. Diez países, un solo
-                objetivo: hacerte reír hasta que te duela.
-              </SectionSub>
+
+              <div className="text-center max-w-[640px] mx-auto mb-12 gs-hidden" data-gs="reveal">
+                <p className="font-mono text-sm tracking-[0.08em] uppercase text-frost mb-4">
+                  Una risa también puede ayudar.
+                </p>
+                <p className="text-base leading-relaxed text-mist mb-2">
+                  Pedrito Leal presenta:<br />
+                  <strong className="text-ice font-display text-lg">VENEZUELA SE LEVANTA</strong><br />
+                  <span className="text-fog">Stand-Up Comedy Tour 2026–2027</span>
+                </p>
+                <p className="text-base leading-relaxed text-mist italic mt-4">
+                  Reímos juntos. Ayudamos juntos. Nos levantamos juntos.
+                </p>
+              </div>
 
               <div className="max-w-[800px] mx-auto" data-gs-stagger="true">
                 {tourDates.map((show) => (
@@ -294,6 +279,42 @@ export default function Home() {
             </div>
           </section>
 
+          {/* ABOUT — moved right after tour */}
+          <section className="py-[120px] max-md:py-14" id="sobre-mi">
+            <div className="max-w-[1200px] mx-auto px-4">
+              <Eyebrow text="El artista" />
+              <SectionHeading>Sobre Pedro Leal</SectionHeading>
+
+              <div className="max-w-[960px] mx-auto gs-hidden" data-gs="reveal">
+                <div className="grid grid-cols-1 md:grid-cols-[360px_1fr] gap-10 items-start">
+                  <div className="w-full">
+                    <Image
+                      src="/images/pedro-leal.jpg"
+                      alt="Pedro Leal — Actor, Músico, Productor, Comediante y Host"
+                      width={560}
+                      height={740}
+                      className="w-full h-auto rounded-2xl shadow-tour-art object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-col justify-center">
+                    <p className="text-base leading-relaxed text-mist mb-4">
+                      Pedrito Leal es actor, músico, productor, comediante y host, un artista integral que ha dedicado más de 30 años de trayectoria a crear, producir y llevar al público espectáculos de alto nivel.
+                    </p>
+                    <p className="text-base leading-relaxed text-mist mb-4">
+                      Su experiencia dentro del mercado venezolano y latinoamericano le ha permitido desarrollarse en diferentes áreas del entretenimiento, combinando actuación, música, producción, conducción y comedia en una misma carrera.
+                    </p>
+                    <p className="text-base leading-relaxed text-mist mb-4">
+                      Más que un comediante, Pedrito Leal es un creador de experiencias sobre el escenario. Cada proyecto lleva consigo años de aprendizaje, producción y contacto directo con el público.
+                    </p>
+                    <p className="text-base leading-relaxed text-fog">
+                      Hoy, esa trayectoria entra en una nueva etapa con proyectos internacionales que mantienen una misma esencia: entretener, conectar y hacer del escenario un lugar donde el público viva una verdadera experiencia.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
           {/* SERVICES */}
           <section className="py-[120px] max-md:py-14" id="servicios">
             <div className="max-w-[1200px] mx-auto px-4">
@@ -305,44 +326,93 @@ export default function Home() {
               </SectionSub>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-[900px] mx-auto" data-gs-stagger="true">
-                {services.map((svc) => (
-                  <div key={svc.title} className="glass-card p-8 gs-hidden" data-gs="stagger-item">
-                    <div className="icon-circle mb-4">
-                      <svc.icon className="w-[18px] h-[18px] text-frost" strokeWidth={1.5} />
-                    </div>
-                    <h3 className="font-display font-medium text-2xl leading-tight tracking-[-0.24px] text-ice mb-2">
-                      {svc.title}
-                    </h3>
-                    <p className="text-sm leading-relaxed text-fog m-0">{svc.description}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* ABOUT */}
-          <section className="py-[120px] max-md:py-14" id="sobre-mi">
-            <div className="max-w-[1200px] mx-auto px-4">
-              <Eyebrow text="Detrás del telón" />
-              <SectionHeading>Sobre Pedro Leal</SectionHeading>
-
-              <div className="max-w-[700px] mx-auto glass-card p-10 text-center gs-hidden" data-gs="reveal">
-                <div className="icon-circle-lg mx-auto mb-6">
-                  <Laugh className="w-10 h-10 text-frost" strokeWidth={1.5} />
+                {/* Stand Up Comedy */}
+                <div className="gs-hidden" data-gs="stagger-item">
+                  <ExpandableCard
+                    icon={Theater}
+                    title="Comedia sin fronteras"
+                    summary="Pedrito Leal ha llevado su comedia a diferentes escenarios internacionales con una propuesta que combina stand-up, crowdwork, storytelling, improvisación y música."
+                  >
+                    <p className="mb-3">
+                      Su recorrido incluye presentaciones en Montreal, Toronto, Ottawa, Nueva York, Miami, Ciudad de México, San José de Costa Rica, San Salvador, San Pedro Sula, Buenos Aires y Caracas, conectando con diferentes públicos a través de su particular estilo de hacer comedia.
+                    </p>
+                    <p className="mb-3">
+                      Actualmente prepara &ldquo;Venezuela se Levanta – Stand Up Comedy Tour 2026–2027&rdquo;, una nueva gira internacional donde la comedia, la identidad venezolana y el propósito solidario se encuentran.
+                    </p>
+                    <p className="text-frost font-medium">
+                      Pedrito Leal – Comedia From Gozadera.
+                    </p>
+                  </ExpandableCard>
                 </div>
-                <p className="text-base leading-relaxed text-mist mb-4">
-                  Venezolano, radicado entre Montreal y Miami. Llevo más de una
-                  década haciendo reír, cantar y saltar a la gente en escenarios
-                  de todo el continente.
-                </p>
-                <p className="text-base leading-relaxed text-mist mb-4">
-                  Empecé en Caracas con un micrófono prestado y una sala medio
-                  vacía. Hoy la gira <strong className="text-ice">Venezuela Se Levanta</strong> recorre
-                  diez países y la sala la llena el público que vuelve cada año.
-                </p>
-                <p className="text-sm text-fog">
-                  Marketing + Art + Música — esa es la fórmula de Leal Show &amp; Productions.
-                </p>
+
+                {/* Música */}
+                <div className="gs-hidden" data-gs="stagger-item">
+                  <ExpandableCard
+                    icon={Music}
+                    title="Música"
+                    summary="La música forma parte esencial de la trayectoria artística de Pedro Leal. Como cantante e intérprete ha desarrollado una propuesta latina con temas originales."
+                  >
+                    <p className="mb-3">
+                      Su propuesta incluye temas como &ldquo;La Rumba Sagrada&rdquo;, &ldquo;Peligrosa&rdquo;, &ldquo;Vete Ya&rdquo;, &ldquo;Ya No Quiero&rdquo;, &ldquo;Amor a Distancia&rdquo; y &ldquo;Dame un Momento&rdquo;, entre otros lanzamientos.
+                    </p>
+                    <p className="mb-4">
+                      Su discografía está disponible internacionalmente en las principales plataformas digitales.
+                    </p>
+                    <p className="font-mono text-xs tracking-wider uppercase text-frost mb-3">Escucha a Pedro Leal</p>
+                    <div className="flex flex-wrap gap-3">
+                      <a
+                        href="https://open.spotify.com/artist/6tZ0mhWVyGYtVcmthJ0z6D"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-[rgba(186,214,247,0.06)] border border-glass-edge text-frost no-underline hover:bg-[rgba(186,214,247,0.12)] transition-colors"
+                      >
+                        Spotify
+                      </a>
+                      <a
+                        href="https://youtube.com/@pedrito_leal"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-[rgba(186,214,247,0.06)] border border-glass-edge text-frost no-underline hover:bg-[rgba(186,214,247,0.12)] transition-colors"
+                      >
+                        YouTube
+                      </a>
+                      <a
+                        href="https://music.amazon.com/albums/B0BJGZC55W"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-[rgba(186,214,247,0.06)] border border-glass-edge text-frost no-underline hover:bg-[rgba(186,214,247,0.12)] transition-colors"
+                      >
+                        Amazon Music
+                      </a>
+                    </div>
+                  </ExpandableCard>
+                </div>
+
+                {/* Producción de Eventos */}
+                <div className="gs-hidden" data-gs="stagger-item">
+                  <ExpandableCard
+                    icon={Clapperboard}
+                    title="Producción de Eventos"
+                    summary="Más de dos décadas participando, creando y formando parte de shows y espectáculos de primera línea."
+                  >
+                    <p>
+                      Junto a grandes producciones teatrales de rotundo éxito, consolidando una trayectoria dedicada al entretenimiento, la actuación y la producción de espectáculos de alto nivel.
+                    </p>
+                  </ExpandableCard>
+                </div>
+
+                {/* Host */}
+                <div className="gs-hidden" data-gs="stagger-item">
+                  <ExpandableCard
+                    icon={Crown}
+                    title="Host"
+                    summary="Maestro de ceremonias para bodas, galas, premiaciones y cualquier evento que necesite energía en el escenario."
+                  >
+                    <p>
+                      Pedro Leal | Música · Actuación · Comedia · Entretenimiento
+                    </p>
+                  </ExpandableCard>
+                </div>
               </div>
             </div>
           </section>
