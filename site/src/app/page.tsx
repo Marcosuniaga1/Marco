@@ -91,13 +91,19 @@ export default function Home() {
             </a>
             <nav aria-label="Navegación principal" className="hidden md:block">
               <ul className="flex gap-2 list-none p-0 m-0">
-                {["Gira", "Sobre mí", "Servicios", "Fundación", "Contacto"].map((item) => (
-                  <li key={item}>
+                {[
+                  { label: "Tour", href: "#gira" },
+                  { label: "Sobre mí", href: "#sobre-mi" },
+                  { label: "Servicios", href: "#servicios" },
+                  { label: "Fundación", href: "#fundacion" },
+                  { label: "Contacto", href: "#contacto" },
+                ].map((item) => (
+                  <li key={item.label}>
                     <a
-                      href={`#${item.toLowerCase().replace(/\s/g, "-").normalize("NFD").replace(/[̀-ͯ]/g, "")}`}
+                      href={item.href}
                       className="nav-link focus-visible:outline-2 focus-visible:outline-frost focus-visible:outline-offset-2"
                     >
-                      {item}
+                      {item.label}
                     </a>
                   </li>
                 ))}
