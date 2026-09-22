@@ -360,6 +360,7 @@ export default function Home() {
                     icon={Music}
                     title="Música"
                     summary="La música forma parte esencial de la trayectoria artística de Pedro Leal. Como cantante e intérprete ha desarrollado una propuesta latina con temas originales."
+                    bgImage="/images/fondomusica.webp"
                   >
                     <p className="mb-3">
                       Su propuesta incluye temas como &ldquo;La Rumba Sagrada&rdquo;, &ldquo;Peligrosa&rdquo;, &ldquo;Vete Ya&rdquo;, &ldquo;Ya No Quiero&rdquo;, &ldquo;Amor a Distancia&rdquo; y &ldquo;Dame un Momento&rdquo;, entre otros lanzamientos.
@@ -415,10 +416,38 @@ export default function Home() {
                   <ExpandableCard
                     icon={Crown}
                     title="Host"
-                    summary="Maestro de ceremonias para bodas, galas, premiaciones y cualquier evento que necesite energía en el escenario."
+                    summary="Más de 20 años como animador, presentador, host y maestro de ceremonias en la industria del entretenimiento."
+                    bgImage="/images/host.jpg"
                   >
-                    <p>
-                      Pedro Leal | Música · Actuación · Comedia · Entretenimiento
+                    <p className="mb-3">
+                      Con más de dos décadas de experiencia frente al público, Pedro Leal ha construido una extensa trayectoria como animador, presentador, host y maestro de ceremonias, una faceta fundamental de su carrera dentro de la industria del entretenimiento.
+                    </p>
+                    <p className="mb-3">
+                      Sus primeros pasos como animador comenzaron en Caracas, Venezuela, dentro de la movida nocturna, conduciendo eventos y presentándose en reconocidos locales de la mano de Corporación Koleoke. Su capacidad para improvisar, comunicarse y conectar naturalmente con el público lo llevó a escenarios y producciones de mayor formato.
+                    </p>
+                    <p className="mb-3">
+                      Posteriormente trabajó junto a profesionales y compañías del espectáculo como ISD – Intermedios Show Design, Osmel Ruido y Marcelo Mazzini, ampliando su experiencia hacia grandes producciones, conciertos, eventos especiales y encuentros corporativos.
+                    </p>
+                    <p className="mb-3">
+                      Durante su trayectoria ha participado como host y animador para importantes marcas, canales y compañías de entretenimiento, entre ellas Warner Latino, E! Entertainment Television, HBO, MGM y FOX, además de importantes empresas venezolanas como Empresas Polar y Cervecería Regional.
+                    </p>
+                    <p className="mb-3">
+                      Su experiencia también se extendió a grandes espectáculos musicales, destacando su participación como animador en presentaciones vinculadas al artista colombiano Juanes, durante las etapas de Mi Sangre Tour (2006) y La Vida World Tour (2009).
+                    </p>
+                    <p className="mb-3">
+                      Durante más de veinte años, Pedro ha conducido eventos corporativos, conciertos, lanzamientos de marcas, encuentros empresariales, espectáculos musicales, eventos privados, producciones especiales y entretenimiento en vivo, desarrollando una capacidad particular para manejar grandes audiencias y adaptarse a diferentes formatos.
+                    </p>
+                    <p className="mb-3">
+                      Su formación como actor, músico, productor y comediante terminó definiendo su sello como host: energía, improvisación, rapidez, humor y conexión directa con el público.
+                    </p>
+                    <p className="mb-3">
+                      Esa experiencia acumulada durante años frente a diferentes audiencias es también una de las raíces de su trabajo actual con el crowdwork, donde la interacción y la improvisación convierten al público en protagonista del espectáculo.
+                    </p>
+                    <p className="mb-3">
+                      Hoy, Pedro Leal reúne más de 20 años de experiencia en conducción y entretenimiento, desenvolviéndose como Host, Maestro de Ceremonias, Animador Corporativo, Presentador de Espectáculos, Entrevistador y Conductor de Eventos en Vivo.
+                    </p>
+                    <p className="text-frost font-medium">
+                      Pedro Leal no simplemente presenta un evento: conecta con la audiencia, conduce la energía y convierte cada presentación en un espectáculo.
                     </p>
                   </ExpandableCard>
                 </div>
