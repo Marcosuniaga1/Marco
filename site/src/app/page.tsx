@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import {
   Mic,
@@ -154,7 +156,7 @@ export default function Home() {
                   href="#gira"
                   className="btn-ghost focus-visible:outline-2 focus-visible:outline-frost focus-visible:outline-offset-2"
                 >
-                  Ver fechas de la gira
+                  TOUR 2026/2027
                 </a>
               </div>
 
