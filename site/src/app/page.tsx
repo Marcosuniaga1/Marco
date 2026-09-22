@@ -122,18 +122,24 @@ export default function Home() {
                 <span className="eyebrow-line" />
               </div>
 
-              <div className="mb-4 gs-hidden" data-gs="wordmark">
+              <div className="mb-4 gs-hidden relative" data-gs="wordmark">
                 <h1 className="sr-only">Pedro Leal</h1>
-                <video
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  className="mx-auto w-full max-w-[600px] h-auto"
-                  aria-label="Logo animado de Leal Show and Productions"
-                >
-                  <source src="/images/logo-animated.mp4" type="video/mp4" />
-                </video>
+                <div className="relative mx-auto max-w-[600px]">
+                  <div className="absolute inset-0 bg-black" style={{
+                    maskImage: "radial-gradient(ellipse 90% 80% at center, black 50%, transparent 100%)",
+                    WebkitMaskImage: "radial-gradient(ellipse 90% 80% at center, black 50%, transparent 100%)",
+                  }} />
+                  <video
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="relative w-full h-auto"
+                    aria-label="Logo animado de Leal Show and Productions"
+                  >
+                    <source src="/images/logo-animated.mp4" type="video/mp4" />
+                  </video>
+                </div>
               </div>
 
               <p className="text-lg leading-snug text-mist max-w-[520px] mx-auto mb-6 gs-hidden" data-gs="sub">
