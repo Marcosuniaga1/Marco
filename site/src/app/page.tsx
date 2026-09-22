@@ -12,6 +12,7 @@ import {
   Phone,
   Crown,
   Music,
+  Heart,
 } from "lucide-react";
 import { FloatingButtons } from "@/components/FloatingButtons";
 import { GsapAnimations } from "@/components/GsapAnimations";
@@ -95,7 +96,7 @@ export default function Home() {
             </a>
             <nav aria-label="Navegación principal" className="hidden md:block">
               <ul className="flex gap-2 list-none p-0 m-0">
-                {["Gira", "Sobre mí", "Servicios", "Contacto"].map((item) => (
+                {["Gira", "Sobre mí", "Servicios", "Fundación", "Contacto"].map((item) => (
                   <li key={item}>
                     <a
                       href={`#${item.toLowerCase().replace(/\s/g, "-").normalize("NFD").replace(/[̀-ͯ]/g, "")}`}
@@ -341,6 +342,7 @@ export default function Home() {
                     icon={Theater}
                     title="Comedia sin fronteras"
                     summary="Pedrito Leal ha llevado su comedia a diferentes escenarios internacionales con una propuesta que combina stand-up, crowdwork, storytelling, improvisación y música."
+                    bgImage="/images/comedia.jpg"
                   >
                     <p className="mb-3">
                       Su recorrido incluye presentaciones en Montreal, Toronto, Ottawa, Nueva York, Miami, Ciudad de México, San José de Costa Rica, San Salvador, San Pedro Sula, Buenos Aires y Caracas, conectando con diferentes públicos a través de su particular estilo de hacer comedia.
@@ -404,6 +406,7 @@ export default function Home() {
                     icon={Clapperboard}
                     title="Producción de Eventos"
                     summary="Más de dos décadas participando, creando y formando parte de shows y espectáculos de primera línea."
+                    bgImage="/images/produccion.jpg"
                   >
                     <p>
                       Junto a grandes producciones teatrales de rotundo éxito, consolidando una trayectoria dedicada al entretenimiento, la actuación y la producción de espectáculos de alto nivel.
@@ -450,6 +453,45 @@ export default function Home() {
                       Pedro Leal no simplemente presenta un evento: conecta con la audiencia, conduce la energía y convierte cada presentación en un espectáculo.
                     </p>
                   </ExpandableCard>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* FUNDACIÓN CORAZÓN LEAL */}
+          <section className="py-[120px] max-md:py-14" id="fundacion">
+            <div className="max-w-[1200px] mx-auto px-4">
+              <Eyebrow text="Propósito social" />
+              <SectionHeading>Fundación Corazón Leal</SectionHeading>
+
+              <div className="max-w-[960px] mx-auto gs-hidden" data-gs="reveal">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_360px] gap-10 items-start">
+                  <div className="flex flex-col justify-center">
+                    <p className="text-base leading-relaxed text-mist mb-4">
+                      La Fundación Corazón Leal fue creada en el año 2017 con el propósito de brindar ayuda a niños huérfanos, niños discapacitados y poblaciones vulnerables.
+                    </p>
+                    <p className="text-base leading-relaxed text-mist mb-4">
+                      La fundación ha canalizado recursos a través de la producción de obras de teatro y espectáculos en vivo, convirtiendo el entretenimiento en una herramienta directa de acción social.
+                    </p>
+                    <p className="text-base leading-relaxed text-mist mb-4">
+                      Entre las producciones que han contribuido con la fundación se encuentran obras como Casanovas, Por Ellas, Favoritas pero Solteras y Leal el arma de la seducción, espectáculos que combinaron humor, actuación y música con un fin solidario.
+                    </p>
+                    <p className="text-base leading-relaxed text-mist mb-4">
+                      Corazón Leal representa el compromiso de Pedro Leal con la responsabilidad social, utilizando su trayectoria artística como plataforma para generar un impacto real en comunidades que lo necesitan.
+                    </p>
+                    <p className="text-base leading-relaxed text-fog italic">
+                      Porque el arte también puede cambiar vidas.
+                    </p>
+                  </div>
+                  <div className="w-full">
+                    <Image
+                      src="/images/fundacion.jpg"
+                      alt="Fundación Corazón Leal — Pedro Leal con el logo de la fundación"
+                      width={560}
+                      height={740}
+                      className="w-full h-auto rounded-2xl shadow-tour-art object-cover"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
