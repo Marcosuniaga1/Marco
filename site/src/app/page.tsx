@@ -120,18 +120,19 @@ export default function Home() {
                 <span className="eyebrow-line" />
               </div>
 
-              <h1
-                className="font-display font-medium text-[clamp(48px,10vw,140px)] leading-[1.1] mb-4 relative inline-block text-gradient gs-hidden"
-                data-gs="wordmark"
-              >
-                Pedro Leal
-                <span
-                  className="absolute inset-0 text-gradient blur-[30px] opacity-40 -z-10 pointer-events-none"
-                  aria-hidden="true"
+              <div className="mb-4 gs-hidden" data-gs="wordmark">
+                <h1 className="sr-only">Pedro Leal</h1>
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="mx-auto w-full max-w-[600px] h-auto"
+                  aria-label="Logo animado de Leal Show and Productions"
                 >
-                  Pedro Leal
-                </span>
-              </h1>
+                  <source src="/images/logo-animated.mp4" type="video/mp4" />
+                </video>
+              </div>
 
               <p className="text-lg leading-snug text-mist max-w-[520px] mx-auto mb-6 gs-hidden" data-gs="sub">
                 Humor que cruza fronteras.
