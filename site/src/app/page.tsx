@@ -17,6 +17,7 @@ import {
 import { FloatingButtons } from "@/components/FloatingButtons";
 import { GsapAnimations } from "@/components/GsapAnimations";
 import { ExpandableCard } from "@/components/ExpandableCard";
+import { MobileNav } from "@/components/MobileNav";
 
 const roles = [
   "Actor",
@@ -102,6 +103,7 @@ export default function Home() {
                 ))}
               </ul>
             </nav>
+            <MobileNav />
           </div>
         </header>
 
