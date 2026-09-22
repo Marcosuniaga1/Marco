@@ -55,7 +55,7 @@ export function GsapAnimations() {
       .fromTo(
         "[data-gs='card-next']",
         { opacity: 0, y: 80, transform: "scale(0.92)" },
-        { opacity: 1, y: 0, transform: "scale(1)", duration: 0.9, ease: "expo.out" },
+        { opacity: 1, y: 0, transform: "scale(1)", duration: 0.9, stagger: 0.15, ease: "expo.out" },
         "-=0.5"
       );
 

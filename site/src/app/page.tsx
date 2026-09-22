@@ -18,7 +18,7 @@ const roles = [
   "Cantante",
   "Productor",
   "Comediante",
-  "Animador",
+  "Host",
 ];
 
 const tourDates = [
@@ -159,8 +159,7 @@ export default function Home() {
               </h1>
 
               <p className="text-lg leading-snug text-mist max-w-[520px] mx-auto mb-6 gs-hidden" data-gs="sub">
-                Humor que cruza fronteras. Desde Caracas hasta el mundo,
-                llevando risas a cada rincón de Latinoamérica.
+                Humor que cruza fronteras.
               </p>
 
               <div className="flex flex-wrap justify-center gap-2 mb-10 gs-hidden" data-gs="roles">
@@ -183,34 +182,72 @@ export default function Home() {
                 </a>
               </div>
 
-              {/* Tour art — dual cards */}
-              <div className="flex items-end justify-center gap-6 max-w-[860px] mx-auto max-md:flex-col max-md:items-center max-md:gap-8">
-                <div className="relative w-full max-w-[400px] gs-hidden" data-gs="card-c">
+              {/* Tour art — main poster */}
+              <div className="max-w-[520px] mx-auto mb-10 gs-hidden" data-gs="card-c">
+                <Image
+                  src="/images/tour-art.jpg"
+                  alt="Pedro Leal presenta Venezuela Se Levanta — Stand Up Comedy Tour 2026/2027 por 10 países"
+                  width={564}
+                  height={700}
+                  priority
+                  className="w-full h-auto rounded-2xl shadow-tour-art"
+                />
+              </div>
+
+              {/* Country show arts — 2x2 grid */}
+              <div className="grid grid-cols-2 gap-4 max-w-[860px] mx-auto max-sm:grid-cols-1 max-sm:max-w-[400px]">
+                <div className="relative gs-hidden" data-gs="card-next">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium tracking-wide uppercase bg-violet text-white shadow-sm whitespace-nowrap">
+                      <Sparkles className="w-3 h-3" />
+                      Colombia
+                    </span>
+                  </div>
                   <Image
-                    src="/images/tour-art.jpg"
-                    alt="Pedro Leal presenta Venezuela Se Levanta — Stand Up Comedy Tour 2026 por Colombia, Guatemala, Chile, Canadá, República Dominicana, Argentina, Uruguay, México, USA y Venezuela"
+                    src="/images/colombia-show.webp"
+                    alt="Pedro Leal en Colombia — Venezuela Se Levanta en Bogotá con Reúben Morales"
                     width={564}
                     height={700}
-                    priority
                     className="w-full h-auto rounded-2xl shadow-tour-art"
                   />
                 </div>
 
-                <div className="relative w-full max-w-[400px] gs-hidden" data-gs="card-next">
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                    <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium tracking-wide uppercase bg-violet text-white shadow-sm whitespace-nowrap">
-                      <Sparkles className="w-3.5 h-3.5" />
-                      Próximo show
+                <div className="relative gs-hidden" data-gs="card-next">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium tracking-wide uppercase bg-violet text-white shadow-sm whitespace-nowrap">
+                      <Sparkles className="w-3 h-3" />
+                      Guatemala
                     </span>
                   </div>
                   <Image
                     src="/images/guatemala-show.webp"
-                    alt="Pedro Leal en Guatemala — Venezuela Se Levanta en La Resortera con Reúben Morales y Darwin y Spanfles"
+                    alt="Pedro Leal en Guatemala — Venezuela Se Levanta en La Resortera con Darwin y Spanfles"
                     width={564}
                     height={700}
-                    priority
                     className="w-full h-auto rounded-2xl shadow-tour-art"
                   />
+                </div>
+
+                <div className="relative gs-hidden" data-gs="card-next">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium tracking-wide uppercase bg-[rgba(186,215,247,0.12)] text-mist shadow-sm whitespace-nowrap">
+                      México — Próximamente
+                    </span>
+                  </div>
+                  <div className="w-full aspect-[564/700] rounded-2xl bg-[rgba(186,214,247,0.03)] border border-[rgba(186,215,247,0.08)] flex items-center justify-center">
+                    <span className="text-fog text-sm">🇲🇽</span>
+                  </div>
+                </div>
+
+                <div className="relative gs-hidden" data-gs="card-next">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium tracking-wide uppercase bg-[rgba(186,215,247,0.12)] text-mist shadow-sm whitespace-nowrap">
+                      Montreal — Próximamente
+                    </span>
+                  </div>
+                  <div className="w-full aspect-[564/700] rounded-2xl bg-[rgba(186,214,247,0.03)] border border-[rgba(186,215,247,0.08)] flex items-center justify-center">
+                    <span className="text-fog text-sm">🇨🇦</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -219,7 +256,7 @@ export default function Home() {
           {/* TOUR DATES */}
           <section className="py-[120px] max-md:py-14" id="gira">
             <div className="max-w-[1200px] mx-auto px-4">
-              <Eyebrow text="Gira 2026" />
+              <Eyebrow text="TOUR 2026/2027" />
               <SectionHeading>Venezuela Se Levanta</SectionHeading>
               <SectionSub>
                 Stand up comedy por todo el continente. Diez países, un solo
