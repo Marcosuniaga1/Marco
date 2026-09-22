@@ -112,7 +112,12 @@ export default function Home() {
 
         <main>
           {/* HERO */}
-          <section className="pt-20 pb-20 text-center overflow-hidden">
+          <section className="relative text-center overflow-hidden">
+            <div className="absolute inset-0 bg-black" aria-hidden="true" />
+            <div className="absolute bottom-0 left-0 right-0 h-24" style={{
+              background: "linear-gradient(to bottom, #000000, #05060f)",
+            }} aria-hidden="true" />
+            <div className="relative pt-20 pb-20">
             <div className="max-w-[1200px] mx-auto px-4">
               <div className="flex items-center justify-center gap-4 mb-6 gs-hidden" data-gs="eyebrow">
                 <span className="eyebrow-line" />
@@ -122,24 +127,18 @@ export default function Home() {
                 <span className="eyebrow-line" />
               </div>
 
-              <div className="mb-4 gs-hidden relative" data-gs="wordmark">
+              <div className="mb-4 gs-hidden" data-gs="wordmark">
                 <h1 className="sr-only">Pedro Leal</h1>
-                <div className="relative mx-auto max-w-[600px]">
-                  <div className="absolute inset-0 bg-black" style={{
-                    maskImage: "radial-gradient(ellipse 90% 80% at center, black 50%, transparent 100%)",
-                    WebkitMaskImage: "radial-gradient(ellipse 90% 80% at center, black 50%, transparent 100%)",
-                  }} />
-                  <video
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    className="relative w-full h-auto"
-                    aria-label="Logo animado de Leal Show and Productions"
-                  >
-                    <source src="/images/logo-animated.mp4" type="video/mp4" />
-                  </video>
-                </div>
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="mx-auto w-full max-w-[600px] h-auto"
+                  aria-label="Logo animado de Leal Show and Productions"
+                >
+                  <source src="/images/logo-animated.mp4" type="video/mp4" />
+                </video>
               </div>
 
               <p className="text-lg leading-snug text-mist max-w-[520px] mx-auto mb-6 gs-hidden" data-gs="sub">
@@ -234,6 +233,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+            </div>
             </div>
           </section>
 
