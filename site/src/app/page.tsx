@@ -85,14 +85,8 @@ export default function Home() {
         {/* HEADER */}
         <header className="sticky top-0 z-50 py-4 bg-[rgba(5,6,15,0.8)] backdrop-blur-xl border-b border-[rgba(186,215,247,0.06)]">
           <div className="max-w-[1200px] mx-auto px-4 flex items-center justify-between">
-            <a href="#" className="block shrink-0 no-underline">
-              <Image
-                src="/images/logo-leal.jpg"
-                alt="Leal — Spectacles et Productions"
-                width={80}
-                height={36}
-                className="h-9 w-auto rounded-sm"
-              />
+            <a href="#" className="block shrink-0 no-underline font-display font-medium text-frost text-base tracking-tight">
+              Leal Show and Productions
             </a>
             <nav aria-label="Navegación principal" className="hidden md:block">
               <ul className="flex gap-2 list-none p-0 m-0">
@@ -123,7 +117,7 @@ export default function Home() {
               <div className="flex items-center justify-center gap-4 mb-6 gs-hidden" data-gs="eyebrow">
                 <span className="eyebrow-line" />
                 <span className="font-mono text-[15px] font-normal tracking-[0.10em] text-mist uppercase leading-tight">
-                  Leal Show &amp; Productions
+                  Leal Show and Productions
                 </span>
                 <span className="eyebrow-line" />
               </div>
@@ -133,12 +127,11 @@ export default function Home() {
                 <video
                   autoPlay
                   muted
-                  loop
                   playsInline
                   className="mx-auto w-full max-w-[600px] h-auto"
                   aria-label="Logo animado de Leal Show and Productions"
                 >
-                  <source src="/images/logo-animated.mp4" type="video/mp4" />
+                  <source src="/images/logohero.mp4" type="video/mp4" />
                 </video>
               </div>
 
@@ -534,7 +527,7 @@ export default function Home() {
         {/* FOOTER */}
         <footer className="py-8 text-center border-t border-[rgba(186,215,247,0.06)]">
           <div className="max-w-[1200px] mx-auto px-4">
-            <p className="text-sm text-fog">&copy; 2026 Pedro Leal — Leal Show &amp; Productions. Todos los derechos reservados.</p>
+            <p className="text-sm text-fog">&copy; 2026 Pedro Leal — Leal Show and Productions. Todos los derechos reservados.</p>
             <div className="mt-3 flex justify-center gap-4">
               <a href="https://www.instagram.com/lealshowandproductions/" target="_blank" rel="noopener noreferrer" className="text-sm text-frost no-underline hover:text-ice transition-colors">Instagram</a>
               <a href="https://wa.me/17869443555" target="_blank" rel="noopener noreferrer" className="text-sm text-frost no-underline hover:text-ice transition-colors">WhatsApp</a>

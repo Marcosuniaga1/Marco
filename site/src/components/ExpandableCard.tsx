@@ -34,17 +34,25 @@ export function ExpandableCard({
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${bgImage})` }}
           />
-          <div className="absolute inset-0 bg-[#05060f]/80" />
+          <div className="absolute inset-0 bg-[#05060f]/88" />
         </>
       )}
       <div className="relative">
         <div className="icon-circle mb-4">
           <Icon className="w-[18px] h-[18px] text-frost" strokeWidth={1.5} />
         </div>
-        <h3 className="font-display font-medium text-2xl leading-tight tracking-[-0.24px] text-ice mb-2">
+        <h3
+          className="font-display font-medium text-2xl leading-tight tracking-[-0.24px] text-ice mb-2"
+          style={bgImage ? { textShadow: "0 1px 4px rgba(0,0,0,0.5)" } : undefined}
+        >
           {title}
         </h3>
-        <p className="text-sm leading-relaxed text-fog m-0 mb-4">{summary}</p>
+        <p
+          className={`text-sm leading-relaxed m-0 mb-4 ${bgImage ? "text-mist" : "text-fog"}`}
+          style={bgImage ? { textShadow: "0 1px 3px rgba(0,0,0,0.4)" } : undefined}
+        >
+          {summary}
+        </p>
 
         <div
           style={{
@@ -53,7 +61,10 @@ export function ExpandableCard({
             transition: "max-height 0.4s cubic-bezier(0.23, 1, 0.32, 1)",
           }}
         >
-          <div ref={contentRef} className="text-sm leading-relaxed text-mist pt-2 border-t border-glass-edge">
+          <div
+            ref={contentRef}
+            className={`text-sm leading-relaxed pt-2 border-t border-glass-edge ${bgImage ? "text-frost" : "text-mist"}`}
+          >
             {children}
           </div>
         </div>
