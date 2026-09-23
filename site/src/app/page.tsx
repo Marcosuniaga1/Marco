@@ -205,7 +205,7 @@ export default function Home() {
                     </span>
                   </div>
                   <Image
-                    src="/images/guatemala-show.webp"
+                    src="/images/guatemala-nuevo.jpg"
                     alt="Pedro Leal en Guatemala — Venezuela Se Levanta en La Resortera con Darwin y Spanfles"
                     width={564}
                     height={700}
@@ -215,13 +215,18 @@ export default function Home() {
 
                 <div className="relative gs-hidden" data-gs="card-next">
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium tracking-wide uppercase bg-[rgba(186,215,247,0.12)] text-mist shadow-sm whitespace-nowrap">
-                      México — Próximamente
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium tracking-wide uppercase bg-violet text-white shadow-sm whitespace-nowrap">
+                      <Sparkles className="w-3 h-3" />
+                      México
                     </span>
                   </div>
-                  <div className="w-full aspect-[564/700] rounded-2xl bg-[rgba(186,214,247,0.03)] border border-[rgba(186,215,247,0.08)] flex items-center justify-center">
-                    <span className="text-fog text-sm">🇲🇽</span>
-                  </div>
+                  <Image
+                    src="/images/mexico-show.jpg"
+                    alt="Pedro Leal en México — Venezuela Se Levanta con David Show, Bobby Comedia y Oscar Estilla"
+                    width={564}
+                    height={700}
+                    className="w-full h-auto rounded-2xl shadow-tour-art"
+                  />
                 </div>
 
                 <div className="relative gs-hidden" data-gs="card-next">
