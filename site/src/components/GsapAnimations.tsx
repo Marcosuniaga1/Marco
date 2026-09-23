@@ -51,6 +51,12 @@ export function GsapAnimations() {
         { opacity: 0, y: 60, transform: "scale(0.95)" },
         { opacity: 1, y: 0, transform: "scale(1)", duration: 0.8 },
         "-=0.3"
+      )
+      .fromTo(
+        "[data-gs='card-next']",
+        { opacity: 0, y: 80, transform: "scale(0.92)" },
+        { opacity: 1, y: 0, transform: "scale(1)", duration: 0.9, stagger: 0.15, ease: "expo.out" },
+        "-=0.5"
       );
 
     // Scroll-triggered reveals
