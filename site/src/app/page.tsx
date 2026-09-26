@@ -27,17 +27,22 @@ const roles = [
   "Host",
 ];
 
-const tourDates = [
-  { city: "Bogotá", country: "Colombia", date: "Oct 4, 2026", flag: "🇨🇴" },
-  { city: "Ciudad de Guatemala", country: "Guatemala", date: "Oct 11, 2026", flag: "🇬🇹" },
-  { city: "Ciudad de México", country: "México", date: "Oct 18, 2026", flag: "🇲🇽" },
-  { city: "Montreal", country: "Canadá", date: "Oct 25, 2026", flag: "🇨🇦" },
-  { city: "Santiago", country: "Chile", date: "Nov 1, 2026", flag: "🇨🇱" },
-  { city: "Santo Domingo", country: "Rep. Dominicana", date: "Nov 8, 2026", flag: "🇩🇴" },
-  { city: "Buenos Aires", country: "Argentina", date: "Nov 15, 2026", flag: "🇦🇷" },
-  { city: "Montevideo", country: "Uruguay", date: "Nov 22, 2026", flag: "🇺🇾" },
-  { city: "Miami", country: "Estados Unidos", date: "Dic 6, 2026", flag: "🇺🇸" },
-  { city: "Caracas", country: "Venezuela", date: "Dic 20, 2026", flag: "🇻🇪" },
+const WA_COLOMBIA = "https://wa.me/17869443555?text=Gracias%20por%20tu%20inter%C3%A9s%20en%20nuestro%20TOUR%20VENEZUELA%20SE%20LEVANTA%0AEn%20este%20mismo%20chat%20te%20daremos%20las%20indicaciones%20para%20adquirir%20tus%20entradas%20a%20nuestro%20Stand%20Up%20Comedy%2C%20En%20la%20ciudad%20de%20Bogot%C3%A1%20%2C%20en%20el%20comedy%20club%20caf%C3%A9%20internet%20este%2014%20de%20noviembre%208%20pm";
+const WA_GUATEMALA = "https://wa.me/50249759226?text=Gracias%20por%20tu%20inter%C3%A9s%20en%20nuestro%20%2ATOUR%20VENEZUELA%20SE%20LEVANTA%2A%0AEn%20este%20mismo%20chat%20te%20daremos%20las%20indicaciones%20para%20adquirir%20tus%20entradas%20a%20nuestro%20Stand%20Up%20Comedy%2C%20en%20ciudad%20Guatemala%2C%20en%20%2ALa%20Resortera%20Comedy%2C%20Food%20%26%20Drinks%2A%20este%2019%20de%20noviembre%20de%202026%20con%20doble%20funci%C3%B3n%207%20y%209%20pm.%20%C2%BFPor%20cu%C3%A1l%20de%20las%20funciones%20est%C3%A1s%20interesado%3F";
+const MEXICO_LINK = "https://circulocomedy.com/eventos/venezuela-se-levanta/";
+const WA_MONTREAL = "https://wa.me/17869443555?text=%F0%9F%87%BB%F0%9F%87%AA%E2%9D%A4%EF%B8%8F%20AGENDA%20DE%20ESPERANZA%202027%0A%0ALa%20agenda%20que%20ves%20en%20estas%20fotograf%C3%ADas%20forma%20parte%20de%20una%20iniciativa%20solidaria%20para%20llevar%20esperanza%20y%20ayuda%20a%20nuestra%20gente%20de%20La%20Guaira%2C%20Venezuela.%0A%0ASoy%20Pedrito%20Leal%20y%20quiero%20invitarte%20a%20formar%20parte%20de%20este%20proyecto.%0A%0A%E2%9D%A4%EF%B8%8F%20Con%20tu%20contribuci%C3%B3n%20de%20%24100%20CAD%20recibes%3A%0A%0A%F0%9F%93%96%201%20Agenda%20de%20Esperanza%202027%0A%F0%9F%8E%9F%EF%B8%8F%202%20entradas%20para%20Venezuela%20se%20Levanta%20%E2%80%93%20Stand-Up%20Comedy%0A%0A%F0%9F%93%85%20S%C3%A1bado%2023%20de%20enero%20de%202027%0A%F0%9F%93%8D%20Th%C3%A9%C3%A2tre%20Sainte-Catherine%20%E2%80%93%20Montreal%0A%0A%F0%9F%8E%AD%20Tendremos%20DOS%20FUNCIONES%3A%0A%F0%9F%95%96%207%3A00%20PM%0A%F0%9F%95%98%209%3A00%20PM%0A%0AEse%20d%C3%ADa%20t%C3%BA%20tambi%C3%A9n%20eres%20protagonista%2C%20porque%20tu%20contribuci%C3%B3n%20se%20suma%20a%20una%20iniciativa%20que%20recorrer%C3%A1%2010%20pa%C3%ADses%2C%20destinando%20un%20porcentaje%20significativo%20de%20lo%20recaudado%20para%20ayudar%20a%20Venezuela.%0A%0A%F0%9F%87%BB%F0%9F%87%AA%20El%20recorrido%20finalizar%C3%A1%20en%20Caracas%2C%20donde%20personalmente%20har%C3%A9%20entrega%20de%20la%20ayuda%2C%20sin%20plataformas%20ni%20intermediarios.%0A%0A%F0%9F%93%8D%20%C2%BFEst%C3%A1s%20en%20Montreal%3F%20Yo%20mismo%20puedo%20llevarte%20tu%20agenda%20a%20tu%20casa%20o%20trabajo.%0A%0A%F0%9F%8C%8E%20%C2%BFEst%C3%A1s%20fuera%20de%20Montreal%3F%20Te%20la%20enviamos%20a%20cualquier%20parte%20del%20mundo%20y%20Pedro%20Leal%20asume%20el%20costo%20del%20env%C3%ADo.%0A%0ACada%20agenda%20representa%20un%20granito%20de%20arena%20para%20reconstruir%20esperanza.%20%E2%9D%A4%EF%B8%8F%F0%9F%87%BB%F0%9F%87%AA%0A%0ASi%20quieres%20reservar%20tu%20Agenda%20de%20Esperanza%20%2B%202%20entradas%2C%20resp%C3%B3ndeme%20este%20mensaje%20y%20te%20env%C3%ADo%20los%20datos.%0A%0AGracias%20por%20contribuir.%20Te%20esperamos.%0A%0APedrito%20Leal%0A%F0%9F%87%BB%F0%9F%87%AA%20Venezuela%20se%20Levanta";
+
+const tourDates: { city: string; country: string; date: string; time?: string; flag: string; href?: string }[] = [
+  { city: "Bogotá", country: "Colombia", date: "Nov 14, 2026", time: "8:00 PM", flag: "🇨🇴", href: WA_COLOMBIA },
+  { city: "Ciudad de Guatemala", country: "Guatemala", date: "Nov 19, 2026", time: "7:00 PM y 9:00 PM", flag: "🇬🇹", href: WA_GUATEMALA },
+  { city: "Ciudad de México", country: "México", date: "Nov 21, 2026", time: "10:30 PM", flag: "🇲🇽", href: MEXICO_LINK },
+  { city: "Montreal", country: "Canadá", date: "Ene 23, 2027", time: "7:00 PM y 9:00 PM", flag: "🇨🇦", href: WA_MONTREAL },
+  { city: "Santiago", country: "Chile", date: "Próximamente", flag: "🇨🇱" },
+  { city: "Santo Domingo", country: "Rep. Dominicana", date: "Próximamente", flag: "🇩🇴" },
+  { city: "Buenos Aires", country: "Argentina", date: "Próximamente", flag: "🇦🇷" },
+  { city: "Montevideo", country: "Uruguay", date: "Próximamente", flag: "🇺🇾" },
+  { city: "Miami", country: "Estados Unidos", date: "Próximamente", flag: "🇺🇸" },
+  { city: "Caracas", country: "Venezuela", date: "Próximamente", flag: "🇻🇪" },
 ];
 
 function Eyebrow({ text }: { text: string }) {
@@ -181,7 +186,7 @@ export default function Home() {
 
               {/* Country show arts — 2x2 grid */}
               <div className="grid grid-cols-2 gap-4 max-w-[860px] mx-auto max-sm:grid-cols-1 max-sm:max-w-[400px]">
-                <div className="relative gs-hidden" data-gs="card-next">
+                <a href={WA_COLOMBIA} target="_blank" rel="noopener noreferrer" className="relative gs-hidden block" data-gs="card-next">
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium tracking-wide uppercase bg-violet text-white shadow-sm whitespace-nowrap">
                       <Sparkles className="w-3 h-3" />
@@ -189,15 +194,15 @@ export default function Home() {
                     </span>
                   </div>
                   <Image
-                    src="/images/colombia-show.webp"
-                    alt="Pedro Leal en Colombia — Venezuela Se Levanta en Bogotá con Reúben Morales"
+                    src="/images/showcolombia.webp"
+                    alt="Pedro Leal en Colombia — Venezuela Se Levanta en Bogotá"
                     width={564}
                     height={700}
                     className="w-full h-auto rounded-2xl shadow-tour-art"
                   />
-                </div>
+                </a>
 
-                <div className="relative gs-hidden" data-gs="card-next">
+                <a href={WA_GUATEMALA} target="_blank" rel="noopener noreferrer" className="relative gs-hidden block" data-gs="card-next">
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium tracking-wide uppercase bg-violet text-white shadow-sm whitespace-nowrap">
                       <Sparkles className="w-3 h-3" />
@@ -205,15 +210,15 @@ export default function Home() {
                     </span>
                   </div>
                   <Image
-                    src="/images/guatemala-nuevo.jpg"
-                    alt="Pedro Leal en Guatemala — Venezuela Se Levanta en La Resortera con Darwin y Spanfles"
+                    src="/images/showguatemala.webp"
+                    alt="Pedro Leal en Guatemala — Venezuela Se Levanta en La Resortera"
                     width={564}
                     height={700}
                     className="w-full h-auto rounded-2xl shadow-tour-art"
                   />
-                </div>
+                </a>
 
-                <div className="relative gs-hidden" data-gs="card-next">
+                <a href={MEXICO_LINK} target="_blank" rel="noopener noreferrer" className="relative gs-hidden block" data-gs="card-next">
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium tracking-wide uppercase bg-violet text-white shadow-sm whitespace-nowrap">
                       <Sparkles className="w-3 h-3" />
@@ -221,24 +226,29 @@ export default function Home() {
                     </span>
                   </div>
                   <Image
-                    src="/images/mexico-show.jpg"
-                    alt="Pedro Leal en México — Venezuela Se Levanta con David Show, Bobby Comedia y Oscar Estilla"
+                    src="/images/showmexico.webp"
+                    alt="Pedro Leal en México — Venezuela Se Levanta"
                     width={564}
                     height={700}
                     className="w-full h-auto rounded-2xl shadow-tour-art"
                   />
-                </div>
+                </a>
 
-                <div className="relative gs-hidden" data-gs="card-next">
+                <a href={WA_MONTREAL} target="_blank" rel="noopener noreferrer" className="relative gs-hidden block" data-gs="card-next">
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium tracking-wide uppercase bg-[rgba(186,215,247,0.12)] text-mist shadow-sm whitespace-nowrap">
-                      Montreal — Próximamente
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium tracking-wide uppercase bg-violet text-white shadow-sm whitespace-nowrap">
+                      <Sparkles className="w-3 h-3" />
+                      Montreal
                     </span>
                   </div>
-                  <div className="w-full aspect-[564/700] rounded-2xl bg-[rgba(186,214,247,0.03)] border border-[rgba(186,215,247,0.08)] flex items-center justify-center">
-                    <span className="text-fog text-sm">🇨🇦</span>
-                  </div>
-                </div>
+                  <Image
+                    src="/images/showmontreal.webp"
+                    alt="Pedro Leal en Montreal — Agenda de Esperanza 2027"
+                    width={564}
+                    height={700}
+                    className="w-full h-auto rounded-2xl shadow-tour-art"
+                  />
+                </a>
               </div>
             </div>
             </div>
@@ -278,17 +288,26 @@ export default function Home() {
                     </div>
                     <div className="flex items-center gap-2 text-sm text-mist shrink-0">
                       <Calendar className="w-4 h-4 text-fog" />
-                      {show.date}
+                      <span>
+                        {show.date}
+                        {show.time && <span className="ml-1 text-fog">· {show.time}</span>}
+                      </span>
                     </div>
-                    <a
-                      href="https://wa.me/17869443555?text=Quiero%20ir%20a%20tu%20pr%C3%B3ximo%20show"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium text-white bg-violet no-underline shrink-0 transition-opacity hover:opacity-90 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-frost focus-visible:outline-offset-2"
-                    >
-                      <Ticket className="w-4 h-4" />
-                      Boletos
-                    </a>
+                    {show.href ? (
+                      <a
+                        href={show.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium text-white bg-violet no-underline shrink-0 transition-opacity hover:opacity-90 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-frost focus-visible:outline-offset-2"
+                      >
+                        <Ticket className="w-4 h-4" />
+                        Boletos
+                      </a>
+                    ) : (
+                      <span className="px-4 py-2 rounded-full text-sm font-medium text-fog bg-[rgba(186,214,247,0.06)] shrink-0">
+                        Próximamente
+                      </span>
+                    )}
                   </div>
                 ))}
               </div>
