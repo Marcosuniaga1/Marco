@@ -272,15 +272,15 @@ export default function Home() {
                 {tourDates.map((show) => (
                   <div
                     key={show.country}
-                    className="flex items-center gap-4 py-4 border-b border-glass-edge gs-hidden max-md:flex-wrap max-md:gap-2"
+                    className="grid grid-cols-[2.5rem_1fr] gap-x-3 gap-y-1.5 items-start py-4 border-b border-glass-edge gs-hidden md:flex md:items-center md:gap-4"
                     data-gs="stagger-item"
                   >
-                    <span className="text-2xl w-10 text-center shrink-0">{show.flag}</span>
-                    <div className="flex-1 min-w-0">
+                    <span className="text-2xl w-10 text-center self-center">{show.flag}</span>
+                    <div className="min-w-0 md:flex-1">
                       <div className="font-display font-medium text-ice text-base">{show.city}</div>
                       <div className="text-sm text-fog">{show.country}</div>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-mist shrink-0">
+                    <div className="col-start-2 flex items-center gap-2 text-sm text-mist md:shrink-0">
                       <Calendar className="w-4 h-4 text-fog" />
                       <span>
                         {show.date}
@@ -292,13 +292,13 @@ export default function Home() {
                         href={show.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium text-white bg-violet no-underline shrink-0 transition-opacity hover:opacity-90 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-frost focus-visible:outline-offset-2"
+                        className="col-start-2 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium text-white bg-violet no-underline w-fit transition-opacity hover:opacity-90 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-frost focus-visible:outline-offset-2 md:shrink-0"
                       >
                         <Ticket className="w-4 h-4" />
                         Boletos
                       </a>
                     ) : (
-                      <span className="px-4 py-2 rounded-full text-sm font-medium text-fog bg-[rgba(186,214,247,0.06)] shrink-0">
+                      <span className="col-start-2 px-4 py-2 rounded-full text-sm font-medium text-fog bg-[rgba(186,214,247,0.06)] w-fit">
                         Próximamente
                       </span>
                     )}
