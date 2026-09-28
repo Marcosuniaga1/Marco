@@ -258,9 +258,10 @@ export default function Home() {
           <section className="py-[120px] max-md:py-14" id="gira">
             <div className="max-w-[1200px] mx-auto px-4">
               <Eyebrow text="TOUR 2026/2027" />
+              <SectionHeading>Venezuela Se Levanta</SectionHeading>
 
               <div className="text-center max-w-[640px] mx-auto mb-12 gs-hidden" data-gs="reveal">
-                <p className="font-mono text-sm tracking-[0.08em] uppercase text-frost mb-4">
+                <p className="font-mono text-sm tracking-[0.08em] text-frost mb-4">
                   Una risa también puede ayudar.
                 </p>
                 <p className="text-base leading-relaxed text-mist italic mt-4">
