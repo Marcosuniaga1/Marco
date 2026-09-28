@@ -20,10 +20,10 @@ import { ExpandableCard } from "@/components/ExpandableCard";
 import { MobileNav } from "@/components/MobileNav";
 
 const roles = [
+  "Comediante",
+  "Productor",
   "Actor",
   "Cantante",
-  "Productor",
-  "Comediante",
   "Host",
 ];
 
@@ -149,7 +149,7 @@ export default function Home() {
               </div>
 
               <p className="text-lg leading-snug text-mist max-w-[520px] mx-auto mb-6 gs-hidden" data-gs="sub">
-                Humor que cruza fronteras.
+                Humor que cruza fronteras
               </p>
 
               <div className="flex flex-wrap justify-center gap-2 mb-10 gs-hidden" data-gs="roles">
@@ -258,19 +258,13 @@ export default function Home() {
           <section className="py-[120px] max-md:py-14" id="gira">
             <div className="max-w-[1200px] mx-auto px-4">
               <Eyebrow text="TOUR 2026/2027" />
-              <SectionHeading>Venezuela Se Levanta</SectionHeading>
 
               <div className="text-center max-w-[640px] mx-auto mb-12 gs-hidden" data-gs="reveal">
                 <p className="font-mono text-sm tracking-[0.08em] uppercase text-frost mb-4">
                   Una risa también puede ayudar.
                 </p>
-                <p className="text-base leading-relaxed text-mist mb-2">
-                  Pedrito Leal presenta:<br />
-                  <strong className="text-ice font-display text-lg">VENEZUELA SE LEVANTA</strong><br />
-                  <span className="text-fog">Stand-Up Comedy Tour 2026–2027</span>
-                </p>
                 <p className="text-base leading-relaxed text-mist italic mt-4">
-                  Reímos juntos. Ayudamos juntos. Nos levantamos juntos.
+                  Reímos juntos, ayudamos juntos, nos levantamos juntos.
                 </p>
               </div>
 
