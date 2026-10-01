@@ -542,15 +542,26 @@ export default function Home() {
                 className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 max-w-[1000px] mx-auto"
                 data-gs-stagger="true"
               >
-                {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
+                {[
+                  { src: "/images/sponsors/sponsor1.png", alt: "Keyris Rodriguez" },
+                  { src: "/images/sponsors/sponsor2.webp", alt: "TuFamilia" },
+                  { src: "/images/sponsors/sponsor3.png", alt: "Latinos en Quebec" },
+                  { src: "/images/sponsors/sponsor4.png", alt: "Teque Pancho" },
+                  { src: "/images/sponsors/sponsor5.webp", alt: "CreacionesByKim" },
+                  { src: "/images/sponsors/sponsor6.png", alt: "Somos Construction" },
+                  { src: "/images/sponsors/sponsor7.png", alt: "Mora Mora Party" },
+                  { src: "/images/sponsors/sponsor8.png", alt: "Arepa du Plateau" },
+                  { src: "/images/sponsors/sponsor9.png", alt: "Gonzalo Nunez - The Agency" },
+                  { src: "/images/sponsors/sponsor10.png", alt: "Connek" },
+                ].map((s) => (
                   <div
-                    key={n}
+                    key={s.alt}
                     className="sponsor-card gs-hidden"
                     data-gs="stagger-item"
                   >
                     <Image
-                      src={`/images/sponsors/sponsor${n}.png`}
-                      alt={`Sponsor ${n}`}
+                      src={s.src}
+                      alt={s.alt}
                       width={200}
                       height={100}
                       className="w-full h-auto object-contain"
