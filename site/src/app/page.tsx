@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import {
   Mic,
   Clapperboard,
@@ -36,7 +37,7 @@ const tourDates: { city: string; country: string; date: string; time?: string; f
   { city: "Bogotá", country: "Colombia", date: "Nov 14, 2026", time: "8:00 PM", flag: "🇨🇴", href: WA_COLOMBIA },
   { city: "Ciudad de Guatemala", country: "Guatemala", date: "Nov 19, 2026", time: "7:00 PM y 9:00 PM", flag: "🇬🇹", href: WA_GUATEMALA },
   { city: "Ciudad de México", country: "México", date: "Nov 21, 2026", time: "10:30 PM", flag: "🇲🇽", href: MEXICO_LINK },
-  { city: "Montreal", country: "Canadá", date: "Ene 23, 2027", time: "7:00 PM y 9:00 PM", flag: "🇨🇦", href: WA_MONTREAL },
+  { city: "Montreal", country: "Canadá", date: "Ene 23, 2027", time: "7:00 PM y 9:00 PM", flag: "🇨🇦", href: "/montreal" },
   { city: "Santiago", country: "Chile", date: "Próximamente", flag: "🇨🇱" },
   { city: "Santo Domingo", country: "Rep. Dominicana", date: "Próximamente", flag: "🇩🇴" },
   { city: "Buenos Aires", country: "Argentina", date: "Próximamente", flag: "🇦🇷" },
@@ -101,6 +102,7 @@ export default function Home() {
                   { label: "Sobre mí", href: "#sobre-mi" },
                   { label: "Servicios", href: "#servicios" },
                   { label: "Fundación", href: "#fundacion" },
+                  { label: "Sponsors", href: "#sponsors" },
                   { label: "Contacto", href: "#contacto" },
                 ].map((item) => (
                   <li key={item.label}>
@@ -234,7 +236,7 @@ export default function Home() {
                   />
                 </a>
 
-                <a href={WA_MONTREAL} target="_blank" rel="noopener noreferrer" className="relative gs-hidden block" data-gs="card-next">
+                <Link href="/montreal" className="relative gs-hidden block" data-gs="card-next">
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium tracking-wide uppercase bg-violet text-white shadow-sm whitespace-nowrap">
                       <Sparkles className="w-3 h-3" />
@@ -248,7 +250,7 @@ export default function Home() {
                     height={700}
                     className="w-full h-auto rounded-2xl shadow-tour-art"
                   />
-                </a>
+                </Link>
               </div>
             </div>
             </div>
@@ -289,15 +291,25 @@ export default function Home() {
                       </span>
                     </div>
                     {show.href ? (
-                      <a
-                        href={show.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="col-start-2 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium text-white bg-violet no-underline w-fit transition-opacity hover:opacity-90 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-frost focus-visible:outline-offset-2 md:shrink-0"
-                      >
-                        <Ticket className="w-4 h-4" />
-                        Boletos
-                      </a>
+                      show.href.startsWith("/") ? (
+                        <Link
+                          href={show.href}
+                          className="col-start-2 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium text-white bg-violet no-underline w-fit transition-opacity hover:opacity-90 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-frost focus-visible:outline-offset-2 md:shrink-0"
+                        >
+                          <Ticket className="w-4 h-4" />
+                          Boletos
+                        </Link>
+                      ) : (
+                        <a
+                          href={show.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="col-start-2 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium text-white bg-violet no-underline w-fit transition-opacity hover:opacity-90 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-frost focus-visible:outline-offset-2 md:shrink-0"
+                        >
+                          <Ticket className="w-4 h-4" />
+                          Boletos
+                        </a>
+                      )
                     ) : (
                       <span className="col-start-2 px-4 py-2 rounded-full text-sm font-medium text-fog bg-[rgba(186,214,247,0.06)] w-fit">
                         Próximamente
@@ -513,6 +525,38 @@ export default function Home() {
                     />
                   </div>
                 </div>
+              </div>
+            </div>
+          </section>
+
+          {/* SPONSORS */}
+          <section className="py-[120px] max-md:py-14" id="sponsors">
+            <div className="max-w-[1200px] mx-auto px-4">
+              <Eyebrow text="SPONSORS" />
+              <SectionHeading>Nos acompañan</SectionHeading>
+              <SectionSub>
+                Aliados que hacen posible llevar este show a cada escenario.
+              </SectionSub>
+
+              <div
+                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 max-w-[1000px] mx-auto"
+                data-gs-stagger="true"
+              >
+                {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
+                  <div
+                    key={n}
+                    className="sponsor-card gs-hidden"
+                    data-gs="stagger-item"
+                  >
+                    <Image
+                      src={`/images/sponsors/sponsor${n}.png`}
+                      alt={`Sponsor ${n}`}
+                      width={200}
+                      height={100}
+                      className="w-full h-auto object-contain"
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           </section>

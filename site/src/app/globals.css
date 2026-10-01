@@ -315,6 +315,66 @@ body {
   opacity: 0;
 }
 
+/* Sponsor card */
+.sponsor-card {
+  border-radius: 16px;
+  background: var(--glass-fill);
+  box-shadow: var(--shadow-subtle);
+  padding: 24px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.sponsor-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-subtle), var(--shadow-glow);
+}
+
+/* Sponsor ticker / marquee */
+.sponsor-ticker {
+  overflow: hidden;
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+}
+.sponsor-ticker-inner {
+  display: inline-flex;
+  animation: marquee 40s linear infinite;
+  will-change: transform;
+}
+.sponsor-ticker-item {
+  flex-shrink: 0;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sponsor-ticker:hover .sponsor-ticker-inner {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 /* Floating buttons */
 .floating-btn {
   position: fixed;
