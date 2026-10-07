@@ -4,29 +4,33 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Heart } from "lucide-react";
 import { GsapAnimations } from "@/components/GsapAnimations";
+import { SponsorModal, useSponsorModal } from "@/components/SponsorModal";
 
 const WA_MONTREAL =
   "https://wa.me/17869443555?text=Hola%2C%20vi%20en%20tu%20p%C3%A1gina%20%2AVenezuela%20se%20Levanta%2A%20y%20me%20interesa%20la%20Agenda%20de%20Esperanza%202027%20con%20las%202%20entradas%20para%20el%20show%20en%20Montreal%20el%20%2A29%20de%20enero%2A.%20%C2%BFMe%20puedes%20dar%20los%20detalles%3F";
 
 const sponsors = [
-  { src: "/images/sponsors/sponsor1.png", alt: "Keyris Rodriguez" },
-  { src: "/images/sponsors/sponsor2.webp", alt: "TuFamilia" },
-  { src: "/images/sponsors/sponsor3.png", alt: "Latinos en Quebec" },
-  { src: "/images/sponsors/sponsor4.png", alt: "Teque Pancho" },
-  { src: "/images/sponsors/sponsor5.webp", alt: "CreacionesByKim" },
-  { src: "/images/sponsors/sponsor6.png", alt: "Somos Construction" },
-  { src: "/images/sponsors/sponsor7.png", alt: "Mora Mora Party" },
-  { src: "/images/sponsors/sponsor8.png", alt: "Arepa du Plateau" },
-  { src: "/images/sponsors/sponsor9.png", alt: "Gonzalo Nunez - The Agency" },
-  { src: "/images/sponsors/sponsor10.png", alt: "Connek" },
+  { src: "/images/sponsors/sponsor1.png", alt: "Keyris Rodriguez", infoImg: "/images/1.jpeg" },
+  { src: "/images/sponsors/sponsor2.webp", alt: "TuFamilia", infoImg: "/images/2.jpeg" },
+  { src: "/images/sponsors/sponsor3.png", alt: "Latinos en Quebec", infoImg: "/images/3.jpeg" },
+  { src: "/images/sponsors/sponsor4.png", alt: "Teque Pancho", infoImg: "/images/4.jpeg" },
+  { src: "/images/sponsors/sponsor5.webp", alt: "CreacionesByKim", infoImg: "/images/5.jpeg" },
+  { src: "/images/sponsors/sponsor6.png", alt: "Somos Construction", infoImg: "/images/6.jpeg" },
+  { src: "/images/sponsors/sponsor7.png", alt: "Mora Mora Party", infoImg: "/images/7.jpeg" },
+  { src: "/images/sponsors/sponsor8.png", alt: "Arepa du Plateau", infoImg: "/images/8.jpeg" },
+  { src: "/images/sponsors/sponsor9.png", alt: "Gonzalo Nunez - The Agency", infoImg: "/images/9.jpeg" },
+  { src: "/images/sponsors/sponsor10.png", alt: "Connek", infoImg: "/images/10.jpeg" },
 ];
 
 export default function MontrealPage() {
+  const { modal, open, close } = useSponsorModal();
+
   return (
     <>
       <div className="grid-bg" aria-hidden="true" />
       <div className="spotlight" aria-hidden="true" />
       <GsapAnimations />
+      {modal && <SponsorModal src={modal.src} alt={modal.alt} onClose={close} />}
 
       <div className="relative z-[1]">
         {/* HEADER */}
@@ -170,7 +174,12 @@ export default function MontrealPage() {
                 <div className="sponsor-ticker">
                   <div className="sponsor-ticker-inner">
                     {[...sponsors, ...sponsors].map((s, i) => (
-                      <div key={i} className="sponsor-ticker-item">
+                      <button
+                        key={i}
+                        className="sponsor-ticker-item cursor-pointer"
+                        onClick={() => open(s.infoImg, s.alt)}
+                        aria-label={`Ver información de patrocinio de ${s.alt}`}
+                      >
                         <Image
                           src={s.src}
                           alt={s.alt}
@@ -178,7 +187,7 @@ export default function MontrealPage() {
                           height={70}
                           className="w-auto h-14 object-contain opacity-60 hover:opacity-100 transition-opacity"
                         />
-                      </div>
+                      </button>
                     ))}
                   </div>
                 </div>
