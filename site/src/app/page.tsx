@@ -19,6 +19,7 @@ import { FloatingButtons } from "@/components/FloatingButtons";
 import { GsapAnimations } from "@/components/GsapAnimations";
 import { ExpandableCard } from "@/components/ExpandableCard";
 import { MobileNav } from "@/components/MobileNav";
+import { SponsorModal, useSponsorModal } from "@/components/SponsorModal";
 
 const roles = [
   "Comediante",
@@ -81,12 +82,15 @@ function SectionSub({ children }: { children: React.ReactNode }) {
 }
 
 export default function Home() {
+  const { modal, open, close } = useSponsorModal();
+
   return (
     <>
       <div className="grid-bg" aria-hidden="true" />
       <div className="spotlight" aria-hidden="true" />
       <GsapAnimations />
       <FloatingButtons />
+      {modal && <SponsorModal src={modal.src} alt={modal.alt} onClose={close} />}
 
       <div className="relative z-[1]">
         {/* HEADER */}
@@ -543,21 +547,23 @@ export default function Home() {
                 data-gs-stagger="true"
               >
                 {[
-                  { src: "/images/sponsors/sponsor1.png", alt: "Keyris Rodriguez" },
-                  { src: "/images/sponsors/sponsor2.webp", alt: "TuFamilia" },
-                  { src: "/images/sponsors/sponsor3.png", alt: "Latinos en Quebec" },
-                  { src: "/images/sponsors/sponsor4.png", alt: "Teque Pancho" },
-                  { src: "/images/sponsors/sponsor5.webp", alt: "CreacionesByKim" },
-                  { src: "/images/sponsors/sponsor6.png", alt: "Somos Construction" },
-                  { src: "/images/sponsors/sponsor7.png", alt: "Mora Mora Party" },
-                  { src: "/images/sponsors/sponsor8.png", alt: "Arepa du Plateau" },
-                  { src: "/images/sponsors/sponsor9.png", alt: "Gonzalo Nunez - The Agency" },
-                  { src: "/images/sponsors/sponsor10.png", alt: "Connek" },
+                  { src: "/images/sponsors/sponsor1.png", alt: "Keyris Rodriguez", infoImg: "/images/1.jpeg" },
+                  { src: "/images/sponsors/sponsor2.webp", alt: "TuFamilia", infoImg: "/images/2.jpeg" },
+                  { src: "/images/sponsors/sponsor3.png", alt: "Latinos en Quebec", infoImg: "/images/3.jpeg" },
+                  { src: "/images/sponsors/sponsor4.png", alt: "Teque Pancho", infoImg: "/images/4.jpeg" },
+                  { src: "/images/sponsors/sponsor5.webp", alt: "CreacionesByKim", infoImg: "/images/5.jpeg" },
+                  { src: "/images/sponsors/sponsor6.png", alt: "Somos Construction", infoImg: "/images/6.jpeg" },
+                  { src: "/images/sponsors/sponsor7.png", alt: "Mora Mora Party", infoImg: "/images/7.jpeg" },
+                  { src: "/images/sponsors/sponsor8.png", alt: "Arepa du Plateau", infoImg: "/images/8.jpeg" },
+                  { src: "/images/sponsors/sponsor9.png", alt: "Gonzalo Nunez - The Agency", infoImg: "/images/9.jpeg" },
+                  { src: "/images/sponsors/sponsor10.png", alt: "Connek", infoImg: "/images/10.jpeg" },
                 ].map((s) => (
-                  <div
+                  <button
                     key={s.alt}
-                    className="sponsor-card gs-hidden"
+                    className="sponsor-card gs-hidden cursor-pointer"
                     data-gs="stagger-item"
+                    onClick={() => open(s.infoImg, s.alt)}
+                    aria-label={`Ver información de patrocinio de ${s.alt}`}
                   >
                     <Image
                       src={s.src}
@@ -566,7 +572,7 @@ export default function Home() {
                       height={100}
                       className="w-full h-auto object-contain"
                     />
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
