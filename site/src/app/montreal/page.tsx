@@ -2,12 +2,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Heart } from "lucide-react";
 import { GsapAnimations } from "@/components/GsapAnimations";
 import { MontrealForm } from "@/components/MontrealForm";
 import { SponsorModal, useSponsorModal } from "@/components/SponsorModal";
 
+const CHECKOUT_READY = process.env.MONTREAL_CHECKOUT_READY === "1";
+
 const WA_MONTREAL =
+  "https://wa.me/17869443555?text=Hola%2C%20vi%20en%20tu%20p%C3%A1gina%20%2AVenezuela%20se%20Levanta%2A%20y%20me%20interesa%20la%20Agenda%20de%20Esperanza%202027%20con%20las%202%20entradas%20para%20el%20show%20en%20Montreal%20el%20%2A29%20de%20enero%2A.%20%C2%BFMe%20puedes%20dar%20los%20detalles%3F";
+const WA_QUESTIONS =
   "https://wa.me/17869443555?text=Hola%2C%20tengo%20una%20pregunta%20sobre%20el%20show%20de%20%2AVenezuela%20se%20Levanta%2A%20en%20Montreal%20el%20%2A29%20de%20enero%2A.";
 
 const sponsors = [
@@ -144,20 +148,34 @@ export default function MontrealPage() {
                   </p>
                 </div>
 
-                <div id="reservar" className="relative scroll-mt-24 overflow-hidden rounded-2xl p-3 sm:p-6">
-                  <Image
-                    src="/images/VSL2.png"
-                    alt=""
-                    fill
-                    sizes="(max-width: 800px) 100vw, 640px"
-                    className="object-cover opacity-35 blur-[2px] scale-105"
-                    aria-hidden="true"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-b from-[rgba(5,6,15,0.55)] to-[rgba(5,6,15,0.9)]" aria-hidden="true" />
-                  <div className="relative">
-                    <MontrealForm whatsappHref={WA_MONTREAL} />
+                {CHECKOUT_READY ? (
+                  <div id="reservar" className="relative scroll-mt-24 overflow-hidden rounded-2xl p-3 sm:p-6">
+                    <Image
+                      src="/images/VSL2.png"
+                      alt=""
+                      fill
+                      sizes="(max-width: 800px) 100vw, 640px"
+                      className="object-cover opacity-35 blur-[2px] scale-105"
+                      aria-hidden="true"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[rgba(5,6,15,0.55)] to-[rgba(5,6,15,0.9)]" aria-hidden="true" />
+                    <div className="relative">
+                      <MontrealForm whatsappHref={WA_QUESTIONS} />
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div id="reservar" className="text-center pb-6">
+                    <a
+                      href={WA_MONTREAL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-lg font-medium text-white bg-violet no-underline transition-opacity hover:opacity-90 active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-frost focus-visible:outline-offset-2"
+                    >
+                      <Heart className="w-5 h-5" />
+                      Donar $100 CAD
+                    </a>
+                  </div>
+                )}
 
                 <div className="text-center space-y-1 pt-4">
                   <p className="text-lg text-frost font-medium">
