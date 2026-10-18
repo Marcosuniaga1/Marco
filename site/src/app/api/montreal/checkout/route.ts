@@ -39,6 +39,8 @@ export async function POST(request: Request) {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       locale: "es",
+      // Stripe's minimum (30 min, plus a small buffer); keeps unpaid checkouts from holding a sold-out show open for 24h.
+      expires_at: Math.floor(Date.now() / 1000) + 31 * 60,
       customer_email: r.email,
       line_items: [
         {
