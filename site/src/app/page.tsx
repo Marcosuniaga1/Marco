@@ -29,14 +29,14 @@ const roles = [
   "Host",
 ];
 
-const WA_COLOMBIA = "https://wa.me/17869443555?text=Hola%2C%20vi%20en%20tu%20p%C3%A1gina%20el%20tour%20%2AVenezuela%20se%20Levanta%2A%20y%20me%20interesa%20adquirir%20entradas%20para%20el%20show%20en%20Bogot%C3%A1%20el%20%2A14%20de%20noviembre%2A.%20%C2%BFMe%20puedes%20dar%20los%20detalles%3F";
-const WA_GUATEMALA = "https://wa.me/50249759226?text=Hola%2C%20vi%20en%20tu%20p%C3%A1gina%20el%20tour%20%2AVenezuela%20se%20Levanta%2A%20y%20me%20interesa%20adquirir%20entradas%20para%20el%20show%20en%20Guatemala%20el%20%2A19%20de%20noviembre%2A.%20%C2%BFMe%20puedes%20dar%20los%20detalles%3F";
+const COLOMBIA_LINK = "https://www.jasspass.com/event/pedrito-leal-reuben-morales-presenta-venezuela-se-levanta-st";
+const GUATEMALA_LINK = "https://www.jasspass.com/event/calendar/6ac6a42550505fe64afb5c3e";
 const MEXICO_LINK = "https://circulocomedy.com/eventos/venezuela-se-levanta/";
 const WA_MONTREAL = "https://wa.me/17869443555?text=Hola%2C%20vi%20en%20tu%20p%C3%A1gina%20%2AVenezuela%20se%20Levanta%2A%20y%20me%20interesa%20la%20Agenda%20de%20Esperanza%202027%20con%20las%202%20entradas%20para%20el%20show%20en%20Montreal%20el%20%2A29%20de%20enero%2A.%20%C2%BFMe%20puedes%20dar%20los%20detalles%3F";
 
 const tourDates: { city: string; country: string; date: string; time?: string; flag: string; href?: string }[] = [
-  { city: "Bogotá", country: "Colombia", date: "Nov 14, 2026", time: "8:00 PM", flag: "🇨🇴", href: WA_COLOMBIA },
-  { city: "Ciudad de Guatemala", country: "Guatemala", date: "Nov 19, 2026", time: "7:00 PM y 9:00 PM", flag: "🇬🇹", href: WA_GUATEMALA },
+  { city: "Bogotá", country: "Colombia", date: "Nov 14, 2026", time: "8:00 PM", flag: "🇨🇴", href: COLOMBIA_LINK },
+  { city: "Ciudad de Guatemala", country: "Guatemala", date: "Nov 19, 2026", time: "7:00 PM y 9:00 PM", flag: "🇬🇹", href: GUATEMALA_LINK },
   { city: "Ciudad de México", country: "México", date: "Nov 21, 2026", time: "10:30 PM", flag: "🇲🇽", href: MEXICO_LINK },
   { city: "Montreal", country: "Canadá", date: "Ene 29, 2027", time: "7:00 PM y 9:00 PM", flag: "🇨🇦", href: "/montreal" },
   { city: "Santiago", country: "Chile", date: "Próximamente", flag: "🇨🇱" },
@@ -192,7 +192,7 @@ export default function Home() {
 
               {/* Country show arts — 2x2 grid */}
               <div className="grid grid-cols-2 gap-4 max-w-[860px] mx-auto max-sm:grid-cols-1 max-sm:max-w-[400px]">
-                <a href={WA_COLOMBIA} target="_blank" rel="noopener noreferrer" className="relative gs-hidden block" data-gs="card-next">
+                <a href={COLOMBIA_LINK} target="_blank" rel="noopener noreferrer" className="relative gs-hidden block" data-gs="card-next">
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium tracking-wide uppercase bg-violet text-white shadow-sm whitespace-nowrap">
                       <Sparkles className="w-3 h-3" />
@@ -208,7 +208,7 @@ export default function Home() {
                   />
                 </a>
 
-                <a href={WA_GUATEMALA} target="_blank" rel="noopener noreferrer" className="relative gs-hidden block" data-gs="card-next">
+                <a href={GUATEMALA_LINK} target="_blank" rel="noopener noreferrer" className="relative gs-hidden block" data-gs="card-next">
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium tracking-wide uppercase bg-violet text-white shadow-sm whitespace-nowrap">
                       <Sparkles className="w-3 h-3" />
