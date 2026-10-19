@@ -1,37 +1,20 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, CircleCheck, Clock } from "lucide-react";
-import { EVENT, SHOWS, fromMetadata } from "@/lib/montreal";
-import { getStripe } from "@/lib/server/stripe";
-import { ticketCode } from "@/lib/server/ticket-code";
+import { ArrowLeft, Clock, Download } from "lucide-react";
+import { TICKET_SIZE } from "@/lib/montreal";
+import { findPurchase } from "@/lib/server/purchase";
 
 export const metadata: Metadata = {
   title: "Gracias por tu donación | Montreal se levanta por La Guaira",
   robots: { index: false },
 };
 
-async function loadPurchase(sessionId: string | undefined) {
-  const stripe = getStripe();
-  if (!stripe || !sessionId?.startsWith("cs_")) return null;
-  try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    const parsed = fromMetadata(session.metadata);
-    if (!parsed.ok) return null;
-    return {
-      paid: session.payment_status === "paid",
-      firstName: parsed.data.firstName,
-      email: parsed.data.email,
-      show: SHOWS[parsed.data.show].label,
-      code: ticketCode(session.id, parsed.data.show),
-    };
-  } catch {
-    return null;
-  }
-}
-
 export default async function GraciasPage({ searchParams }: PageProps<"/montreal/gracias">) {
   const { session_id } = await searchParams;
-  const purchase = await loadPurchase(typeof session_id === "string" ? session_id : undefined);
+  const purchase = await findPurchase(typeof session_id === "string" ? session_id : undefined);
+  const ticketUrl = purchase?.paid ? `/api/montreal/ticket?session_id=${encodeURIComponent(purchase.sessionId)}` : null;
+  const sender = process.env.GMAIL_USER;
 
   return (
     <>
@@ -47,51 +30,58 @@ export default async function GraciasPage({ searchParams }: PageProps<"/montreal
           </div>
         </header>
 
-        <main className="flex flex-1 items-center py-16">
-          <div className="max-w-[560px] mx-auto px-4 w-full">
-            <div className="glass-modal p-8 text-center space-y-6">
-              {purchase?.paid === false ? (
-                <Clock className="mx-auto h-12 w-12 text-frost" aria-hidden="true" />
-              ) : (
-                <CircleCheck className="mx-auto h-12 w-12 text-frost" aria-hidden="true" />
-              )}
-
+        <main className="flex flex-1 items-center py-12">
+          <div className="max-w-[480px] mx-auto px-4 w-full">
+            <div className="glass-modal p-6 sm:p-8 text-center space-y-6">
               <div className="space-y-2">
                 <h1 className="text-gradient font-display font-medium text-[clamp(26px,5vw,36px)] leading-tight text-balance">
-                  {purchase ? `¡Gracias, ${purchase.firstName}!` : "¡Gracias por tu donación!"}
+                  {purchase ? `¡Gracias, ${purchase.registration.firstName}!` : "¡Gracias por tu donación!"}
                 </h1>
                 <p className="text-base text-mist">
-                  {purchase?.paid === false
-                    ? "Tu pago está en proceso. Apenas se confirme, te enviamos tu entrada por correo."
+                  {ticketUrl
+                    ? "Esta es tu entrada, válida para 2 personas. Guárdala en tu teléfono y preséntala en la puerta."
                     : purchase
-                      ? `Tu donación fue recibida. Te enviamos tu entrada a ${purchase.email}.`
+                      ? "Tu pago está en proceso. Apenas se confirme, te enviamos tu entrada por correo."
                       : "Tu donación fue recibida. En unos minutos te llega la entrada a tu correo."}
                 </p>
               </div>
 
-              {purchase && (
-                <dl className="glass-card grid grid-cols-2 gap-4 p-5 text-left">
-                  <div>
-                    <dt className="text-xs uppercase tracking-[0.08em] text-fog">Función</dt>
-                    <dd className="font-display text-xl text-ice">{purchase.show}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-xs uppercase tracking-[0.08em] text-fog">Entrada</dt>
-                    <dd className="font-display text-xl text-ice">2 personas</dd>
-                  </div>
-                  <div className="col-span-2">
-                    <dt className="text-xs uppercase tracking-[0.08em] text-fog">Fecha y lugar</dt>
-                    <dd className="text-frost">{EVENT.dateLabel} · {EVENT.venue}</dd>
-                  </div>
-                  <div className="col-span-2">
-                    <dt className="text-xs uppercase tracking-[0.08em] text-fog">Código de entrada</dt>
-                    <dd className="font-mono text-lg text-ice">{purchase.code}</dd>
-                  </div>
-                </dl>
+              {ticketUrl ? (
+                <div className="space-y-4">
+                  <a href={ticketUrl} target="_blank" rel="noopener" className="block">
+                    <Image
+                      src={ticketUrl}
+                      alt={`Tu entrada ${purchase!.code}`}
+                      width={TICKET_SIZE.width}
+                      height={TICKET_SIZE.height}
+                      unoptimized
+                      priority
+                      className="w-full h-auto rounded-xl shadow-tour-art"
+                    />
+                  </a>
+                  <a
+                    href={`${ticketUrl}&download=1`}
+                    className="flex w-full items-center justify-center gap-2 rounded-full bg-violet px-6 py-3.5 text-base font-medium text-white no-underline transition-opacity hover:opacity-90 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-frost focus-visible:outline-offset-2"
+                  >
+                    <Download className="h-5 w-5" />
+                    Descargar mi entrada
+                  </a>
+                  <p className="text-[13px] text-fog">En iPhone también puedes mantener presionada la imagen y elegir “Guardar en Fotos”.</p>
+                </div>
+              ) : (
+                purchase && <Clock className="mx-auto h-12 w-12 text-frost" aria-hidden="true" />
               )}
 
-              <p className="text-sm text-fog">
-                ¿No ves el correo en 10 minutos? Revisa la carpeta de spam o promociones.
+              {purchase && (
+                <p className="text-sm text-mist">
+                  {ticketUrl ? "Como respaldo, también te la enviamos a " : "Te la enviaremos a "}
+                  <span className="text-frost">{purchase.registration.email}</span>
+                  {ticketUrl ? ". Es la misma entrada." : "."}
+                </p>
+              )}
+              <p className="text-[13px] text-fog">
+                ¿No ves el correo? Revisa spam o promociones
+                {sender ? <> y agrega <span className="text-mist">{sender}</span> a tus contactos</> : null}.
               </p>
               <p className="font-display text-lg text-ice">Gracias, Montreal. Venezuela se levanta.</p>
             </div>

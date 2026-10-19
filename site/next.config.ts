@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
   env: { MONTREAL_CHECKOUT_READY: checkoutReady ? "1" : "" },
   outputFileTracingIncludes: {
     "/api/montreal/webhook": ["./src/assets/fonts/*.ttf", "./public/images/logo-leal.jpg"],
+    "/api/montreal/ticket": ["./src/assets/fonts/*.ttf", "./public/images/logo-leal.jpg"],
   },
 };
 

@@ -2,7 +2,7 @@ import type Stripe from "stripe";
 import { fromMetadata } from "@/lib/montreal";
 import { appendRow } from "./sheet";
 import { sendTicketEmail } from "./mailer";
-import { renderTicketPng } from "./ticket";
+import { renderTicketJpeg } from "./ticket";
 import { ticketCode } from "./ticket-code";
 
 const paidAtFormat = new Intl.DateTimeFormat("es-CA", {
@@ -40,7 +40,7 @@ export async function fulfillSession(stripe: Stripe, session: Stripe.Checkout.Se
   }
 
   if (pi.metadata.email_done !== "1") {
-    const ticketPng = await renderTicketPng({ holder: `${r.firstName} ${r.lastName}`, show: r.show, code });
+    const ticketImage = await renderTicketJpeg({ holder: `${r.firstName} ${r.lastName}`, show: r.show, code });
     await sendTicketEmail({
       to: r.email,
       firstName: r.firstName,
@@ -48,7 +48,7 @@ export async function fulfillSession(stripe: Stripe, session: Stripe.Checkout.Se
       code,
       address: r.address,
       giftName: r.giftName,
-      ticketPng,
+      ticketImage,
     });
     await stripe.paymentIntents.update(piId, { metadata: { email_done: "1" } });
   }
