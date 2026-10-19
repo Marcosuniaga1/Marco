@@ -6,10 +6,23 @@ import { EVENT, SHOWS, TICKET_SIZE, type ShowId } from "@/lib/montreal";
 
 const root = process.cwd();
 const assets = Promise.all([
-  readFile(join(root, "src/assets/fonts/SpaceGrotesk-Medium.ttf")),
-  readFile(join(root, "src/assets/fonts/SpaceGrotesk-Bold.ttf")),
-  readFile(join(root, "public/images/logo-leal.jpg")),
+  readFile(join(root, "src/assets/fonts/Poppins-Medium.ttf")),
+  readFile(join(root, "src/assets/fonts/Poppins-Bold.ttf")),
+  readFile(join(root, "src/assets/fonts/Poppins-ExtraBold.ttf")),
+  readFile(join(root, "public/images/MontrealNuevoDef.jpg")),
 ]);
+
+// The poster's bottom row lists both show times; cropping just above it leaves only the buyer's show on the stub.
+const ART_HEIGHT = 1215;
+
+const C = {
+  stub: "#16060d",
+  pink: "#ff3d73",
+  yellow: "#ffd23f",
+  white: "#ffffff",
+  dim: "rgba(255,255,255,0.68)",
+  line: "rgba(255,255,255,0.22)",
+};
 
 export type TicketData = {
   holder: string;
@@ -17,73 +30,64 @@ export type TicketData = {
   code: string;
 };
 
-const C = {
-  canvas: "#05060f",
-  panel: "#0b0d1a",
-  edge: "rgba(186,215,247,0.18)",
-  ice: "#d8ecf8",
-  frost: "#d1e4fa",
-  mist: "#c7d3ea",
-  fog: "#9da7ba",
-  violet: "#663af3",
-};
+function Label({ children }: { children: string }) {
+  return <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: 4, color: C.pink, textTransform: "uppercase" }}>{children}</div>;
+}
 
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-      <div style={{ fontSize: 24, letterSpacing: 4, color: C.fog, textTransform: "uppercase" }}>{label}</div>
-      <div style={{ fontSize: 44, fontWeight: 700, color: C.ice }}>{value}</div>
-    </div>
-  );
+function holderSize(name: string): number {
+  if (name.length > 36) return 28;
+  if (name.length > 24) return 34;
+  return 42;
 }
 
 export async function renderTicketJpeg(t: TicketData): Promise<Buffer> {
-  const [medium, bold, logo] = await assets;
-  const logoSrc = `data:image/jpeg;base64,${logo.toString("base64")}`;
+  const [medium, bold, extraBold, art] = await assets;
+  const artSrc = `data:image/jpeg;base64,${art.toString("base64")}`;
   const show = SHOWS[t.show];
 
   const image = new ImageResponse(
     (
-      <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", background: C.canvas, fontFamily: "Space Grotesk", color: C.frost }}>
-        {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse only renders plain <img> */}
-        <img src={logoSrc} alt="" width={1080} height={360} style={{ objectFit: "cover", objectPosition: "center 52%" }} />
-
-        <div style={{ display: "flex", flexDirection: "column", flex: 1, padding: "52px 72px 0", gap: 36 }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            <div style={{ fontSize: 26, letterSpacing: 6, color: C.mist, textTransform: "uppercase" }}>
-              {`Venezuela se levanta · ${EVENT.city}`}
-            </div>
-            <div style={{ fontSize: 76, fontWeight: 700, lineHeight: 1.05, color: "#ffffff" }}>Entrada válida para 2 personas</div>
-          </div>
-
-          <div style={{ display: "flex", gap: 24 }}>
-            <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "20px 36px", borderRadius: 18, background: C.violet }}>
-              <div style={{ fontSize: 22, letterSpacing: 4, color: "rgba(255,255,255,0.8)", textTransform: "uppercase" }}>Función</div>
-              <div style={{ fontSize: 64, fontWeight: 700, color: "#ffffff" }}>{show.label}</div>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: 18 }}>
-              <Row label="Fecha" value={EVENT.dateLabel} />
-            </div>
-          </div>
-
-          <Row label="Lugar" value={EVENT.venue} />
-          <Row label="Titular" value={t.holder} />
+      <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", background: C.stub, fontFamily: "Poppins", color: C.white }}>
+        <div style={{ display: "flex", position: "relative", width: TICKET_SIZE.width, height: ART_HEIGHT }}>
+          {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse only renders plain <img> */}
+          <img src={artSrc} alt="" width={TICKET_SIZE.width} height={ART_HEIGHT} style={{ objectFit: "cover", objectPosition: "top" }} />
+          <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 140, display: "flex", background: `linear-gradient(to bottom, rgba(22,6,13,0), ${C.stub})` }} />
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", margin: "36px 0 0" }}>
-          <div style={{ width: 36, height: 72, borderRadius: "0 36px 36px 0", background: C.panel }} />
-          <div style={{ flex: 1, borderTop: `3px dashed ${C.edge}`, margin: "0 12px" }} />
-          <div style={{ width: 36, height: 72, borderRadius: "36px 0 0 36px", background: C.panel }} />
-        </div>
+        <div style={{ display: "flex", borderTop: `3px dashed ${C.line}`, margin: "0 40px" }} />
 
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", padding: "28px 72px 64px" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <div style={{ fontSize: 22, letterSpacing: 4, color: C.fog, textTransform: "uppercase" }}>Código de entrada</div>
-            <div style={{ fontSize: 56, fontWeight: 700, letterSpacing: 2, color: "#ffffff" }}>{t.code}</div>
+        <div style={{ display: "flex", flexDirection: "column", flex: 1, justifyContent: "space-between", padding: "30px 64px 36px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <Label>Fecha</Label>
+              <div style={{ fontSize: 58, fontWeight: 800, color: C.yellow, lineHeight: 1.05 }}>{EVENT.ticketDate}</div>
+              <div style={{ fontSize: 22, fontWeight: 500, color: C.dim }}>{EVENT.ticketWeekday}</div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+              <Label>Función</Label>
+              <div style={{ fontSize: 84, fontWeight: 800, color: C.yellow, lineHeight: 1 }}>{show.label}</div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2 }}>
+              <Label>Entrada</Label>
+              <div style={{ fontSize: 58, fontWeight: 800, lineHeight: 1.05 }}>2</div>
+              <div style={{ fontSize: 22, fontWeight: 500, color: C.dim }}>personas</div>
+            </div>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6, fontSize: 24, color: C.mist }}>
+
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 32 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1, minWidth: 0 }}>
+              <Label>Titular</Label>
+              <div style={{ fontSize: holderSize(t.holder), fontWeight: 700, lineHeight: 1.15 }}>{t.holder}</div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4, flexShrink: 0 }}>
+              <Label>Código</Label>
+              <div style={{ fontSize: 40, fontWeight: 800, letterSpacing: 1, lineHeight: 1.1 }}>{t.code}</div>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: 20, fontWeight: 500, color: C.dim }}>
+            <div>{`${EVENT.venue} · ${EVENT.city}`}</div>
             <div>Incluye 1 Agenda Esperanza 2027</div>
-            <div style={{ color: C.fog }}>Presenta esta imagen en la puerta</div>
           </div>
         </div>
       </div>
@@ -91,13 +95,14 @@ export async function renderTicketJpeg(t: TicketData): Promise<Buffer> {
     {
       ...TICKET_SIZE,
       fonts: [
-        { name: "Space Grotesk", data: medium, weight: 500, style: "normal" },
-        { name: "Space Grotesk", data: bold, weight: 700, style: "normal" },
+        { name: "Poppins", data: medium, weight: 500, style: "normal" },
+        { name: "Poppins", data: bold, weight: 700, style: "normal" },
+        { name: "Poppins", data: extraBold, weight: 800, style: "normal" },
       ],
     },
   );
 
-  // A ~570 KB PNG attachment counts against inbox placement; JPEG keeps it near 120 KB with no visible loss.
+  // A ~570 KB PNG attachment counts against inbox placement; JPEG keeps it far smaller with no visible loss.
   const png = Buffer.from(await image.arrayBuffer());
   return sharp(png).jpeg({ quality: 82, mozjpeg: true }).toBuffer();
 }

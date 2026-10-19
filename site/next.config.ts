@@ -13,8 +13,8 @@ const nextConfig: NextConfig = {
   // Until every credential is set in Vercel, /montreal keeps the WhatsApp button instead of the checkout form.
   env: { MONTREAL_CHECKOUT_READY: checkoutReady ? "1" : "" },
   outputFileTracingIncludes: {
-    "/api/montreal/webhook": ["./src/assets/fonts/*.ttf", "./public/images/logo-leal.jpg"],
-    "/api/montreal/ticket": ["./src/assets/fonts/*.ttf", "./public/images/logo-leal.jpg"],
+    "/api/montreal/webhook": ["./src/assets/fonts/*.ttf", "./public/images/MontrealNuevoDef.jpg"],
+    "/api/montreal/ticket": ["./src/assets/fonts/*.ttf", "./public/images/MontrealNuevoDef.jpg"],
   },
 };
 

@@ -3,6 +3,8 @@ export const EVENT = {
   venue: "Théâtre Sainte-Catherine",
   city: "Montreal",
   dateLabel: "Viernes 29 de enero de 2027",
+  ticketDate: "29 ENE",
+  ticketWeekday: "Viernes · 2027",
   priceCad: 100,
 } as const;
 
@@ -13,7 +15,7 @@ export const SHOWS = {
 
 export type ShowId = keyof typeof SHOWS;
 
-export const TICKET_SIZE = { width: 1080, height: 1350 };
+export const TICKET_SIZE = { width: 1080, height: 1590 };
 
 export type Registration = {
   firstName: string;
