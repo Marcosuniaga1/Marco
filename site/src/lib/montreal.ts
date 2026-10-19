@@ -13,6 +13,8 @@ export const SHOWS = {
 
 export type ShowId = keyof typeof SHOWS;
 
+export const TICKET_SIZE = { width: 1080, height: 1350 };
+
 export type Registration = {
   firstName: string;
   lastName: string;

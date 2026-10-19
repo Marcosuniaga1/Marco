@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { EVENT, SHOWS, type ShowId } from "@/lib/montreal";
+import sharp from "sharp";
+import { EVENT, SHOWS, TICKET_SIZE, type ShowId } from "@/lib/montreal";
 
 const root = process.cwd();
 const assets = Promise.all([
@@ -9,8 +10,6 @@ const assets = Promise.all([
   readFile(join(root, "src/assets/fonts/SpaceGrotesk-Bold.ttf")),
   readFile(join(root, "public/images/logo-leal.jpg")),
 ]);
-
-export const TICKET_SIZE = { width: 1080, height: 1350 };
 
 export type TicketData = {
   holder: string;
@@ -38,7 +37,7 @@ function Row({ label, value }: { label: string; value: string }) {
   );
 }
 
-export async function renderTicketPng(t: TicketData): Promise<Buffer> {
+export async function renderTicketJpeg(t: TicketData): Promise<Buffer> {
   const [medium, bold, logo] = await assets;
   const logoSrc = `data:image/jpeg;base64,${logo.toString("base64")}`;
   const show = SHOWS[t.show];
@@ -98,5 +97,7 @@ export async function renderTicketPng(t: TicketData): Promise<Buffer> {
     },
   );
 
-  return Buffer.from(await image.arrayBuffer());
+  // A ~570 KB PNG attachment counts against inbox placement; JPEG keeps it near 120 KB with no visible loss.
+  const png = Buffer.from(await image.arrayBuffer());
+  return sharp(png).jpeg({ quality: 82, mozjpeg: true }).toBuffer();
 }

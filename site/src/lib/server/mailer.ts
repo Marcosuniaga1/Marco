@@ -27,7 +27,7 @@ export type TicketEmail = {
   code: string;
   address: string;
   giftName: string;
-  ticketPng: Buffer;
+  ticketImage: Buffer;
 };
 
 export function buildTicketEmail(m: TicketEmail, fromAddress: string): SendMailOptions {
@@ -50,6 +50,8 @@ export function buildTicketEmail(m: TicketEmail, fromAddress: string): SendMailO
     "",
     "Adjuntamos tu entrada como imagen. Guárdala en tu teléfono y preséntala en la puerta.",
     "",
+    `Si ya la descargaste al terminar el pago, esta es una copia de respaldo: es la misma entrada. Su código (${m.code}) es único y vale para 2 personas, así que no necesitas hacer nada más.`,
+    "",
     agenda,
     "",
     "Tu donación se convierte en ayuda para nuestra gente de La Guaira.",
@@ -69,6 +71,7 @@ export function buildTicketEmail(m: TicketEmail, fromAddress: string): SendMailO
     <tr><td style="padding:4px 0;color:#5b6475;">Código de entrada</td><td style="padding:4px 0;font-weight:bold;">${e(m.code)}</td></tr>
   </table>
   <p style="font-size:15px;margin:0 0 16px;">Guarda esta imagen en tu teléfono y preséntala en la puerta. También va adjunta a este correo.</p>
+  <p style="font-size:15px;margin:0 0 16px;padding:12px 14px;background:#ffffff;border-radius:8px;">Si ya la descargaste al terminar el pago, esta es una <strong>copia de respaldo</strong>: es la misma entrada. Su código <strong>${e(m.code)}</strong> es único y vale para 2 personas, así que no necesitas hacer nada más.</p>
   <p style="font-size:15px;margin:0 0 24px;">${e(agenda)}</p>
   <p style="font-size:15px;margin:0;color:#5b6475;">Tu donación se convierte en ayuda para nuestra gente de La Guaira.<br>Gracias, Montreal. Venezuela se levanta.</p>
 </div></body></html>`;
@@ -81,7 +84,7 @@ export function buildTicketEmail(m: TicketEmail, fromAddress: string): SendMailO
     text,
     html,
     attachments: [
-      { filename: `entrada-${m.code}.png`, content: m.ticketPng, contentType: "image/png", cid: "entrada" },
+      { filename: `entrada-${m.code}.jpg`, content: m.ticketImage, contentType: "image/jpeg", cid: "entrada" },
     ],
   };
 }
