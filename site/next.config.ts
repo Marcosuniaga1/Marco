@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/montreal/webhook": ["./src/assets/fonts/*.ttf", "./public/images/MontrealNuevoDef.jpg"],
     "/api/montreal/ticket": ["./src/assets/fonts/*.ttf", "./public/images/MontrealNuevoDef.jpg"],
+    "/api/montreal/efectivo": ["./src/assets/fonts/*.ttf", "./public/images/MontrealNuevoDef.jpg"],
   },
 };
 

@@ -17,6 +17,13 @@ export type ShowId = keyof typeof SHOWS;
 
 export const TICKET_SIZE = { width: 1080, height: 1590 };
 
+export const CASH_LINK_MESSAGES: Record<string, string> = {
+  Usado: "Este enlace ya fue usado. Si ya te registraste, tu entrada está en tu correo.",
+  Vencido: "Este enlace venció. Pídele a Pedrito uno nuevo.",
+  Anulado: "Este enlace fue anulado. Pídele a Pedrito uno nuevo.",
+  not_found: "Este enlace no existe. Revisa que esté completo o pídele a Pedrito uno nuevo.",
+};
+
 export type Registration = {
   firstName: string;
   lastName: string;
