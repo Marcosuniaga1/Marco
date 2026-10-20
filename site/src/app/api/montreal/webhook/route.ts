@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       try {
         await fulfillSession(stripe, session);
       } catch (error) {
-        console.error(`[montreal] fulfillment failed for ${session.id}`, error);
+        console.error(`[montreal] fulfillment failed for ${session.id}: ${error instanceof Error ? error.message : error}`, error);
         return new Response("Fulfillment failed, retry later", { status: 500 });
       }
     }

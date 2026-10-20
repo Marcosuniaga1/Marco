@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Clock, Download } from "lucide-react";
 import { TICKET_SIZE } from "@/lib/montreal";
-import { findPurchase } from "@/lib/server/purchase";
+import { findTicket } from "@/lib/server/purchase";
 
 export const metadata: Metadata = {
   title: "Gracias por tu donación | Montreal se levanta por La Guaira",
@@ -11,9 +11,8 @@ export const metadata: Metadata = {
 };
 
 export default async function GraciasPage({ searchParams }: PageProps<"/montreal/gracias">) {
-  const { session_id } = await searchParams;
-  const purchase = await findPurchase(typeof session_id === "string" ? session_id : undefined);
-  const ticketUrl = purchase?.paid ? `/api/montreal/ticket?session_id=${encodeURIComponent(purchase.sessionId)}` : null;
+  const purchase = await findTicket(await searchParams);
+  const ticketUrl = purchase?.issued ? `/api/montreal/ticket?${purchase.query}` : null;
   const sender = process.env.GMAIL_USER;
 
   return (
@@ -35,7 +34,7 @@ export default async function GraciasPage({ searchParams }: PageProps<"/montreal
             <div className="glass-modal p-6 sm:p-8 text-center space-y-6">
               <div className="space-y-2">
                 <h1 className="text-gradient font-display font-medium text-[clamp(26px,5vw,36px)] leading-tight text-balance">
-                  {purchase ? `¡Gracias, ${purchase.registration.firstName}!` : "¡Gracias por tu donación!"}
+                  {purchase ? `¡Gracias, ${purchase.firstName}!` : "¡Gracias por tu donación!"}
                 </h1>
                 <p className="text-base text-mist">
                   {ticketUrl
@@ -75,7 +74,7 @@ export default async function GraciasPage({ searchParams }: PageProps<"/montreal
               {purchase && (
                 <p className="text-sm text-mist">
                   {ticketUrl ? "Como respaldo, también te la enviamos a " : "Te la enviaremos a "}
-                  <span className="text-frost">{purchase.registration.email}</span>
+                  <span className="text-frost">{purchase.email}</span>
                   {ticketUrl ? ". Es la misma entrada." : "."}
                 </p>
               )}

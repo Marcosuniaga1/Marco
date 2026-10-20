@@ -1,28 +1,63 @@
-import { fromMetadata, type Registration } from "@/lib/montreal";
+import { fromMetadata, isShowId, type ShowId } from "@/lib/montreal";
 import { getStripe } from "./stripe";
+import { getCashLink } from "./sheet";
+import { isCashTokenShape } from "./taquilla";
 import { ticketCode } from "./ticket-code";
 
-export type Purchase = {
-  sessionId: string;
-  paid: boolean;
-  registration: Registration;
+export type TicketHolder = {
+  // Query string that identifies this ticket on /montreal/gracias and /api/montreal/ticket.
+  query: string;
+  issued: boolean;
+  firstName: string;
+  lastName: string;
+  email: string;
+  show: ShowId;
   code: string;
 };
 
-export async function findPurchase(sessionId: string | undefined | null): Promise<Purchase | null> {
+async function fromStripe(sessionId: string): Promise<TicketHolder | null> {
   const stripe = getStripe();
-  if (!stripe || !sessionId?.startsWith("cs_")) return null;
+  if (!stripe || !sessionId.startsWith("cs_")) return null;
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     const parsed = fromMetadata(session.metadata);
     if (!parsed.ok) return null;
+    const r = parsed.data;
     return {
-      sessionId: session.id,
-      paid: session.payment_status === "paid",
-      registration: parsed.data,
-      code: ticketCode(session.id, parsed.data.show),
+      query: `session_id=${encodeURIComponent(session.id)}`,
+      issued: session.payment_status === "paid",
+      firstName: r.firstName,
+      lastName: r.lastName,
+      email: r.email,
+      show: r.show,
+      code: ticketCode(session.id, r.show),
     };
   } catch {
     return null;
   }
+}
+
+async function fromCash(token: string): Promise<TicketHolder | null> {
+  if (!isCashTokenShape(token)) return null;
+  try {
+    const link = await getCashLink(token);
+    if (!link.found || link.status !== "Usado" || !isShowId(link.show)) return null;
+    return {
+      query: `cash=${token}`,
+      issued: true,
+      firstName: link.firstName ?? "",
+      lastName: link.lastName ?? "",
+      email: link.email ?? "",
+      show: link.show,
+      code: link.code ?? "",
+    };
+  } catch {
+    return null;
+  }
+}
+
+export async function findTicket(params: { session_id?: unknown; cash?: unknown }): Promise<TicketHolder | null> {
+  if (typeof params.session_id === "string") return fromStripe(params.session_id);
+  if (typeof params.cash === "string") return fromCash(params.cash);
+  return null;
 }

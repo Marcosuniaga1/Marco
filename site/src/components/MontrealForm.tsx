@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Heart, Lock, Loader2 } from "lucide-react";
+import { Heart, Lock, Loader2, Ticket } from "lucide-react";
 import { SHOWS, validateRegistration, type FieldErrors, type ShowId } from "@/lib/montreal";
 
 const labelClass = "block text-sm font-medium text-mist mb-1.5";
@@ -15,9 +15,10 @@ function FieldError({ id, message }: { id: string; message?: string }) {
   ) : null;
 }
 
-export function MontrealForm({ whatsappHref }: { whatsappHref: string }) {
+// With `cash`, the buyer already paid Pedro in person: the show comes from his one-time link and there is no Stripe step.
+export function MontrealForm({ whatsappHref, cash }: { whatsappHref: string; cash?: { token: string; show: ShowId } }) {
   const [gift, setGift] = useState(false);
-  const [show, setShow] = useState<ShowId | "">("");
+  const [show, setShow] = useState<ShowId | "">(cash?.show ?? "");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -49,18 +50,19 @@ export function MontrealForm({ whatsappHref }: { whatsappHref: string }) {
     setFormError("");
     setSubmitting(true);
     try {
-      const res = await fetch("/api/montreal/checkout", {
+      const res = await fetch(cash ? "/api/montreal/efectivo" : "/api/montreal/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(check.data),
+        body: JSON.stringify(cash ? { ...check.data, token: cash.token } : check.data),
       });
       const data = await res.json().catch(() => ({}));
-      if (res.ok && data.url) {
-        window.location.href = data.url;
+      const next = cash ? data.redirect : data.url;
+      if (res.ok && next) {
+        window.location.href = next;
         return;
       }
       setErrors(data.fields ?? {});
-      setFormError(data.error ?? "No pudimos abrir el pago. Intenta de nuevo.");
+      setFormError(data.error ?? (cash ? "No pudimos registrar tu entrada. Intenta de nuevo." : "No pudimos abrir el pago. Intenta de nuevo."));
     } catch {
       setFormError("No hay conexión. Revisa tu internet e intenta de nuevo.");
     }
@@ -72,9 +74,11 @@ export function MontrealForm({ whatsappHref }: { whatsappHref: string }) {
   return (
     <form onSubmit={onSubmit} noValidate className="glass-modal p-6 sm:p-8 space-y-5 text-left">
       <div>
-        <h2 className="font-display font-medium text-2xl text-ice">Reserva tu entrada</h2>
+        <h2 className="font-display font-medium text-2xl text-ice">{cash ? "Registra tu entrada" : "Reserva tu entrada"}</h2>
         <p className="mt-1 text-sm text-fog">
-          Donación de $100 CAD · 2 entradas + 1 Agenda Esperanza 2027. Tu entrada llega a tu correo al confirmar el pago.
+          {cash
+            ? "Pago en efectivo recibido · 2 entradas + 1 Agenda Esperanza 2027. Completa tus datos y recibe tu entrada al instante."
+            : "Donación de $100 CAD · 2 entradas + 1 Agenda Esperanza 2027. Tu entrada llega a tu correo al confirmar el pago."}
         </p>
       </div>
 
@@ -109,6 +113,12 @@ export function MontrealForm({ whatsappHref }: { whatsappHref: string }) {
         <FieldError id="whatsapp-error" message={errors.whatsapp} />
       </div>
 
+      {cash ? (
+        <div className="rounded-xl bg-input-bg px-4 py-3 shadow-subtle">
+          <p className="text-sm text-mist">Tu función · 29 de enero</p>
+          <p className="font-display text-xl font-medium text-ice">{SHOWS[cash.show].label}</p>
+        </div>
+      ) : (
       <fieldset aria-describedby={describe("show")}>
         <legend className={labelClass}>Función de preferencia · 29 de enero</legend>
         <div className="grid grid-cols-2 gap-3">
@@ -126,6 +136,7 @@ export function MontrealForm({ whatsappHref }: { whatsappHref: string }) {
         </div>
         <FieldError id="show-error" message={errors.show} />
       </fieldset>
+      )}
 
       <label htmlFor="gift" className="flex cursor-pointer items-start gap-3 rounded-xl bg-input-bg p-4 shadow-subtle">
         <input id="gift" type="checkbox" checked={gift} onChange={(e) => setGift(e.target.checked)}
@@ -167,14 +178,16 @@ export function MontrealForm({ whatsappHref }: { whatsappHref: string }) {
 
       <button type="submit" disabled={submitting}
         className="flex w-full items-center justify-center gap-2 rounded-full bg-violet px-8 py-4 text-lg font-medium text-white transition-opacity hover:opacity-90 active:scale-[0.98] disabled:cursor-wait disabled:opacity-70 focus-visible:outline-2 focus-visible:outline-frost focus-visible:outline-offset-2">
-        {submitting ? <Loader2 className="h-5 w-5 animate-spin" /> : <Heart className="h-5 w-5" />}
-        {submitting ? "Abriendo pago seguro…" : "Donar $100 CAD"}
+        {submitting ? <Loader2 className="h-5 w-5 animate-spin" /> : cash ? <Ticket className="h-5 w-5" /> : <Heart className="h-5 w-5" />}
+        {submitting ? (cash ? "Registrando…" : "Abriendo pago seguro…") : cash ? "Registrar mi entrada" : "Donar $100 CAD"}
       </button>
 
       <div className="space-y-2 text-center text-[13px] text-fog">
-        <p className="flex items-center justify-center gap-1.5">
-          <Lock className="h-3.5 w-3.5" /> Pago seguro con Stripe · Tarjeta, Apple Pay o Google Pay
-        </p>
+        {!cash && (
+          <p className="flex items-center justify-center gap-1.5">
+            <Lock className="h-3.5 w-3.5" /> Pago seguro con Stripe · Tarjeta, Apple Pay o Google Pay
+          </p>
+        )}
         <p>
           ¿Dudas?{" "}
           <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="text-frost underline underline-offset-2 hover:text-ice">

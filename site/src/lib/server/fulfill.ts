@@ -1,15 +1,23 @@
 import type Stripe from "stripe";
-import { fromMetadata } from "@/lib/montreal";
+import { fromMetadata, type Registration } from "@/lib/montreal";
 import { appendRow } from "./sheet";
 import { sendTicketEmail } from "./mailer";
+import { sheetRow } from "./rows";
 import { renderTicketJpeg } from "./ticket";
 import { ticketCode } from "./ticket-code";
 
-const paidAtFormat = new Intl.DateTimeFormat("es-CA", {
-  timeZone: "America/Toronto",
-  dateStyle: "short",
-  timeStyle: "short",
-});
+export async function emailTicket(r: Registration, code: string): Promise<void> {
+  const ticketImage = await renderTicketJpeg({ holder: `${r.firstName} ${r.lastName}`, show: r.show, code });
+  await sendTicketEmail({
+    to: r.email,
+    firstName: r.firstName,
+    show: r.show,
+    code,
+    address: r.address,
+    giftName: r.giftName,
+    ticketImage,
+  });
+}
 
 // Stripe retries webhooks, so each step records completion on the PaymentIntent and is skipped on redelivery.
 export async function fulfillSession(stripe: Stripe, session: Stripe.Checkout.Session): Promise<void> {
@@ -23,33 +31,12 @@ export async function fulfillSession(stripe: Stripe, session: Stripe.Checkout.Se
   const code = ticketCode(session.id, r.show);
 
   if (pi.metadata.sheet_done !== "1") {
-    await appendRow(r.show, {
-      paidAt: paidAtFormat.format(new Date(session.created * 1000)),
-      ticketCode: code,
-      firstName: r.firstName,
-      lastName: r.lastName,
-      email: r.email,
-      whatsapp: r.whatsapp,
-      address: r.address,
-      gift: r.gift ? "Sí" : "No",
-      recipient: r.gift ? r.giftName : "El comprador",
-      amountCad: (session.amount_total ?? 0) / 100,
-      stripeId: piId,
-    });
+    await appendRow(r.show, sheetRow(r, code, new Date(session.created * 1000), (session.amount_total ?? 0) / 100, piId));
     await stripe.paymentIntents.update(piId, { metadata: { sheet_done: "1", ticket_code: code } });
   }
 
   if (pi.metadata.email_done !== "1") {
-    const ticketImage = await renderTicketJpeg({ holder: `${r.firstName} ${r.lastName}`, show: r.show, code });
-    await sendTicketEmail({
-      to: r.email,
-      firstName: r.firstName,
-      show: r.show,
-      code,
-      address: r.address,
-      giftName: r.giftName,
-      ticketImage,
-    });
+    await emailTicket(r, code);
     await stripe.paymentIntents.update(piId, { metadata: { email_done: "1" } });
   }
 }

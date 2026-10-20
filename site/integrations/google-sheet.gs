@@ -25,8 +25,18 @@ const FIELDS = [
 const STRIPE_ID_COL = 11;
 const CHECKBOX_COL = 12;
 
+// Pagos en efectivo: cada enlace de un solo uso es una fila de esta pestaña.
+const CASH_TAB = 'Efectivo';
+const CASH_HEADERS = ['Enlace', 'Función', 'Creado', 'Vence', 'Estado', 'Nombre', 'Apellido', 'Correo', 'Código de entrada', 'Usado el'];
+const CASH = { TOKEN: 0, SHOW: 1, CREATED: 2, EXPIRES: 3, STATUS: 4, FIRST: 5, LAST: 6, EMAIL: 7, CODE: 8, USED_AT: 9 };
+const PENDING = 'Pendiente';
+const USED = 'Usado';
+const EXPIRED = 'Vencido';
+const CANCELLED = 'Anulado';
+
 function setup() {
   Object.keys(TABS).forEach(getTab_);
+  cashTab_();
 }
 
 function doPost(e) {
@@ -43,6 +53,10 @@ function doPost(e) {
   try {
     if (body.action === 'append') return reply_(append_(body.show, body.row || {}));
     if (body.action === 'count') return reply_({ ok: true, counts: { '7pm': count_('7pm'), '9pm': count_('9pm') } });
+    if (body.action === 'cashCreate') return reply_(cashCreate_(body));
+    if (body.action === 'cashGet') return reply_(cashGet_(body.token));
+    if (body.action === 'cashRedeem') return reply_(cashRedeem_(body));
+    if (body.action === 'cashCancel') return reply_(cashCancel_(body.token));
     return reply_({ ok: false, error: 'unknown action' });
   } catch (err) {
     return reply_({ ok: false, error: String(err) });
@@ -63,9 +77,102 @@ function append_(show, row) {
   return { ok: true };
 }
 
+// Entradas emitidas + enlaces de efectivo aún sin usar (apartan cupo hasta que vencen).
 function count_(show) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(TABS[show]);
-  return sheet ? Math.max(sheet.getLastRow() - 1, 0) : 0;
+  const sold = sheet ? Math.max(sheet.getLastRow() - 1, 0) : 0;
+  return sold + reserved_(show);
+}
+
+function reserved_(show) {
+  const now = new Date();
+  return cashRows_().filter(function (r) {
+    return r.values[CASH.SHOW] === TABS[show] && r.values[CASH.STATUS] === PENDING && new Date(r.values[CASH.EXPIRES]) > now;
+  }).length;
+}
+
+function cashCreate_(b) {
+  if (!TABS[b.show]) return { ok: false, error: 'unknown show' };
+  const capacity = Number(b.capacity) || 0;
+  if (capacity > 0 && count_(b.show) >= capacity) return { ok: false, error: 'sold_out' };
+  cashTab_().appendRow([b.token, TABS[b.show], b.createdAt, b.expiresAt, PENDING, '', '', '', '', '']);
+  return { ok: true };
+}
+
+function cashGet_(token) {
+  const found = findCash_(token);
+  if (!found) return { ok: true, found: false };
+  const v = found.values;
+  return {
+    ok: true,
+    found: true,
+    show: showId_(v[CASH.SHOW]),
+    status: currentStatus_(v),
+    expiresAt: v[CASH.EXPIRES],
+    firstName: v[CASH.FIRST],
+    lastName: v[CASH.LAST],
+    email: v[CASH.EMAIL],
+    code: v[CASH.CODE],
+  };
+}
+
+function cashRedeem_(b) {
+  const found = findCash_(b.token);
+  if (!found) return { ok: false, error: 'not_found' };
+  const status = currentStatus_(found.values);
+  if (status !== PENDING) return { ok: false, error: status };
+  const row = b.row || {};
+  append_(showId_(found.values[CASH.SHOW]), row);
+  cashTab_().getRange(found.rowIndex, CASH.STATUS + 1, 1, 6)
+    .setValues([[USED, row.firstName || '', row.lastName || '', row.email || '', row.ticketCode || '', b.usedAt || '']]);
+  return { ok: true };
+}
+
+function cashCancel_(token) {
+  const found = findCash_(token);
+  if (!found) return { ok: false, error: 'not_found' };
+  if (found.values[CASH.STATUS] !== PENDING) return { ok: false, error: currentStatus_(found.values) };
+  cashTab_().getRange(found.rowIndex, CASH.STATUS + 1).setValue(CANCELLED);
+  return { ok: true };
+}
+
+function currentStatus_(v) {
+  if (v[CASH.STATUS] === PENDING && new Date(v[CASH.EXPIRES]) <= new Date()) return EXPIRED;
+  return v[CASH.STATUS];
+}
+
+function findCash_(token) {
+  if (!token) return null;
+  const rows = cashRows_();
+  for (let i = 0; i < rows.length; i++) {
+    if (rows[i].values[CASH.TOKEN] === token) return rows[i];
+  }
+  return null;
+}
+
+function cashRows_() {
+  const sheet = cashTab_();
+  const last = sheet.getLastRow();
+  if (last < 2) return [];
+  return sheet.getRange(2, 1, last - 1, CASH_HEADERS.length).getValues().map(function (values, i) {
+    return { rowIndex: i + 2, values: values };
+  });
+}
+
+function showId_(tabName) {
+  return Object.keys(TABS).filter(function (k) { return TABS[k] === tabName; })[0];
+}
+
+function cashTab_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(CASH_TAB);
+  if (!sheet) {
+    sheet = ss.insertSheet(CASH_TAB);
+    sheet.getRange(1, 1, 1, CASH_HEADERS.length).setValues([CASH_HEADERS]).setFontWeight('bold').setBackground('#fff4d6');
+    sheet.setFrozenRows(1);
+    sheet.getRange('A2:J').setNumberFormat('@');
+  }
+  return sheet;
 }
 
 function getTab_(show) {

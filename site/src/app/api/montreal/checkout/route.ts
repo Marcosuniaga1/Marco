@@ -1,6 +1,6 @@
 import { EVENT, SHOWS, toMetadata, validateRegistration } from "@/lib/montreal";
 import { getStripe } from "@/lib/server/stripe";
-import { countByShow, sheetConfigured } from "@/lib/server/sheet";
+import { capacityFor, countByShow, sheetConfigured } from "@/lib/server/sheet";
 
 export const runtime = "nodejs";
 
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
   const r = parsed.data;
   const show = SHOWS[r.show];
 
-  const capacity = Number(process.env[show.capacityEnv]);
+  const capacity = capacityFor(r.show);
   if (capacity > 0 && sheetConfigured()) {
     try {
       const counts = await countByShow();
