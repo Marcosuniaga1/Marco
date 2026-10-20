@@ -37,9 +37,10 @@ export function newSessionValue(): { value: string; maxAge: number } {
 }
 
 export async function isTaquillaSession(): Promise<boolean> {
-  if (!pin()) return false;
+  // Read the cookie before checking the PIN so the taquilla page is always rendered per request:
+  // otherwise a build without CASH_ADMIN_PIN prerenders "no configurada" and keeps showing it.
   const raw = (await cookies()).get(SESSION_COOKIE)?.value;
-  if (!raw) return false;
+  if (!pin() || !raw) return false;
   const [expires, signature] = raw.split(".");
   if (!expires || !signature || Number(expires) < Date.now()) return false;
   const expected = Buffer.from(sign(expires));
