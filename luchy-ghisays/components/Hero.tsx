@@ -20,7 +20,7 @@ export default function Hero() {
         <div className="video-wrap">
           {playing ? (
             <iframe
-              src="https://www.youtube.com/embed/mJ2m-DWh504?rel=0&modestbranding=1&autoplay=1"
+              src="https://www.youtube.com/embed/elwcz3ZWqLE?rel=0&modestbranding=1&autoplay=1"
               title="Tu liderazgo funciona. Pero algo no encaja."
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -32,7 +32,7 @@ export default function Hero() {
               aria-label="Reproducir video"
             >
               <img
-                src="https://i.ytimg.com/vi/mJ2m-DWh504/hqdefault.jpg"
+                src="https://i.ytimg.com/vi/elwcz3ZWqLE/hqdefault.jpg"
                 alt="Ver video"
                 loading="lazy"
               />
