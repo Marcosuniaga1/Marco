@@ -8,6 +8,9 @@ export const EVENT = {
   priceCad: 100,
 } as const;
 
+// What a card checkout costs while the taquilla session (Pedro's PIN) is open, to test real payments cheaply.
+export const TEST_PRICE_CAD = 1;
+
 export const SHOWS = {
   "7pm": { label: "7:00 PM", sheetTab: "Show 7PM", capacityEnv: "MONTREAL_CAPACITY_7PM" },
   "9pm": { label: "9:00 PM", sheetTab: "Show 9PM", capacityEnv: "MONTREAL_CAPACITY_9PM" },
