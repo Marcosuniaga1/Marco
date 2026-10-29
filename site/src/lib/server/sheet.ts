@@ -57,8 +57,22 @@ export function sheetConfigured(): boolean {
   return config() !== null;
 }
 
-export async function appendRow(show: ShowId, row: SheetRow): Promise<void> {
-  await call({ action: "append", show, row: safeRow(row) });
+// Must match SCRIPT_VERSION in integrations/google-sheet.gs. An older script ignores `rows` and `quantity` and would
+// write empty or short rows, so every write first checks the deployed version (once per server instance).
+const SCRIPT_VERSION = 2;
+let scriptChecked = false;
+
+async function requireCurrentScript(): Promise<void> {
+  if (scriptChecked) return;
+  const { version } = await call<{ version?: number }>({ action: "count" });
+  if ((version ?? 1) < SCRIPT_VERSION)
+    throw new Error(`Sheet script is version ${version ?? 1}, needs ${SCRIPT_VERSION}: publish a new version of integrations/google-sheet.gs`);
+  scriptChecked = true;
+}
+
+export async function appendRows(show: ShowId, rows: SheetRow[]): Promise<void> {
+  await requireCurrentScript();
+  await call({ action: "append", show, rows: rows.map(safeRow) });
 }
 
 export type CashStatus = "Pendiente" | "Usado" | "Vencido" | "Anulado";
@@ -68,32 +82,37 @@ export type CashLink = {
   show?: ShowId;
   status?: CashStatus;
   expiresAt?: string;
+  quantity?: number;
   firstName?: string;
   lastName?: string;
   email?: string;
-  code?: string;
 };
 
 export async function createCashLink(
   token: string,
   show: ShowId,
+  quantity: number,
   capacity: number,
   createdAt: string,
   expiresAt: string,
-): Promise<{ ok: true } | { ok: false; error?: string }> {
-  return request({ action: "cashCreate", token, show, capacity, createdAt, expiresAt });
+): Promise<{ ok: true } | { ok: false; error?: string; remaining?: number }> {
+  await requireCurrentScript();
+  return request({ action: "cashCreate", token, show, quantity, capacity, createdAt, expiresAt });
 }
 
 export async function getCashLink(token: string): Promise<CashLink> {
-  return call<CashLink>({ action: "cashGet", token });
+  const link = await call<CashLink>({ action: "cashGet", token });
+  // Links created before the counter existed have no quantity.
+  return link.found ? { ...link, quantity: Number(link.quantity) || 1 } : link;
 }
 
 export async function redeemCashLink(
   token: string,
-  row: SheetRow,
+  rows: SheetRow[],
   usedAt: string,
 ): Promise<{ ok: true } | { ok: false; error?: string }> {
-  return request({ action: "cashRedeem", token, row: safeRow(row), usedAt });
+  await requireCurrentScript();
+  return request({ action: "cashRedeem", token, rows: rows.map(safeRow), usedAt });
 }
 
 export async function cancelCashLink(token: string): Promise<{ ok: true } | { ok: false; error?: string }> {

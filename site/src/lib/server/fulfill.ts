@@ -1,21 +1,28 @@
 import type Stripe from "stripe";
 import { fromMetadata, type Registration } from "@/lib/montreal";
-import { appendRow } from "./sheet";
+import { appendRows } from "./sheet";
 import { sendTicketEmail } from "./mailer";
-import { sheetRow } from "./rows";
+import { sheetRows } from "./rows";
 import { renderTicketJpeg } from "./ticket";
-import { ticketCode } from "./ticket-code";
+import { ticketCodes } from "./ticket-code";
 
-export async function emailTicket(r: Registration, code: string): Promise<void> {
-  const ticketImage = await renderTicketJpeg({ holder: `${r.firstName} ${r.lastName}`, show: r.show, code });
+export async function emailTickets(r: Registration, codes: string[], totalCad: number): Promise<void> {
+  const holder = `${r.firstName} ${r.lastName}`;
+  const ticketImages: Buffer[] = [];
+  // One at a time: rendering is CPU-bound, so running them together would only add memory pressure.
+  for (const [i, code] of codes.entries()) {
+    ticketImages.push(await renderTicketJpeg({ holder, show: r.show, code, index: i + 1, count: codes.length }));
+  }
   await sendTicketEmail({
     to: r.email,
     firstName: r.firstName,
     show: r.show,
-    code,
+    codes,
+    totalCad,
+    agenda: r.agenda,
     address: r.address,
     giftName: r.giftName,
-    ticketImage,
+    ticketImages,
   });
 }
 
@@ -28,15 +35,16 @@ export async function fulfillSession(stripe: Stripe, session: Stripe.Checkout.Se
   const piId = typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id;
   if (!piId) throw new Error(`Session ${session.id} has no payment_intent`);
   const pi = await stripe.paymentIntents.retrieve(piId);
-  const code = ticketCode(session.id, r.show);
+  const codes = ticketCodes(session.id, r.show, r.quantity);
+  const totalCad = (session.amount_total ?? 0) / 100;
 
   if (pi.metadata.sheet_done !== "1") {
-    await appendRow(r.show, sheetRow(r, code, new Date(session.created * 1000), (session.amount_total ?? 0) / 100, piId));
-    await stripe.paymentIntents.update(piId, { metadata: { sheet_done: "1", ticket_code: code } });
+    await appendRows(r.show, sheetRows(r, codes, new Date(session.created * 1000), totalCad, piId));
+    await stripe.paymentIntents.update(piId, { metadata: { sheet_done: "1", ticket_code: codes.join(", ").slice(0, 500) } });
   }
 
   if (pi.metadata.email_done !== "1") {
-    await emailTicket(r, code);
+    await emailTickets(r, codes, totalCad);
     await stripe.paymentIntents.update(piId, { metadata: { email_done: "1" } });
   }
 }

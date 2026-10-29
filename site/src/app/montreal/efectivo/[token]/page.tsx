@@ -53,7 +53,7 @@ export default async function EfectivoPage({ params }: PageProps<"/montreal/efec
         <main className="flex flex-1 items-center py-12">
           <div className="max-w-[640px] mx-auto px-4 w-full">
             {usable ? (
-              <MontrealForm whatsappHref={WA_QUESTIONS} cash={{ token, show: link.show! }} />
+              <MontrealForm whatsappHref={WA_QUESTIONS} cash={{ token, show: link.show!, quantity: link.quantity ?? 1 }} />
             ) : (
               <div className="glass-modal p-8 text-center space-y-4">
                 <Ban className="mx-auto h-10 w-10 text-frost" aria-hidden="true" />

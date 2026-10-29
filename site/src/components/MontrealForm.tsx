@@ -1,8 +1,18 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { Heart, Lock, Loader2, Ticket } from "lucide-react";
-import { SHOWS, validateRegistration, type FieldErrors, type ShowId } from "@/lib/montreal";
+import { Heart, Lock, Loader2, Minus, Plus, Ticket } from "lucide-react";
+import {
+  AGENDA,
+  EVENT,
+  MAX_TICKETS,
+  SHOWS,
+  ticketWord,
+  validateRegistration,
+  type AgendaChoice,
+  type FieldErrors,
+  type ShowId,
+} from "@/lib/montreal";
 
 const labelClass = "block text-sm font-medium text-mist mb-1.5";
 const errorClass = "mt-1.5 text-[13px] text-ember";
@@ -15,9 +25,20 @@ function FieldError({ id, message }: { id: string; message?: string }) {
   ) : null;
 }
 
-// With `cash`, the buyer already paid Pedro in person: the show comes from his one-time link and there is no Stripe step.
-export function MontrealForm({ whatsappHref, cash }: { whatsappHref: string; cash?: { token: string; show: ShowId } }) {
-  const [gift, setGift] = useState(false);
+const stepBtn =
+  "flex h-11 w-11 items-center justify-center rounded-full bg-input-bg text-frost shadow-subtle transition-colors hover:bg-[rgba(199,211,234,0.1)] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-frost";
+
+// With `cash`, the buyer already paid Pedro in person: the show and the number of tickets come from his one-time link
+// and there is no Stripe step.
+export function MontrealForm({
+  whatsappHref,
+  cash,
+}: {
+  whatsappHref: string;
+  cash?: { token: string; show: ShowId; quantity: number };
+}) {
+  const [agenda, setAgenda] = useState<AgendaChoice>("self");
+  const [quantity, setQuantity] = useState(cash?.quantity ?? 1);
   const [show, setShow] = useState<ShowId | "">(cash?.show ?? "");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState("");
@@ -33,7 +54,8 @@ export function MontrealForm({ whatsappHref, cash }: { whatsappHref: string; cas
       whatsapp: fd.get("whatsapp"),
       address: fd.get("address"),
       show,
-      gift,
+      quantity,
+      agenda,
       giftName: fd.get("giftName"),
     };
 
@@ -42,7 +64,7 @@ export function MontrealForm({ whatsappHref, cash }: { whatsappHref: string; cas
       setErrors(check.errors);
       setFormError("Revisa los campos marcados.");
       const first = Object.keys(check.errors)[0];
-      document.getElementById(first === "show" ? "show-7pm" : first)?.focus();
+      document.getElementById(first === "show" ? "show-7pm" : first === "agenda" ? "agenda-self" : first)?.focus();
       return;
     }
 
@@ -81,8 +103,8 @@ export function MontrealForm({ whatsappHref, cash }: { whatsappHref: string; cas
         <h2 className="font-display font-medium text-2xl text-ice">{cash ? "Registra tu entrada" : "Reserva tu entrada"}</h2>
         <p className="mt-1 text-sm text-fog">
           {cash
-            ? "Pago en efectivo recibido · 2 entradas + 1 Agenda Esperanza 2027. Completa tus datos y recibe tu entrada al instante."
-            : "Donación de $100 CAD · 2 entradas + 1 Agenda Esperanza 2027. Tu entrada llega a tu correo al confirmar el pago."}
+            ? `Pago en efectivo recibido · ${ticketWord(cash.quantity)} para 2 personas cada una. Completa tus datos y recibe ${cash.quantity === 1 ? "tu entrada" : "tus entradas"} al instante.`
+            : `Donación de $${EVENT.priceCad} CAD por entrada · cada entrada vale para 2 personas e incluye 1 Agenda Esperanza 2027 (opcional).`}
         </p>
       </div>
 
@@ -118,9 +140,15 @@ export function MontrealForm({ whatsappHref, cash }: { whatsappHref: string; cas
       </div>
 
       {cash ? (
-        <div className="rounded-xl bg-input-bg px-4 py-3 shadow-subtle">
-          <p className="text-sm text-mist">Tu función · 29 de enero</p>
-          <p className="font-display text-xl font-medium text-ice">{SHOWS[cash.show].label}</p>
+        <div className="flex items-end justify-between gap-4 rounded-xl bg-input-bg px-4 py-3 shadow-subtle">
+          <div>
+            <p className="text-sm text-mist">Tu función · 29 de enero</p>
+            <p className="font-display text-xl font-medium text-ice">{SHOWS[cash.show].label}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-sm text-mist">Entradas</p>
+            <p className="font-display text-xl font-medium text-ice">{cash.quantity}</p>
+          </div>
         </div>
       ) : (
       <fieldset aria-describedby={describe("show")}>
@@ -142,16 +170,52 @@ export function MontrealForm({ whatsappHref, cash }: { whatsappHref: string; cas
       </fieldset>
       )}
 
-      <label htmlFor="gift" className="flex cursor-pointer items-start gap-3 rounded-xl bg-input-bg p-4 shadow-subtle">
-        <input id="gift" type="checkbox" checked={gift} onChange={(e) => setGift(e.target.checked)}
-          className="mt-0.5 h-5 w-5 shrink-0 accent-[#663af3]" />
-        <span>
-          <span className="block text-sm font-medium text-frost">Regala la agenda a un familiar</span>
-          <span className="block text-[13px] text-fog">Enviamos tu Agenda Esperanza 2027 a cualquier parte del mundo.</span>
-        </span>
-      </label>
+      {!cash && (
+        <div>
+          <p id="quantity-label" className={labelClass}>Cantidad de entradas</p>
+          <div className="flex items-center gap-4">
+            <button type="button" className={stepBtn} onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+              disabled={quantity <= 1} aria-label="Una entrada menos">
+              <Minus className="h-5 w-5" />
+            </button>
+            <output id="quantity" aria-labelledby="quantity-label" aria-live="polite" tabIndex={-1}
+              className="min-w-[2ch] text-center font-display text-3xl font-medium text-ice">{quantity}</output>
+            <button type="button" className={stepBtn} onClick={() => setQuantity((q) => Math.min(MAX_TICKETS, q + 1))}
+              disabled={quantity >= MAX_TICKETS} aria-label="Una entrada más">
+              <Plus className="h-5 w-5" />
+            </button>
+            <p className="text-sm text-fog">
+              {quantity * 2} personas · <span className="text-frost">${quantity * EVENT.priceCad} CAD</span>
+            </p>
+          </div>
+          {errors.quantity ? <FieldError id="quantity-error" message={errors.quantity} /> : (
+            <p className="mt-1.5 text-[13px] text-fog">Recibes una entrada por cada una, todas a tu nombre y a tu correo.</p>
+          )}
+        </div>
+      )}
 
-      {gift && (
+      <fieldset aria-describedby={describe("agenda")}>
+        <legend className={labelClass}>
+          Agenda Esperanza 2027{quantity > 1 ? ` · 1 por entrada (${quantity})` : ""}
+        </legend>
+        <div className="grid gap-2 sm:grid-cols-3">
+          {(Object.keys(AGENDA) as AgendaChoice[]).map((id) => (
+            <label key={id} htmlFor={`agenda-${id}`}
+              className={`flex cursor-pointer items-center justify-center rounded-xl px-3 py-3 text-center text-sm font-medium shadow-subtle transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-frost ${
+                agenda === id ? "bg-violet text-white" : "bg-input-bg text-frost hover:bg-[rgba(199,211,234,0.1)]"
+              }`}>
+              <input id={`agenda-${id}`} type="radio" name="agenda" value={id} checked={agenda === id}
+                onChange={() => setAgenda(id)} className="sr-only" />
+              {AGENDA[id]}
+            </label>
+          ))}
+        </div>
+        {errors.agenda ? <FieldError id="agenda-error" message={errors.agenda} /> : (
+          agenda === "gift" && <p className="mt-1.5 text-[13px] text-fog">Enviamos tu agenda a cualquier parte del mundo.</p>
+        )}
+      </fieldset>
+
+      {agenda === "gift" && (
         <div>
           <label htmlFor="giftName" className={labelClass}>Nombre de quien recibe la agenda</label>
           <input id="giftName" name="giftName" autoComplete="off" className="input-field !text-base !py-2.5"
@@ -160,19 +224,21 @@ export function MontrealForm({ whatsappHref, cash }: { whatsappHref: string; cas
         </div>
       )}
 
-      <div>
-        <label htmlFor="address" className={labelClass}>
-          {gift ? "Dirección completa de tu familiar (ciudad y país)" : "Dirección de entrega de la agenda"}
-        </label>
-        <textarea id="address" name="address" rows={2} autoComplete={gift ? "off" : "street-address"} required
-          className="input-field !text-base !py-2.5 resize-none" aria-invalid={!!errors.address}
-          aria-describedby={describe("address") ?? "address-hint"} />
-        {errors.address ? <FieldError id="address-error" message={errors.address} /> : (
-          <p id="address-hint" className="mt-1.5 text-[13px] text-fog">
-            {gift ? "Incluye calle, ciudad, código postal y país." : "En Montreal, Pedrito te la entrega personalmente."}
-          </p>
-        )}
-      </div>
+      {agenda !== "none" && (
+        <div>
+          <label htmlFor="address" className={labelClass}>
+            {agenda === "gift" ? "Dirección completa de tu familiar (ciudad y país)" : "Dirección de entrega de la agenda"}
+          </label>
+          <textarea id="address" name="address" rows={2} autoComplete={agenda === "gift" ? "off" : "street-address"} required
+            className="input-field !text-base !py-2.5 resize-none" aria-invalid={!!errors.address}
+            aria-describedby={describe("address") ?? "address-hint"} />
+          {errors.address ? <FieldError id="address-error" message={errors.address} /> : (
+            <p id="address-hint" className="mt-1.5 text-[13px] text-fog">
+              {agenda === "gift" ? "Incluye calle, ciudad, código postal y país." : "En Montreal, Pedrito te la entrega personalmente."}
+            </p>
+          )}
+        </div>
+      )}
 
       {formError && (
         <p role="alert" className="rounded-lg bg-[rgba(228,109,76,0.12)] px-4 py-3 text-sm text-ember">
@@ -183,7 +249,9 @@ export function MontrealForm({ whatsappHref, cash }: { whatsappHref: string; cas
       <button type="submit" disabled={submitting}
         className="flex w-full items-center justify-center gap-2 rounded-full bg-violet px-8 py-4 text-lg font-medium text-white transition-opacity hover:opacity-90 active:scale-[0.98] disabled:cursor-wait disabled:opacity-70 focus-visible:outline-2 focus-visible:outline-frost focus-visible:outline-offset-2">
         {submitting ? <Loader2 className="h-5 w-5 animate-spin" /> : cash ? <Ticket className="h-5 w-5" /> : <Heart className="h-5 w-5" />}
-        {submitting ? (cash ? "Registrando…" : "Abriendo pago seguro…") : cash ? "Registrar mi entrada" : "Donar $100 CAD"}
+        {submitting
+          ? cash ? "Registrando…" : "Abriendo pago seguro…"
+          : cash ? (cash.quantity === 1 ? "Registrar mi entrada" : `Registrar mis ${cash.quantity} entradas`) : `Donar $${quantity * EVENT.priceCad} CAD`}
       </button>
 
       <div className="space-y-2 text-center text-[13px] text-fog">
