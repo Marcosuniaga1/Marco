@@ -53,7 +53,11 @@ export function MontrealForm({ whatsappHref, cash }: { whatsappHref: string; cas
       const res = await fetch(cash ? "/api/montreal/efectivo" : "/api/montreal/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(cash ? { ...check.data, token: cash.token } : check.data),
+        body: JSON.stringify(
+          cash
+            ? { ...check.data, token: cash.token }
+            : { ...check.data, test: new URLSearchParams(window.location.search).get("prueba") === "1" },
+        ),
       });
       const data = await res.json().catch(() => ({}));
       const next = cash ? data.redirect : data.url;
