@@ -14,7 +14,8 @@ export async function POST(request: Request) {
     );
   }
 
-  const parsed = validateRegistration(await request.json().catch(() => null));
+  const body: unknown = await request.json().catch(() => null);
+  const parsed = validateRegistration(body);
   if (!parsed.ok) return Response.json({ error: "Revisa los campos marcados.", fields: parsed.errors }, { status: 400 });
   const r = parsed.data;
   const show = SHOWS[r.show];
@@ -34,7 +35,9 @@ export async function POST(request: Request) {
     }
   }
 
-  const test = await isTaquillaSession();
+  // The test price needs both the taquilla's test link (?prueba=1) and its PIN session, so a phone with the
+  // taquilla open still charges the full price on the regular form.
+  const test = (body as { test?: unknown } | null)?.test === true && (await isTaquillaSession());
   const origin = process.env.SITE_URL?.replace(/\/$/, "") || new URL(request.url).origin;
 
   try {

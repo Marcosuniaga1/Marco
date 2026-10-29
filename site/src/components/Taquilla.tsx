@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Check, Copy, KeyRound, Link2, Loader2, LogOut, MessageCircle, Smartphone, XCircle } from "lucide-react";
-import { SHOWS, TEST_PRICE_CAD, type ShowId } from "@/lib/montreal";
+import { EVENT, SHOWS, TEST_PRICE_CAD, type ShowId } from "@/lib/montreal";
 
 type ShowStatus = { taken: number; capacity: number; remaining: number | null };
 type Created = { token: string; show: ShowId; url: string; expiresAt: string };
@@ -232,10 +232,10 @@ export function Taquilla({ loggedIn: initiallyLoggedIn }: { loggedIn: boolean })
       <div className="glass-modal p-6 sm:p-8 space-y-2">
         <h2 className="text-base font-medium text-ice">Probar el pago con tarjeta</h2>
         <p className="text-sm text-fog">
-          Mientras esta sesión esté abierta, el formulario de{" "}
-          <a href="/montreal#reservar" target="_blank" className="text-frost underline">pedritoleal.com/montreal</a> cobra
-          solo ${TEST_PRICE_CAD} CAD en este teléfono o computadora, y Stripe lo muestra como PRUEBA. Después reembolsa el pago en Stripe,
-          borra la fila del Sheet y toca Salir.
+          Abre el formulario desde{" "}
+          <a href="/montreal?prueba=1#reservar" target="_blank" className="text-frost underline">este enlace de prueba</a>: con
+          esta sesión abierta cobra solo ${TEST_PRICE_CAD} CAD y Stripe lo muestra como PRUEBA. Comprar en /montreal de forma
+          normal cobra siempre ${EVENT.priceCad} CAD. Después reembolsa el pago en Stripe, borra la fila del Sheet y toca Salir.
         </p>
       </div>
     </div>
