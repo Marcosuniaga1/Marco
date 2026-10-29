@@ -1,6 +1,7 @@
-import { EVENT, SHOWS, toMetadata, validateRegistration } from "@/lib/montreal";
+import { EVENT, SHOWS, TEST_PRICE_CAD, toMetadata, validateRegistration } from "@/lib/montreal";
 import { getStripe } from "@/lib/server/stripe";
 import { capacityFor, countByShow, sheetConfigured } from "@/lib/server/sheet";
+import { isTaquillaSession } from "@/lib/server/taquilla";
 
 export const runtime = "nodejs";
 
@@ -33,6 +34,7 @@ export async function POST(request: Request) {
     }
   }
 
+  const test = await isTaquillaSession();
   const origin = process.env.SITE_URL?.replace(/\/$/, "") || new URL(request.url).origin;
 
   try {
@@ -47,9 +49,9 @@ export async function POST(request: Request) {
           quantity: 1,
           price_data: {
             currency: "cad",
-            unit_amount: EVENT.priceCad * 100,
+            unit_amount: (test ? TEST_PRICE_CAD : EVENT.priceCad) * 100,
             product_data: {
-              name: `Donación ${EVENT.title}`,
+              name: `${test ? "PRUEBA · " : ""}Donación ${EVENT.title}`,
               description: `2 entradas · Función ${show.label} · ${EVENT.dateLabel} · ${EVENT.venue} + 1 Agenda Esperanza 2027`,
             },
           },
@@ -57,8 +59,8 @@ export async function POST(request: Request) {
       ],
       metadata: toMetadata(r),
       payment_intent_data: {
-        description: `Montreal · Función ${show.label} · ${r.firstName} ${r.lastName}`,
-        metadata: { show: r.show },
+        description: `${test ? "PRUEBA · " : ""}Montreal · Función ${show.label} · ${r.firstName} ${r.lastName}`,
+        metadata: test ? { show: r.show, test: "1" } : { show: r.show },
       },
       success_url: `${origin}/montreal/gracias?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/montreal#reservar`,
