@@ -2,7 +2,7 @@ import { fromMetadata, isShowId, type ShowId } from "@/lib/montreal";
 import { getStripe } from "./stripe";
 import { getCashLink } from "./sheet";
 import { isCashTokenShape } from "./taquilla";
-import { ticketCode } from "./ticket-code";
+import { ticketCodes } from "./ticket-code";
 
 export type TicketHolder = {
   // Query string that identifies this ticket on /montreal/gracias and /api/montreal/ticket.
@@ -12,7 +12,8 @@ export type TicketHolder = {
   lastName: string;
   email: string;
   show: ShowId;
-  code: string;
+  // One per ticket in the purchase; the thank-you page and the ticket route address them by position (1-based).
+  codes: string[];
 };
 
 async function fromStripe(sessionId: string): Promise<TicketHolder | null> {
@@ -30,7 +31,7 @@ async function fromStripe(sessionId: string): Promise<TicketHolder | null> {
       lastName: r.lastName,
       email: r.email,
       show: r.show,
-      code: ticketCode(session.id, r.show),
+      codes: ticketCodes(session.id, r.show, r.quantity),
     };
   } catch {
     return null;
@@ -49,7 +50,7 @@ async function fromCash(token: string): Promise<TicketHolder | null> {
       lastName: link.lastName ?? "",
       email: link.email ?? "",
       show: link.show,
-      code: link.code ?? "",
+      codes: ticketCodes(`cash:${token}`, link.show, link.quantity ?? 1),
     };
   } catch {
     return null;

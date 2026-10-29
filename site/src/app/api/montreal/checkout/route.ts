@@ -1,4 +1,4 @@
-import { EVENT, SHOWS, TEST_PRICE_CAD, toMetadata, validateRegistration } from "@/lib/montreal";
+import { EVENT, SHOWS, TEST_PRICE_CAD, onlyLeft, ticketWord, toMetadata, validateRegistration } from "@/lib/montreal";
 import { getStripe } from "@/lib/server/stripe";
 import { capacityFor, countByShow, sheetConfigured } from "@/lib/server/sheet";
 import { isTaquillaSession } from "@/lib/server/taquilla";
@@ -24,9 +24,15 @@ export async function POST(request: Request) {
   if (capacity > 0 && sheetConfigured()) {
     try {
       const counts = await countByShow();
-      if ((counts[r.show] ?? 0) >= capacity) {
+      const remaining = Math.max(capacity - (counts[r.show] ?? 0), 0);
+      if (r.quantity > remaining) {
         return Response.json(
-          { error: `La función de las ${show.label} está agotada. Prueba con la otra función.`, fields: { show: "Agotada" } },
+          remaining === 0
+            ? { error: `La función de las ${show.label} está agotada. Prueba con la otra función.`, fields: { show: "Agotada" } }
+            : {
+                error: `Para la función de las ${show.label} ${onlyLeft(remaining)}.`,
+                fields: { quantity: `Elige ${remaining === 1 ? "1 entrada" : `hasta ${remaining} entradas`}.` },
+              },
           { status: 409 },
         );
       }
@@ -49,20 +55,22 @@ export async function POST(request: Request) {
       customer_email: r.email,
       line_items: [
         {
-          quantity: 1,
+          quantity: r.quantity,
           price_data: {
             currency: "cad",
             unit_amount: (test ? TEST_PRICE_CAD : EVENT.priceCad) * 100,
             product_data: {
               name: `${test ? "PRUEBA · " : ""}Donación ${EVENT.title}`,
-              description: `2 entradas · Función ${show.label} · ${EVENT.dateLabel} · ${EVENT.venue} + 1 Agenda Esperanza 2027`,
+              description: `Entrada para 2 personas · Función ${show.label} · ${EVENT.dateLabel} · ${EVENT.venue}${
+                r.agenda === "none" ? "" : " + 1 Agenda Esperanza 2027"
+              }`,
             },
           },
         },
       ],
       metadata: toMetadata(r),
       payment_intent_data: {
-        description: `${test ? "PRUEBA · " : ""}Montreal · Función ${show.label} · ${r.firstName} ${r.lastName}`,
+        description: `${test ? "PRUEBA · " : ""}Montreal · Función ${show.label} · ${ticketWord(r.quantity)} · ${r.firstName} ${r.lastName}`,
         metadata: test ? { show: r.show, test: "1" } : { show: r.show },
       },
       success_url: `${origin}/montreal/gracias?session_id={CHECKOUT_SESSION_ID}`,

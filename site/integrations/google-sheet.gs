@@ -13,6 +13,9 @@
 
 const SECRET = 'CAMBIA-ESTO-POR-UNA-CLAVE-LARGA';
 
+// El sitio revisa este número antes de escribir; súbelo cuando cambie lo que el sitio envía.
+const SCRIPT_VERSION = 2;
+
 const TABS = { '7pm': 'Show 7PM', '9pm': 'Show 9PM' };
 const HEADERS = [
   'Fecha de pago', 'Código de entrada', 'Nombre', 'Apellido', 'Correo', 'WhatsApp',
@@ -27,8 +30,10 @@ const CHECKBOX_COL = 12;
 
 // Pagos en efectivo: cada enlace de un solo uso es una fila de esta pestaña.
 const CASH_TAB = 'Efectivo';
-const CASH_HEADERS = ['Enlace', 'Función', 'Creado', 'Vence', 'Estado', 'Nombre', 'Apellido', 'Correo', 'Código de entrada', 'Usado el'];
-const CASH = { TOKEN: 0, SHOW: 1, CREATED: 2, EXPIRES: 3, STATUS: 4, FIRST: 5, LAST: 6, EMAIL: 7, CODE: 8, USED_AT: 9 };
+const CASH_HEADERS = [
+  'Enlace', 'Función', 'Creado', 'Vence', 'Estado', 'Nombre', 'Apellido', 'Correo', 'Códigos de entrada', 'Usado el', 'Entradas',
+];
+const CASH = { TOKEN: 0, SHOW: 1, CREATED: 2, EXPIRES: 3, STATUS: 4, FIRST: 5, LAST: 6, EMAIL: 7, CODE: 8, USED_AT: 9, QTY: 10 };
 const PENDING = 'Pendiente';
 const USED = 'Usado';
 const EXPIRED = 'Vencido';
@@ -51,7 +56,7 @@ function doPost(e) {
   const lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
-    if (body.action === 'append') return reply_(append_(body.show, body.row || {}));
+    if (body.action === 'append') return reply_(append_(body.show, rowsOf_(body)));
     if (body.action === 'count') return reply_({ ok: true, counts: { '7pm': count_('7pm'), '9pm': count_('9pm') } });
     if (body.action === 'cashCreate') return reply_(cashCreate_(body));
     if (body.action === 'cashGet') return reply_(cashGet_(body.token));
@@ -65,19 +70,29 @@ function doPost(e) {
   }
 }
 
-function append_(show, row) {
-  const sheet = getTab_(show);
-  const last = sheet.getLastRow();
-  if (last > 1 && row.stripeId) {
-    const ids = sheet.getRange(2, STRIPE_ID_COL, last - 1, 1).getValues().map(function (r) { return r[0]; });
-    if (ids.indexOf(row.stripeId) !== -1) return { ok: true, duplicate: true };
-  }
-  sheet.appendRow(FIELDS.map(function (f) { return row[f] === undefined ? '' : row[f]; }));
-  sheet.getRange(sheet.getLastRow(), CHECKBOX_COL).insertCheckboxes();
-  return { ok: true };
+// Una compra puede traer varias entradas: una fila por entrada, todas con el mismo ID de pago.
+function rowsOf_(body) {
+  if (body.rows && body.rows.length) return body.rows;
+  return body.row ? [body.row] : [];
 }
 
-// Entradas emitidas + enlaces de efectivo aún sin usar (apartan cupo hasta que vencen).
+function append_(show, rows) {
+  if (!rows.length) return { ok: false, error: 'no rows' };
+  const sheet = getTab_(show);
+  const last = sheet.getLastRow();
+  const stripeId = rows[0].stripeId;
+  if (last > 1 && stripeId) {
+    const ids = sheet.getRange(2, STRIPE_ID_COL, last - 1, 1).getValues().map(function (r) { return r[0]; });
+    if (ids.indexOf(stripeId) !== -1) return { ok: true, duplicate: true };
+  }
+  rows.forEach(function (row) {
+    sheet.appendRow(FIELDS.map(function (f) { return row[f] === undefined ? '' : row[f]; }));
+    sheet.getRange(sheet.getLastRow(), CHECKBOX_COL).insertCheckboxes();
+  });
+  return { ok: true, appended: rows.length };
+}
+
+// Entradas emitidas + entradas apartadas por enlaces de efectivo aún sin usar (hasta que vencen).
 function count_(show) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(TABS[show]);
   const sold = sheet ? Math.max(sheet.getLastRow() - 1, 0) : 0;
@@ -86,16 +101,27 @@ function count_(show) {
 
 function reserved_(show) {
   const now = new Date();
-  return cashRows_().filter(function (r) {
-    return r.values[CASH.SHOW] === TABS[show] && r.values[CASH.STATUS] === PENDING && new Date(r.values[CASH.EXPIRES]) > now;
-  }).length;
+  return cashRows_().reduce(function (sum, r) {
+    const v = r.values;
+    const pending = v[CASH.SHOW] === TABS[show] && v[CASH.STATUS] === PENDING && new Date(v[CASH.EXPIRES]) > now;
+    return pending ? sum + quantity_(v) : sum;
+  }, 0);
+}
+
+// Los enlaces creados antes del contador no tienen cantidad: valen 1 entrada.
+function quantity_(v) {
+  return Number(v[CASH.QTY]) || 1;
 }
 
 function cashCreate_(b) {
   if (!TABS[b.show]) return { ok: false, error: 'unknown show' };
+  const quantity = Number(b.quantity) || 1;
   const capacity = Number(b.capacity) || 0;
-  if (capacity > 0 && count_(b.show) >= capacity) return { ok: false, error: 'sold_out' };
-  cashTab_().appendRow([b.token, TABS[b.show], b.createdAt, b.expiresAt, PENDING, '', '', '', '', '']);
+  if (capacity > 0) {
+    const remaining = capacity - count_(b.show);
+    if (quantity > remaining) return { ok: false, error: 'sold_out', remaining: Math.max(remaining, 0) };
+  }
+  cashTab_().appendRow([b.token, TABS[b.show], b.createdAt, b.expiresAt, PENDING, '', '', '', '', '', quantity]);
   return { ok: true };
 }
 
@@ -109,10 +135,10 @@ function cashGet_(token) {
     show: showId_(v[CASH.SHOW]),
     status: currentStatus_(v),
     expiresAt: v[CASH.EXPIRES],
+    quantity: quantity_(v),
     firstName: v[CASH.FIRST],
     lastName: v[CASH.LAST],
     email: v[CASH.EMAIL],
-    code: v[CASH.CODE],
   };
 }
 
@@ -121,11 +147,14 @@ function cashRedeem_(b) {
   if (!found) return { ok: false, error: 'not_found' };
   const status = currentStatus_(found.values);
   if (status !== PENDING) return { ok: false, error: status };
-  const row = b.row || {};
-  append_(showId_(found.values[CASH.SHOW]), row);
+  const rows = rowsOf_(b);
+  const appended = append_(showId_(found.values[CASH.SHOW]), rows);
+  if (!appended.ok) return appended;
+  const row = rows[0];
+  const codes = rows.map(function (r) { return r.ticketCode || ''; }).join(', ');
   cashTab_().getRange(found.rowIndex, CASH.STATUS + 1, 1, 6)
-    .setValues([[USED, row.firstName || '', row.lastName || '', row.email || '', row.ticketCode || '', b.usedAt || '']]);
-  return { ok: true };
+    .setValues([[USED, row.firstName || '', row.lastName || '', row.email || '', codes, b.usedAt || '']]);
+  return { ok: true, appended: rows.length };
 }
 
 function cashCancel_(token) {
@@ -168,9 +197,12 @@ function cashTab_() {
   let sheet = ss.getSheetByName(CASH_TAB);
   if (!sheet) {
     sheet = ss.insertSheet(CASH_TAB);
-    sheet.getRange(1, 1, 1, CASH_HEADERS.length).setValues([CASH_HEADERS]).setFontWeight('bold').setBackground('#fff4d6');
     sheet.setFrozenRows(1);
     sheet.getRange('A2:J').setNumberFormat('@');
+  }
+  // Pone los encabezados nuevos (como "Entradas") también en la pestaña que ya existía.
+  if (sheet.getRange(1, CASH_HEADERS.length).getValue() !== CASH_HEADERS[CASH_HEADERS.length - 1]) {
+    sheet.getRange(1, 1, 1, CASH_HEADERS.length).setValues([CASH_HEADERS]).setFontWeight('bold').setBackground('#fff4d6');
   }
   return sheet;
 }
@@ -192,5 +224,6 @@ function getTab_(show) {
 }
 
 function reply_(obj) {
+  obj.version = SCRIPT_VERSION;
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }

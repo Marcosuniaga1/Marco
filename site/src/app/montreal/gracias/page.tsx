@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Clock, Download } from "lucide-react";
-import { TICKET_SIZE } from "@/lib/montreal";
+import { ArrowLeft, Clock } from "lucide-react";
+import { MontrealTickets } from "@/components/MontrealTickets";
 import { findTicket } from "@/lib/server/purchase";
+import { ticketFileName } from "@/lib/server/ticket-code";
 
 export const metadata: Metadata = {
   title: "Gracias por tu donación | Montreal se levanta por La Guaira",
@@ -12,7 +12,14 @@ export const metadata: Metadata = {
 
 export default async function GraciasPage({ searchParams }: PageProps<"/montreal/gracias">) {
   const purchase = await findTicket(await searchParams);
-  const ticketUrl = purchase?.issued ? `/api/montreal/ticket?${purchase.query}` : null;
+  const tickets = purchase?.issued
+    ? purchase.codes.map((code, i) => ({
+        url: `/api/montreal/ticket?${purchase.query}&n=${i + 1}`,
+        fileName: ticketFileName(code, i + 1, purchase.codes.length),
+        code,
+      }))
+    : null;
+  const many = (tickets?.length ?? 0) > 1;
   const sender = process.env.GMAIL_USER;
 
   return (
@@ -30,52 +37,34 @@ export default async function GraciasPage({ searchParams }: PageProps<"/montreal
         </header>
 
         <main className="flex flex-1 items-center py-12">
-          <div className="max-w-[480px] mx-auto px-4 w-full">
+          <div className={`${many ? "max-w-[720px]" : "max-w-[480px]"} mx-auto px-4 w-full`}>
             <div className="glass-modal p-6 sm:p-8 text-center space-y-6">
               <div className="space-y-2">
                 <h1 className="text-gradient font-display font-medium text-[clamp(26px,5vw,36px)] leading-tight text-balance">
                   {purchase ? `¡Gracias, ${purchase.firstName}!` : "¡Gracias por tu donación!"}
                 </h1>
                 <p className="text-base text-mist">
-                  {ticketUrl
-                    ? "Esta es tu entrada, válida para 2 personas. Guárdala en tu teléfono y preséntala en la puerta."
+                  {tickets
+                    ? many
+                      ? `Estas son tus ${tickets.length} entradas, cada una válida para 2 personas. Guárdalas o envíalas a quienes van contigo: cada una se presenta en la puerta por separado.`
+                      : "Esta es tu entrada, válida para 2 personas. Guárdala en tu teléfono y preséntala en la puerta."
                     : purchase
                       ? "Tu pago está en proceso. Apenas se confirme, te enviamos tu entrada por correo."
                       : "Tu donación fue recibida. En unos minutos te llega la entrada a tu correo."}
                 </p>
               </div>
 
-              {ticketUrl ? (
-                <div className="space-y-4">
-                  <a href={ticketUrl} target="_blank" rel="noopener" className="block">
-                    <Image
-                      src={ticketUrl}
-                      alt={`Tu entrada ${purchase!.code}`}
-                      width={TICKET_SIZE.width}
-                      height={TICKET_SIZE.height}
-                      unoptimized
-                      priority
-                      className="w-full h-auto rounded-xl shadow-tour-art"
-                    />
-                  </a>
-                  <a
-                    href={`${ticketUrl}&download=1`}
-                    className="flex w-full items-center justify-center gap-2 rounded-full bg-violet px-6 py-3.5 text-base font-medium text-white no-underline transition-opacity hover:opacity-90 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-frost focus-visible:outline-offset-2"
-                  >
-                    <Download className="h-5 w-5" />
-                    Descargar mi entrada
-                  </a>
-                  <p className="text-[13px] text-fog">En iPhone también puedes mantener presionada la imagen y elegir “Guardar en Fotos”.</p>
-                </div>
+              {tickets ? (
+                <MontrealTickets tickets={tickets} />
               ) : (
                 purchase && <Clock className="mx-auto h-12 w-12 text-frost" aria-hidden="true" />
               )}
 
               {purchase && (
                 <p className="text-sm text-mist">
-                  {ticketUrl ? "Como respaldo, también te la enviamos a " : "Te la enviaremos a "}
+                  {tickets ? `Como respaldo, también ${many ? "te las" : "te la"} enviamos a ` : "Te la enviaremos a "}
                   <span className="text-frost">{purchase.email}</span>
-                  {ticketUrl ? ". Es la misma entrada." : "."}
+                  {tickets ? (many ? ". Son las mismas entradas." : ". Es la misma entrada.") : "."}
                 </p>
               )}
               <p className="text-[13px] text-fog">

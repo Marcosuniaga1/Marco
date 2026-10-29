@@ -11,8 +11,11 @@ export function torontoTime(date: Date): string {
   return torontoFormat.format(date);
 }
 
-export function sheetRow(r: Registration, code: string, paidAt: Date, amountCad: number, paymentId: string): SheetRow {
-  return {
+const GIFT = { self: "No", gift: "Sí", none: "Sin agenda" } as const;
+
+// One row per ticket, so the door can check each one off on its own; each row carries one ticket's share of the payment.
+export function sheetRows(r: Registration, codes: string[], paidAt: Date, totalCad: number, paymentId: string): SheetRow[] {
+  return codes.map((code) => ({
     paidAt: torontoTime(paidAt),
     ticketCode: code,
     firstName: r.firstName,
@@ -20,9 +23,9 @@ export function sheetRow(r: Registration, code: string, paidAt: Date, amountCad:
     email: r.email,
     whatsapp: r.whatsapp,
     address: r.address,
-    gift: r.gift ? "Sí" : "No",
-    recipient: r.gift ? r.giftName : "El comprador",
-    amountCad,
+    gift: GIFT[r.agenda],
+    recipient: r.agenda === "gift" ? r.giftName : r.agenda === "self" ? "El comprador" : "",
+    amountCad: Math.round((totalCad / codes.length) * 100) / 100,
     stripeId: paymentId,
-  };
+  }));
 }

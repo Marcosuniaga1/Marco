@@ -11,6 +11,17 @@ export const EVENT = {
 // What a card checkout costs while the taquilla session (Pedro's PIN) is open, to test real payments cheaply.
 export const TEST_PRICE_CAD = 1;
 
+// Tickets per purchase; each ticket admits 2 people and takes one seat of the show's capacity.
+export const MAX_TICKETS = 10;
+
+export const AGENDA = {
+  self: "Enviármela a mí",
+  gift: "Regalarla a un familiar",
+  none: "No quiero la agenda",
+} as const;
+
+export type AgendaChoice = keyof typeof AGENDA;
+
 export const SHOWS = {
   "7pm": { label: "7:00 PM", sheetTab: "Show 7PM", capacityEnv: "MONTREAL_CAPACITY_7PM" },
   "9pm": { label: "9:00 PM", sheetTab: "Show 9PM", capacityEnv: "MONTREAL_CAPACITY_9PM" },
@@ -34,7 +45,8 @@ export type Registration = {
   whatsapp: string;
   address: string;
   show: ShowId;
-  gift: boolean;
+  quantity: number;
+  agenda: AgendaChoice;
   giftName: string;
 };
 
@@ -50,6 +62,24 @@ export function isShowId(value: unknown): value is ShowId {
   return typeof value === "string" && value in SHOWS;
 }
 
+function isAgenda(value: unknown): value is AgendaChoice {
+  return typeof value === "string" && value in AGENDA;
+}
+
+// Purchases made before the counter existed carry no quantity and a gift flag instead of an agenda choice.
+function agendaFrom(input: Record<string, unknown>): AgendaChoice | "" {
+  if (input.agenda !== undefined) return isAgenda(input.agenda) ? input.agenda : "";
+  return input.gift === true || input.gift === "true" ? "gift" : "self";
+}
+
+export function ticketWord(n: number): string {
+  return n === 1 ? "1 entrada" : `${n} entradas`;
+}
+
+export function onlyLeft(n: number): string {
+  return `solo ${n === 1 ? "queda" : "quedan"} ${ticketWord(n)}`;
+}
+
 export function validateRegistration(
   raw: unknown,
 ): { ok: true; data: Registration } | { ok: false; errors: FieldErrors } {
@@ -61,10 +91,12 @@ export function validateRegistration(
     whatsapp: text(input.whatsapp, LIMITS.whatsapp),
     address: text(input.address, LIMITS.address),
     show: isShowId(input.show) ? input.show : ("" as ShowId),
-    gift: input.gift === true || input.gift === "true",
+    quantity: input.quantity === undefined ? 1 : Number(input.quantity),
+    agenda: agendaFrom(input) as AgendaChoice,
     giftName: "",
   };
-  if (data.gift) data.giftName = text(input.giftName, LIMITS.giftName);
+  if (data.agenda === "gift") data.giftName = text(input.giftName, LIMITS.giftName);
+  if (data.agenda === "none") data.address = "";
 
   const errors: FieldErrors = {};
   if (!data.firstName) errors.firstName = "Escribe tu nombre.";
@@ -72,9 +104,12 @@ export function validateRegistration(
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email)) errors.email = "Revisa tu correo: ahí te llega la entrada.";
   if (!/^\+?[\d\s().-]{7,20}$/.test(data.whatsapp) || data.whatsapp.replace(/\D/g, "").length < 7)
     errors.whatsapp = "Escribe tu WhatsApp con código de país, por ejemplo +1 514 555 0123.";
-  if (data.address.length < 8) errors.address = "Escribe la dirección completa para entregar la agenda.";
   if (!isShowId(data.show)) errors.show = "Elige la función de las 7:00 PM o de las 9:00 PM.";
-  if (data.gift && !data.giftName) errors.giftName = "Escribe el nombre de quien recibe la agenda.";
+  if (!Number.isInteger(data.quantity) || data.quantity < 1 || data.quantity > MAX_TICKETS)
+    errors.quantity = `Elige entre 1 y ${MAX_TICKETS} entradas.`;
+  if (!isAgenda(data.agenda)) errors.agenda = "Elige qué hacemos con la agenda.";
+  if (data.agenda !== "none" && data.address.length < 8) errors.address = "Escribe la dirección completa para entregar la agenda.";
+  if (data.agenda === "gift" && !data.giftName) errors.giftName = "Escribe el nombre de quien recibe la agenda.";
 
   return Object.keys(errors).length ? { ok: false, errors } : { ok: true, data };
 }
@@ -87,7 +122,8 @@ export function toMetadata(r: Registration): Record<string, string> {
     whatsapp: r.whatsapp,
     address: r.address,
     show: r.show,
-    gift: r.gift ? "true" : "false",
+    quantity: String(r.quantity),
+    agenda: r.agenda,
     giftName: r.giftName,
   };
 }

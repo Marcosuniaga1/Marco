@@ -1,11 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { Check, Copy, KeyRound, Link2, Loader2, LogOut, MessageCircle, Smartphone, XCircle } from "lucide-react";
-import { EVENT, SHOWS, TEST_PRICE_CAD, type ShowId } from "@/lib/montreal";
+import { Check, Copy, KeyRound, Link2, Loader2, LogOut, MessageCircle, Minus, Plus, Smartphone, XCircle } from "lucide-react";
+import { EVENT, MAX_TICKETS, SHOWS, ticketWord, type ShowId } from "@/lib/montreal";
 
 type ShowStatus = { taken: number; capacity: number; remaining: number | null };
-type Created = { token: string; show: ShowId; url: string; expiresAt: string };
+type Created = { token: string; show: ShowId; quantity: number; url: string; expiresAt: string };
 
 const card = "glass-modal p-6 sm:p-8 space-y-5";
 const primaryBtn =
@@ -13,8 +13,12 @@ const primaryBtn =
 const ghostBtn =
   "flex w-full items-center justify-center gap-2 rounded-full bg-input-bg px-6 py-3 text-base font-medium text-frost shadow-subtle transition-colors hover:bg-[rgba(199,211,234,0.1)] disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-frost";
 
+const stepBtn =
+  "flex h-11 w-11 items-center justify-center rounded-full bg-input-bg text-frost shadow-subtle transition-colors hover:bg-[rgba(199,211,234,0.1)] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-frost";
+
 function whatsappText(c: Created): string {
-  return `¡Gracias por tu donación para Venezuela se Levanta! Registra aquí tu entrada para la función de las ${SHOWS[c.show].label} del 29 de enero: ${c.url}\n\nEl enlace es personal, sirve una sola vez y vence en 48 horas.`;
+  const what = c.quantity === 1 ? "tu entrada" : `tus ${c.quantity} entradas`;
+  return `¡Gracias por tu donación para Venezuela se Levanta! Registra aquí ${what} para la función de las ${SHOWS[c.show].label} del 29 de enero: ${c.url}\n\nEl enlace es personal, sirve una sola vez y vence en 48 horas.`;
 }
 
 function Login({ onDone }: { onDone: () => void }) {
@@ -59,6 +63,7 @@ function Login({ onDone }: { onDone: () => void }) {
 export function Taquilla({ loggedIn: initiallyLoggedIn }: { loggedIn: boolean }) {
   const [loggedIn, setLoggedIn] = useState(initiallyLoggedIn);
   const [show, setShow] = useState<ShowId | "">("");
+  const [quantity, setQuantity] = useState(1);
   const [status, setStatus] = useState<Record<ShowId, ShowStatus> | null>(null);
   const [created, setCreated] = useState<Created | null>(null);
   const [busy, setBusy] = useState<"" | "wa" | "here" | "cancel">("");
@@ -99,7 +104,7 @@ export function Taquilla({ loggedIn: initiallyLoggedIn }: { loggedIn: boolean })
     const res = await fetch("/api/montreal/taquilla/links", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ show }),
+      body: JSON.stringify({ show, quantity }),
     }).catch(() => null);
     if (!res) {
       setBusy("");
@@ -162,7 +167,7 @@ export function Taquilla({ loggedIn: initiallyLoggedIn }: { loggedIn: boolean })
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="font-display text-2xl font-medium text-ice">Taquilla · Efectivo</h1>
-            <p className="mt-1 text-sm text-fog">Genera el enlace solo después de recibir los $100 CAD.</p>
+            <p className="mt-1 text-sm text-fog">Genera el enlace solo después de recibir el efectivo: ${EVENT.priceCad} CAD por entrada.</p>
           </div>
           <button onClick={logout} className="inline-flex shrink-0 items-center gap-1.5 text-sm text-mist hover:text-ice">
             <LogOut className="h-4 w-4" /> Salir
@@ -192,6 +197,26 @@ export function Taquilla({ loggedIn: initiallyLoggedIn }: { loggedIn: boolean })
           </div>
         </fieldset>
 
+        <div>
+          <p id="t-quantity-label" className="block text-sm font-medium text-mist mb-1.5">Entradas que pagó</p>
+          <div className="flex items-center gap-4">
+            <button type="button" className={stepBtn} onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+              disabled={quantity <= 1} aria-label="Una entrada menos">
+              <Minus className="h-5 w-5" />
+            </button>
+            <output aria-labelledby="t-quantity-label" aria-live="polite" className="min-w-[2ch] text-center font-display text-3xl font-medium text-ice">
+              {quantity}
+            </output>
+            <button type="button" className={stepBtn} onClick={() => setQuantity((q) => Math.min(MAX_TICKETS, q + 1))}
+              disabled={quantity >= MAX_TICKETS} aria-label="Una entrada más">
+              <Plus className="h-5 w-5" />
+            </button>
+            <p className="text-sm text-fog">
+              Debe darte <span className="text-frost">${quantity * EVENT.priceCad} CAD</span>
+            </p>
+          </div>
+        </div>
+
         {error && <p role="alert" className="rounded-lg bg-[rgba(228,109,76,0.12)] px-4 py-3 text-sm text-ember">{error}</p>}
 
         <div className="space-y-3">
@@ -204,13 +229,13 @@ export function Taquilla({ loggedIn: initiallyLoggedIn }: { loggedIn: boolean })
             Registrar aquí ahora (pásale tu teléfono)
           </button>
         </div>
-        <p className="text-[13px] text-fog">Cada enlace aparta 1 cupo, sirve una sola vez y vence en 48 horas si nadie lo usa.</p>
+        <p className="text-[13px] text-fog">Cada enlace aparta sus cupos (1 por entrada), sirve una sola vez y vence en 48 horas si nadie lo usa.</p>
       </div>
 
       {created && (
         <div className={card}>
           <div>
-            <p className="text-sm text-mist">Enlace para la función de las {SHOWS[created.show].label}</p>
+            <p className="text-sm text-mist">Enlace para {ticketWord(created.quantity)} · función de las {SHOWS[created.show].label}</p>
             <p className="mt-2 select-all break-all rounded-lg bg-input-bg px-4 py-3 font-mono text-sm text-ice shadow-subtle">{created.url}</p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
@@ -224,20 +249,11 @@ export function Taquilla({ loggedIn: initiallyLoggedIn }: { loggedIn: boolean })
           </div>
           <button onClick={cancel} disabled={busy !== ""} className="inline-flex items-center gap-1.5 text-sm text-ember hover:underline">
             {busy === "cancel" ? <Loader2 className="h-4 w-4 animate-spin" /> : <XCircle className="h-4 w-4" />}
-            Anular este enlace (libera el cupo)
+            Anular este enlace (libera {created.quantity === 1 ? "el cupo" : "los cupos"})
           </button>
         </div>
       )}
 
-      <div className="glass-modal p-6 sm:p-8 space-y-2">
-        <h2 className="text-base font-medium text-ice">Probar el pago con tarjeta</h2>
-        <p className="text-sm text-fog">
-          Abre el formulario desde{" "}
-          <a href="/montreal?prueba=1#reservar" target="_blank" className="text-frost underline">este enlace de prueba</a>: con
-          esta sesión abierta cobra solo ${TEST_PRICE_CAD} CAD y Stripe lo muestra como PRUEBA. Comprar en /montreal de forma
-          normal cobra siempre ${EVENT.priceCad} CAD. Después reembolsa el pago en Stripe, borra la fila del Sheet y toca Salir.
-        </p>
-      </div>
     </div>
   );
 }

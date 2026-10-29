@@ -1,5 +1,5 @@
 import type { NextRequest } from "next/server";
-import { SHOWS, isShowId } from "@/lib/montreal";
+import { MAX_TICKETS, SHOWS, isShowId, onlyLeft } from "@/lib/montreal";
 import { cancelCashLink, capacityFor, countByShow, createCashLink } from "@/lib/server/sheet";
 import { torontoTime } from "@/lib/server/rows";
 import { CASH_LINK_HOURS, isCashTokenShape, isTaquillaSession, newCashToken } from "@/lib/server/taquilla";
@@ -27,20 +27,24 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   if (!(await isTaquillaSession())) return unauthorized();
-  const body = (await request.json().catch(() => null)) as { show?: unknown } | null;
+  const body = (await request.json().catch(() => null)) as { show?: unknown; quantity?: unknown } | null;
   if (!isShowId(body?.show)) return Response.json({ error: "Elige la función." }, { status: 400 });
   const show = body.show;
+  const quantity = Number(body.quantity ?? 1);
+  if (!Number.isInteger(quantity) || quantity < 1 || quantity > MAX_TICKETS)
+    return Response.json({ error: `Elige entre 1 y ${MAX_TICKETS} entradas.` }, { status: 400 });
 
   const token = newCashToken();
   const now = new Date();
   const expires = new Date(now.getTime() + CASH_LINK_HOURS * 3600 * 1000);
   try {
-    const result = await createCashLink(token, show, capacityFor(show), torontoTime(now), expires.toISOString());
+    const result = await createCashLink(token, show, quantity, capacityFor(show), torontoTime(now), expires.toISOString());
     if (!result.ok) {
-      const soldOut = result.error === "sold_out";
+      if (result.error !== "sold_out") return Response.json({ error: "No pude crear el enlace. Intenta de nuevo." }, { status: 502 });
+      const label = SHOWS[show].label;
       return Response.json(
-        { error: soldOut ? `La función de las ${SHOWS[show].label} está llena.` : "No pude crear el enlace. Intenta de nuevo." },
-        { status: soldOut ? 409 : 502 },
+        { error: result.remaining ? `Para la función de las ${label} ${onlyLeft(result.remaining)}.` : `La función de las ${label} está llena.` },
+        { status: 409 },
       );
     }
   } catch (error) {
@@ -49,7 +53,7 @@ export async function POST(request: NextRequest) {
   }
 
   const origin = process.env.SITE_URL?.replace(/\/$/, "") || request.nextUrl.origin;
-  return Response.json({ token, show, url: `${origin}/montreal/efectivo/${token}`, expiresAt: expires.toISOString() });
+  return Response.json({ token, show, quantity, url: `${origin}/montreal/efectivo/${token}`, expiresAt: expires.toISOString() });
 }
 
 export async function DELETE(request: NextRequest) {
