@@ -60,10 +60,10 @@ export default function MontrealPage() {
               {/* VSL Image */}
               <div className="mb-12 gs-hidden" data-gs="reveal">
                 <Image
-                  src="/images/VSL2.png"
+                  src="/images/montreal-afiche.jpg"
                   alt="Montreal se levanta por La Guaira — Agenda de Esperanza 2027"
-                  width={800}
-                  height={1000}
+                  width={1051}
+                  height={1496}
                   priority
                   className="w-full h-auto rounded-2xl shadow-tour-art"
                 />
@@ -151,7 +151,7 @@ export default function MontrealPage() {
                 {CHECKOUT_READY ? (
                   <div id="reservar" className="relative scroll-mt-24 overflow-hidden rounded-2xl p-3 sm:p-6">
                     <Image
-                      src="/images/VSL2.png"
+                      src="/images/montreal-afiche.jpg"
                       alt=""
                       fill
                       sizes="(max-width: 800px) 100vw, 640px"
